@@ -81,6 +81,7 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
+            position: relative;
         }
         .logo {
             font-size: 1.5rem;
@@ -91,6 +92,12 @@
             gap: 0.5rem;
             cursor: pointer;
             user-select: none;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .logo-text {
+            white-space: nowrap;
         }
         .nav-links {
             display: flex;
@@ -639,18 +646,18 @@
         footer .logo { justify-content: center; margin-bottom: 1rem; }
 
         @media (max-width: 768px) {
-            nav { justify-content: center !important; }
-            .logo { 
-                position: absolute; 
-                left: 50%; 
-                transform: translateX(-50%); 
-                margin: 0;
+            .logo {
+                position: static;
+                left: auto;
+                transform: none;
+                margin: 0 auto;
+                font-size: 1.2rem;
             }
-            .menu-toggle { 
-                position: absolute; 
-                right: 1rem; 
-                top: 50%; 
-                transform: translateY(-50%); 
+            .logo img {
+                height: 32px !important;
+            }
+            nav {
+                padding: 0.8rem 1rem;
             }
             .nav-links { 
                 position: fixed;
@@ -736,14 +743,15 @@
     </style>
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
 
     <nav id="navbar">
         <div class="logo" onclick="smoothScrollTo('hero')">
-            <img src="logo.jpg" alt="KITY SHOP" style="height: 40px; width: auto; border-radius: 8px; object-fit: contain;">
-            <span>KITY SHOP</span>
+            <img src="logo.jpg" alt="KITY SHOP" style="height: 40px; width: auto; border-radius: 8px; object-fit: contain; flex-shrink: 0;">
+            <span class="logo-text">KITY SHOP</span>
         </div>
         <div class="nav-links" id="navLinks">
             <button class="nav-link" data-section="hero" onclick="smoothScrollTo('hero'); closeMobileMenu();">Home</button>
