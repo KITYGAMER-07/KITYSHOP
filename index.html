@@ -125,16 +125,28 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 800;
             color: var(--brown-darker);
             user-select: none;
             white-space: nowrap;
         }
 
+        .menu-toggle {
+            font-size: 1.8rem;
+            padding: 0.6rem;
+        }
+
         @media (max-width: 768px) {
             .nav-center-title {
-                font-size: 1.2rem;
+                font-size: 1.4rem;
+            }
+            .menu-toggle {
+                font-size: 1.6rem;
+                padding: 0.5rem;
+            }
+            .logo img {
+                height: 42px !important;
             }
         }
 
@@ -747,7 +759,7 @@
 
     <nav id="navbar">
         <div class="logo" onclick="smoothScrollTo('hero')">
-            <img src="logo.jpg" alt="KITY SHOP" style="height: 40px; width: auto; border-radius: 8px; object-fit: contain;">
+            <img src="logo.jpg" alt="KITY SHOP" style="height: 50px; width: auto; border-radius: 8px; object-fit: contain;">
         </div>
         <div class="nav-center-title">KITY SHOP</div>
         <div class="nav-links" id="navLinks">
