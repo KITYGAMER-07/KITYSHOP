@@ -81,7 +81,6 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
-            position: relative;
         }
         .logo {
             font-size: 1.5rem;
@@ -92,12 +91,6 @@
             gap: 0.5rem;
             cursor: pointer;
             user-select: none;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        .logo-text {
-            white-space: nowrap;
         }
         .nav-links {
             display: flex;
@@ -127,6 +120,23 @@
         }
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
         .nav-link:hover, .nav-link.active { color: var(--brown-dark); }
+
+        .nav-center-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--brown-darker);
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .nav-center-title {
+                font-size: 1.2rem;
+            }
+        }
 
         .admin-btn {
             background: linear-gradient(135deg, var(--brown), var(--brown-dark));
@@ -646,19 +656,6 @@
         footer .logo { justify-content: center; margin-bottom: 1rem; }
 
         @media (max-width: 768px) {
-            .logo {
-                position: static;
-                left: auto;
-                transform: none;
-                margin: 0 auto;
-                font-size: 1.2rem;
-            }
-            .logo img {
-                height: 32px !important;
-            }
-            nav {
-                padding: 0.8rem 1rem;
-            }
             .nav-links { 
                 position: fixed;
                 top: 70px;
@@ -750,9 +747,9 @@
 
     <nav id="navbar">
         <div class="logo" onclick="smoothScrollTo('hero')">
-            <img src="logo.jpg" alt="KITY SHOP" style="height: 40px; width: auto; border-radius: 8px; object-fit: contain; flex-shrink: 0;">
-            <span class="logo-text">KITY SHOP</span>
+            <img src="logo.jpg" alt="KITY SHOP" style="height: 40px; width: auto; border-radius: 8px; object-fit: contain;">
         </div>
+        <div class="nav-center-title">KITY SHOP</div>
         <div class="nav-links" id="navLinks">
             <button class="nav-link" data-section="hero" onclick="smoothScrollTo('hero'); closeMobileMenu();">Home</button>
             <button class="nav-link" data-section="products" onclick="smoothScrollTo('products'); closeMobileMenu();">Products</button>
