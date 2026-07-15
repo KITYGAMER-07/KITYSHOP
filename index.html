@@ -639,6 +639,19 @@
         footer .logo { justify-content: center; margin-bottom: 1rem; }
 
         @media (max-width: 768px) {
+            nav { justify-content: center !important; }
+            .logo { 
+                position: absolute; 
+                left: 50%; 
+                transform: translateX(-50%); 
+                margin: 0;
+            }
+            .menu-toggle { 
+                position: absolute; 
+                right: 1rem; 
+                top: 50%; 
+                transform: translateY(-50%); 
+            }
             .nav-links { 
                 position: fixed;
                 top: 70px;
