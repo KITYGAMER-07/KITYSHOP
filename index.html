@@ -75,7 +75,7 @@
             top: 0; width: 100%;
             padding: 1rem 2rem;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             z-index: 1000;
             background: rgba(255, 255, 255, 0.95);
@@ -85,14 +85,15 @@
         .logo {
             font-size: 1.5rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--brown), var(--brown-dark));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--brown-darker);
             display: flex;
             align-items: center;
             gap: 0.5rem;
             cursor: pointer;
             user-select: none;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
         .nav-links {
             display: flex;
@@ -657,6 +658,12 @@
                 transition: transform 0.4s ease;
                 z-index: 999;
             }
+            .logo {
+                position: relative !important;
+                left: auto !important;
+                transform: none !important;
+                margin: 0 auto;
+            }
             .nav-links.active { transform: translateY(0); }
             .nav-links .nav-link { 
                 width: 100%; 
@@ -732,7 +739,7 @@
     <nav id="navbar">
         <div class="logo" onclick="smoothScrollTo('hero')">
             <img src="logo.jpg" alt="KITY SHOP" style="height: 40px; width: auto; border-radius: 8px; object-fit: contain;">
-            <span style="background: linear-gradient(135deg, var(--brown), var(--brown-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">KITY SHOP</span>
+            <span>KITY SHOP</span>
         </div>
         <div class="nav-links" id="navLinks">
             <button class="nav-link" data-section="hero" onclick="smoothScrollTo('hero'); closeMobileMenu();">Home</button>
@@ -993,7 +1000,7 @@
 
         let products = [
             { id: '5hours', name: '5 Hours Access', duration: '5 Hours', price: 49, stock: 15, icon: 'fa-clock' },
-            { id: '1day', name: '1 Day Access', duration: '1 Day', price: 99, stock: 25, icon: 'fa-sun' },
+            { id: '1day', name: '1 Day Access', duration: '1 Day', price: 99, stock: 25, icon: 'fa-calendar-day' },
             { id: '3days', name: '3 Days Access', duration: '3 Days', price: 199, stock: 20, icon: 'fa-calendar-day' },
             { id: '7days', name: '7 Days Access', duration: '7 Days', price: 399, stock: 18, icon: 'fa-calendar-week' },
             { id: '14days', name: '14 Days Access', duration: '14 Days', price: 699, stock: 12, icon: 'fa-calendar-alt' },
