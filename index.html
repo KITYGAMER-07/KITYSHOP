@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeyStore - Premium Access Keys</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --cream: #faf6f1;
+            --white: #ffffff;
+            --brown-light: #c4a882;
+            --brown: #8b6914;
+            --brown-dark: #5c3d1e;
+            --brown-darker: #3d2817;
+            --brown-deep: #2a1a0f;
+            --text: #2c1810;
+            --text-light: #5c3d1e;
+            --text-muted: #8b7355;
+            --border: #e8ddd0;
+            --card-bg: #ffffff;
+            --card-shadow: rgba(139, 105, 20, 0.08);
+            --success: #2d7d46;
+            --danger: #b91c1c;
+            --warning: #b45309;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: var(--cream);
+        }
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(196, 168, 130, 0.2) 0%, transparent 70%);
+            top: -200px; right: -200px;
+            animation: float 8s ease-in-out infinite;
+        }
+        .bg-animation::after {
+            content: '';
+            position: absolute;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(139, 105, 20, 0.1) 0%, transparent 70%);
+            bottom: -150px; left: -150px;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -30px) scale(1.1); }
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--cream); }
+        ::-webkit-scrollbar-thumb { background: var(--brown); border-radius: 4px; }
+
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--brown), var(--brown-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            user-select: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            padding: 0.5rem 0;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 2px;
+            background: linear-gradient(90deg, var(--brown), var(--brown-dark));
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .nav-link:hover, .nav-link.active { color: var(--brown-dark); }
+
+        .admin-btn {
+            background: linear-gradient(135deg, var(--brown), var(--brown-dark));
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+        }
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 105, 20, 0.3);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(196, 168, 130, 0.15);
+            border: 1px solid rgba(196, 168, 130, 0.4);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: var(--brown);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease 0.2s both;
+            color: var(--brown-darker);
+        }
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--brown), var(--brown-dark), var(--brown-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--brown), var(--brown-dark));
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(139, 105, 20, 0.3);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--brown-dark);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            border: 2px solid var(--border);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-secondary:hover {
+            border-color: var(--brown);
+            background: rgba(196, 168, 130, 0.1);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .products-section {
+            padding: 6rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        .section-header h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--brown-darker);
+        }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            box-shadow: 0 4px 20px var(--card-shadow);
+        }
+        .product-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, var(--brown-light), var(--brown));
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+        .product-card:hover::before { transform: scaleX(1); }
+        .product-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--brown-light);
+            box-shadow: 0 20px 50px rgba(139, 105, 20, 0.15);
+        }
+        .product-icon {
+            width: 60px; height: 60px;
+            background: linear-gradient(135deg, var(--brown-light), var(--brown));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+        .product-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--brown-darker);
+        }
+        .product-card .duration {
+            color: var(--brown);
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        .product-card .price {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--brown-dark), var(--brown));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        .stock-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        .stock-status.in-stock {
+            background: rgba(45, 125, 70, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(45, 125, 70, 0.3);
+        }
+        .stock-status.out-stock {
+            background: rgba(185, 28, 28, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(185, 28, 28, 0.3);
+        }
+        .stock-status.low-stock {
+            background: rgba(180, 83, 9, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(180, 83, 9, 0.3);
+        }
+        .buy-btn {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        .buy-btn.available {
+            background: linear-gradient(135deg, var(--brown), var(--brown-dark));
+            color: white;
+        }
+        .buy-btn.available:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(139, 105, 20, 0.3);
+        }
+        .buy-btn.unavailable {
+            background: #f0ebe5;
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .features-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(180deg, var(--white) 0%, var(--cream) 100%);
+        }
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+        .feature-item {
+            text-align: center;
+            padding: 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        .feature-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .feature-icon {
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, rgba(196, 168, 130, 0.2), rgba(139, 105, 20, 0.1));
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+            border: 1px solid var(--border);
+            color: var(--brown);
+        }
+        .feature-item h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--brown-darker); }
+        .feature-item p { color: var(--text-muted); font-size: 0.95rem; }
+
+        .telegram-section {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(196, 168, 130, 0.05), rgba(139, 105, 20, 0.05));
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .telegram-box {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px var(--card-shadow);
+        }
+        .telegram-box i { font-size: 3rem; color: #0088cc; margin-bottom: 1rem; }
+        .telegram-box h3 { color: var(--brown-darker); }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(42, 26, 15, 0.7);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 1rem;
+        }
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid var(--border);
+            animation: slideUp 0.4s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(42, 26, 15, 0.2);
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .modal-header h2 { font-size: 1.5rem; color: var(--brown-darker); }
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .close-btn:hover { color: var(--brown-dark); }
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: var(--cream);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--brown-light);
+        }
+        .form-group input::placeholder { color: var(--text-muted); }
+        .modal .btn-primary { width: 100%; justify-content: center; }
+
+        .admin-panel {
+            display: none;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 6rem;
+        }
+        .admin-panel.active { display: block; }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .admin-header h2 { color: var(--brown-darker); }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px var(--card-shadow);
+        }
+        .stat-card h4 { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .stat-card .value { font-size: 2rem; font-weight: 800; color: var(--brown); }
+
+        .admin-table {
+            width: 100%;
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px var(--card-shadow);
+        }
+        .admin-table table { width: 100%; border-collapse: collapse; }
+        .admin-table th,
+        .admin-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        .admin-table th {
+            background: rgba(196, 168, 130, 0.1);
+            font-weight: 600;
+            color: var(--brown);
+        }
+        .admin-table tr:hover { background: rgba(196, 168, 130, 0.05); }
+
+        .action-btn {
+            padding: 0.4rem 1rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        .action-btn.edit { background: rgba(196, 168, 130, 0.2); color: var(--brown); }
+        .action-btn.delete { background: rgba(185, 28, 28, 0.1); color: var(--danger); }
+        .action-btn:hover { transform: scale(1.05); }
+
+        .add-stock-btn {
+            background: linear-gradient(135deg, var(--success), #1e5c32);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+        }
+        .add-stock-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(45, 125, 70, 0.3);
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            right: 2rem;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .toast {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 10px 40px rgba(42, 26, 15, 0.15);
+            animation: slideInRight 0.4s ease;
+            min-width: 300px;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.info { border-left: 4px solid var(--brown); }
+
+        footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            background: var(--white);
+        }
+        footer .logo { justify-content: center; margin-bottom: 1rem; }
+
+        @media (max-width: 768px) {
+            .nav-links { gap: 1rem; font-size: 0.9rem; }
+            .hero h1 { font-size: 2.5rem; }
+            .hero-cta { flex-direction: column; width: 100%; }
+            .hero-cta .btn-primary, .hero-cta .btn-secondary { width: 100%; justify-content: center; }
+            .products-grid { grid-template-columns: 1fr; }
+            .admin-table { overflow-x: auto; }
+            .modal { padding: 1.5rem; }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px; height: 20px;
+            border: 3px solid rgba(139, 105, 20, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--brown);
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .success-check {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--success), #1e5c32);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+            animation: scaleIn 0.5s ease;
+            color: white;
+        }
+        @keyframes scaleIn { from { transform: scale(0); } to { transform: scale(1); } }
+
+        .hidden { display: none !important; }
+        .main-content { display: block; }
+        .main-content.hidden { display: none; }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <nav id="navbar">
+        <div class="logo" onclick="smoothScrollTo('hero')">
+            <i class="fas fa-key"></i>
+            KeyStore
+        </div>
+        <div class="nav-links">
+            <button class="nav-link" data-section="hero" onclick="smoothScrollTo('hero')">Home</button>
+            <button class="nav-link" data-section="products" onclick="smoothScrollTo('products')">Products</button>
+            <button class="nav-link" data-section="features" onclick="smoothScrollTo('features')">Features</button>
+            <button class="admin-btn" onclick="showAdminLogin()">
+                <i class="fas fa-lock"></i> Admin
+            </button>
+        </div>
+    </nav>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="main-content" id="mainContent">
+        <section class="hero" id="hero">
+            <div class="hero-badge">
+                <i class="fas fa-bolt"></i>
+                Instant Delivery via Telegram
+            </div>
+            <h1>
+                Premium Access<br>
+                <span>Keys & Licenses</span>
+            </h1>
+            <p>
+                Secure, instant, and reliable access keys delivered directly to your Telegram. 
+                Choose your duration and get started in seconds.
+            </p>
+            <div class="hero-cta">
+                <button class="btn-primary" onclick="smoothScrollTo('products')">
+                    <i class="fas fa-shopping-cart"></i>
+                    Buy Now
+                </button>
+                <button class="btn-secondary" onclick="smoothScrollTo('features')">
+                    Learn More
+                </button>
+            </div>
+            <div class="scroll-indicator" onclick="smoothScrollTo('products')">
+                <i class="fas fa-chevron-down" style="color: var(--text-muted); font-size: 1.5rem;"></i>
+            </div>
+        </section>
+
+        <section class="products-section" id="products">
+            <div class="section-header">
+                <h2>Choose Your Plan</h2>
+                <p>Select the duration that fits your needs. All keys are instantly delivered.</p>
+            </div>
+            <div class="products-grid" id="productsGrid"></div>
+        </section>
+
+        <section class="features-section" id="features">
+            <div class="section-header">
+                <h2>Why Choose Us?</h2>
+                <p>Trusted by thousands of users worldwide</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                    <h3>Instant Delivery</h3>
+                    <p>Keys delivered to your Telegram within seconds of payment</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Secure Payments</h3>
+                    <p>Powered by Razorpay with bank-grade encryption</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-headset"></i></div>
+                    <h3>24/7 Support</h3>
+                    <p>Our team is always ready to help you with any issues</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-sync"></i></div>
+                    <h3>Auto Stock Update</h3>
+                    <p>Real-time stock status. Never buy out-of-stock items</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="telegram-section" id="telegram">
+            <div class="telegram-box">
+                <i class="fab fa-telegram"></i>
+                <h3>Telegram Auto-Delivery</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">
+                    After successful payment, your key will be automatically sent to your Telegram ID. 
+                    Make sure to enter your correct Telegram ID during checkout.
+                </p>
+            </div>
+        </section>
+
+        <footer>
+            <div class="logo" onclick="smoothScrollTo('hero')">
+                <i class="fas fa-key"></i>
+                KeyStore
+            </div>
+            <p>2026 KeyStore. All rights reserved. | Secure Key Distribution Platform</p>
+        </footer>
+    </div>
+
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h2><i class="fas fa-cog"></i> Admin Dashboard</h2>
+            <div style="display: flex; gap: 1rem;">
+                <button class="add-stock-btn" onclick="showAddStockModal()">
+                    <i class="fas fa-plus"></i> Add Stock
+                </button>
+                <button class="btn-secondary" onclick="logoutAdmin()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h4>Total Keys</h4>
+                <div class="value" id="totalKeys">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>Available</h4>
+                <div class="value" id="availableKeys">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>Sold Today</h4>
+                <div class="value" id="soldToday">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>Revenue</h4>
+                <div class="value" id="revenue">Rs.0</div>
+            </div>
+        </div>
+
+        <div class="admin-table">
+            <table>
+                <thead>
+                    <tr><th>Duration</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="adminTableBody"></tbody>
+            </table>
+        </div>
+
+        <h3 style="margin: 2rem 0 1rem;"><i class="fas fa-history"></i> Recent Orders</h3>
+        <div class="admin-table">
+            <table>
+                <thead>
+                    <tr><th>Order ID</th><th>Product</th><th>Telegram ID</th><th>Amount</th><th>Status</th><th>Time</th></tr>
+                </thead>
+                <tbody id="ordersTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="buyModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-shopping-cart"></i> Complete Purchase</h2>
+                <button class="close-btn" onclick="closeModal('buyModal')">&times;</button>
+            </div>
+            <div id="buyModalContent">
+                <div class="form-group">
+                    <label><i class="fas fa-box"></i> Selected Plan</label>
+                    <input type="text" id="selectedPlan" readonly style="background: rgba(196, 168, 130, 0.1); border-color: var(--brown-light);">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-tag"></i> Price</label>
+                    <input type="text" id="selectedPrice" readonly>
+                </div>
+                <div class="form-group">
+                    <label><i class="fab fa-telegram"></i> Telegram ID (with @)</label>
+                    <input type="text" id="telegramId" placeholder="@username" required>
+                    <small style="color: var(--text-muted);">Your key will be sent here automatically</small>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email (optional)</label>
+                    <input type="email" id="email" placeholder="your@email.com">
+                </div>
+                <button class="btn-primary" id="payBtn" onclick="processPayment()">
+                    <i class="fas fa-credit-card"></i> Pay with Razorpay
+                </button>
+            </div>
+            <div id="paymentSuccess" class="hidden" style="text-align: center;">
+                <div class="success-check"><i class="fas fa-check"></i></div>
+                <h3>Payment Successful!</h3>
+                <p style="color: var(--text-muted); margin: 1rem 0;">
+                    Your key has been sent to your Telegram ID.<br>Check your messages!
+                </p>
+                <div style="background: var(--cream); padding: 1rem; border-radius: 12px; margin: 1rem 0; font-family: monospace; border: 1px solid var(--border);" id="sentKeyDisplay">KEY-XXXX-XXXX-XXXX</div>
+                <button class="btn-primary" onclick="closeModal('buyModal'); resetBuyModal();">
+                    <i class="fas fa-check"></i> Done
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="adminLoginModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-lock"></i> Admin Login</h2>
+                <button class="close-btn" onclick="closeModal('adminLoginModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="adminUsername" placeholder="admin">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="adminPassword" placeholder="password">
+            </div>
+            <button class="btn-primary" onclick="loginAdmin()">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="addStockModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus"></i> Add Stock</h2>
+                <button class="close-btn" onclick="closeModal('addStockModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>Duration</label>
+                <select id="stockDuration">
+                    <option value="5hours">5 Hours</option>
+                    <option value="1day">1 Day</option>
+                    <option value="3days">3 Days</option>
+                    <option value="7days">7 Days</option>
+                    <option value="14days">14 Days</option>
+                    <option value="30days">30 Days</option>
+                    <option value="60days">60 Days</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Price (Rs.)</label>
+                <input type="number" id="stockPrice" placeholder="199">
+            </div>
+            <div class="form-group">
+                <label>Quantity to Add</label>
+                <input type="number" id="stockQuantity" placeholder="10">
+            </div>
+            <div class="form-group">
+                <label>Keys (one per line, optional)</label>
+                <textarea id="stockKeys" rows="5" placeholder="KEY-ABC-123-XYZ"></textarea>
+            </div>
+            <button class="btn-primary" onclick="addStock()">
+                <i class="fas fa-plus"></i> Add Stock
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const RAZORPAY_KEY_ID = 'rzp_live_TD3L7tVFGUPTiA';
+        const TELEGRAM_BOT_TOKEN = '8740697101:AAG1b2QXxbV_Zm20tAH_uL2NbrBGtl0HVlI';
+
+        let products = [
+            { id: '5hours', name: '5 Hours Access', duration: '5 Hours', price: 49, stock: 15, icon: 'fa-clock' },
+            { id: '1day', name: '1 Day Access', duration: '1 Day', price: 99, stock: 25, icon: 'fa-sun' },
+            { id: '3days', name: '3 Days Access', duration: '3 Days', price: 199, stock: 20, icon: 'fa-calendar-day' },
+            { id: '7days', name: '7 Days Access', duration: '7 Days', price: 399, stock: 18, icon: 'fa-calendar-week' },
+            { id: '14days', name: '14 Days Access', duration: '14 Days', price: 699, stock: 12, icon: 'fa-calendar-alt' },
+            { id: '30days', name: '30 Days Access', duration: '30 Days', price: 1299, stock: 8, icon: 'fa-calendar' },
+            { id: '60days', name: '60 Days Access', duration: '60 Days', price: 2299, stock: 5, icon: 'fa-infinity' }
+        ];
+
+        let orders = [];
+        let keys = {};
+        let currentProduct = null;
+
+        products.forEach(p => {
+            keys[p.id] = [];
+            for (let i = 0; i < p.stock; i++) {
+                keys[p.id].push(generateKey(p.id));
+            }
+        });
+
+        function generateKey(productId) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let key = 'KEY-';
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 4; j++) {
+                    key += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                if (i < 2) key += '-';
+            }
+            return key;
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = products.map(product => {
+                const stockStatus = product.stock > 10 ? 'in-stock' : product.stock > 0 ? 'low-stock' : 'out-stock';
+                const stockText = product.stock > 10 ? 'In Stock' : product.stock > 0 ? 'Only ' + product.stock + ' left' : 'Out of Stock';
+                const btnClass = product.stock > 0 ? 'available' : 'unavailable';
+                const btnText = product.stock > 0 ? 'Buy Now' : 'Out of Stock';
+
+                return `
+                    <div class="product-card">
+                        <div class="product-icon"><i class="fas ${product.icon}"></i></div>
+                        <h3>${product.name}</h3>
+                        <div class="duration"><i class="fas fa-hourglass-half"></i> ${product.duration}</div>
+                        <div class="price">Rs.${product.price}</div>
+                        <div class="stock-status ${stockStatus}">
+                            <i class="fas fa-circle" style="font-size: 0.5rem;"></i>
+                            ${stockText}
+                        </div>
+                        <button class="buy-btn ${btnClass}" onclick="openBuyModal('${product.id}')" ${product.stock === 0 ? 'disabled' : ''}>
+                            <i class="fas fa-shopping-cart"></i> ${btnText}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+            observeProducts();
+        }
+
+        function smoothScrollTo(targetId) {
+            const element = document.getElementById(targetId);
+            if (element) {
+                const navHeight = document.getElementById('navbar').offsetHeight;
+                const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                const offsetPosition = elementPosition - navHeight - 20;
+                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+            }
+            updateActiveNav(targetId);
+        }
+
+        function updateActiveNav(activeId) {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.section === activeId) link.classList.add('active');
+            });
+        }
+
+        function openBuyModal(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product || product.stock <= 0) {
+                showToast('Product is out of stock!', 'error');
+                return;
+            }
+            currentProduct = product;
+            document.getElementById('selectedPlan').value = product.name;
+            document.getElementById('selectedPrice').value = 'Rs.' + product.price;
+            document.getElementById('buyModal').classList.add('active');
+            document.getElementById('buyModalContent').classList.remove('hidden');
+            document.getElementById('paymentSuccess').classList.add('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function resetBuyModal() {
+            document.getElementById('telegramId').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('buyModalContent').classList.remove('hidden');
+            document.getElementById('paymentSuccess').classList.add('hidden');
+        }
+
+        function processPayment() {
+            const telegramId = document.getElementById('telegramId').value.trim();
+            if (!telegramId) {
+                showToast('Please enter your Telegram ID!', 'error');
+                return;
+            }
+            if (!telegramId.startsWith('@')) {
+                showToast('Telegram ID must start with @ (e.g., @username)', 'error');
+                return;
+            }
+
+            if (RAZORPAY_KEY_ID === 'rzp_test_YOUR_KEY_ID_HERE') {
+                showToast('Please add your Razorpay Key ID in the CONFIG section!', 'error');
+                console.error('Razorpay Key ID not configured!');
+                return;
+            }
+
+            const payBtn = document.getElementById('payBtn');
+            payBtn.innerHTML = '<div class="loading"></div> Loading...';
+            payBtn.disabled = true;
+
+            const options = {
+                key: RAZORPAY_KEY_ID,
+                amount: currentProduct.price * 100,
+                currency: "INR",
+                name: "KeyStore",
+                description: currentProduct.name,
+                image: "https://cdn-icons-png.flaticon.com/512/2885/2885417.png",
+                handler: function (response) {
+                    handlePaymentSuccess(response, telegramId);
+                },
+                prefill: {
+                    name: "",
+                    email: document.getElementById('email').value || "",
+                    contact: ""
+                },
+                notes: {
+                    product: currentProduct.name,
+                    telegram_id: telegramId
+                },
+                theme: {
+                    color: "#8b6914"
+                },
+                modal: {
+                    ondismiss: function() {
+                        showToast('Payment cancelled', 'info');
+                        payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
+                        payBtn.disabled = false;
+                    },
+                    escape: true,
+                    backdropclose: false
+                }
+            };
+
+            try {
+                const rzp = new Razorpay(options);
+                rzp.on('payment.failed', function (response) {
+                    showToast('Payment failed: ' + response.error.description, 'error');
+                    payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
+                    payBtn.disabled = false;
+                });
+                rzp.open();
+                setTimeout(() => {
+                    payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
+                    payBtn.disabled = false;
+                }, 1000);
+            } catch (error) {
+                showToast('Error loading Razorpay: ' + error.message, 'error');
+                payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
+                payBtn.disabled = false;
+            }
+        }
+
+        function handlePaymentSuccess(response, telegramId) {
+            const productIndex = products.findIndex(p => p.id === currentProduct.id);
+            if (productIndex > -1 && products[productIndex].stock > 0) {
+                products[productIndex].stock--;
+                const key = keys[currentProduct.id].pop() || generateKey(currentProduct.id);
+
+                const order = {
+                    id: 'ORD-' + Date.now(),
+                    product: currentProduct.name,
+                    productId: currentProduct.id,
+                    telegramId: telegramId,
+                    amount: currentProduct.price,
+                    key: key,
+                    paymentId: response.razorpay_payment_id,
+                    status: 'Delivered',
+                    time: new Date().toLocaleString()
+                };
+                orders.unshift(order);
+
+                document.getElementById('buyModalContent').classList.add('hidden');
+                document.getElementById('paymentSuccess').classList.remove('hidden');
+                document.getElementById('sentKeyDisplay').textContent = key;
+
+                sendToTelegram(telegramId, key, currentProduct);
+
+                renderProducts();
+                updateAdminStats();
+                renderAdminTables();
+
+                showToast('Payment successful! Key sent to Telegram.', 'success');
+            } else {
+                showToast('Sorry, this product just went out of stock!', 'error');
+            }
+        }
+
+        function sendToTelegram(telegramId, key, product) {
+            if (TELEGRAM_BOT_TOKEN === 'YOUR_BOT_TOKEN_HERE') {
+                console.log('Telegram Bot Token not configured. Key would be sent to:', telegramId);
+                console.log('Key:', key);
+                return;
+            }
+
+            const message = 'KeyStore Delivery\n\n' +
+                'Payment Successful!\n' +
+                'Product: ' + product.name + '\n' +
+                'Duration: ' + product.duration + '\n' +
+                'Key: ' + key + '\n\n' +
+                'Thank you for your purchase!';
+
+            fetch('https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: telegramId,
+                    text: message,
+                    parse_mode: 'HTML'
+                })
+            }).then(res => res.json()).then(data => {
+                if (data.ok) {
+                    console.log('Telegram message sent successfully');
+                } else {
+                    console.error('Telegram error:', data);
+                }
+            }).catch(err => {
+                console.error('Failed to send Telegram message:', err);
+            });
+        }
+
+        function showAdminLogin() {
+            document.getElementById('adminLoginModal').classList.add('active');
+        }
+
+        function loginAdmin() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+
+            if (username === 'admin' && password === 'admin123') {
+                document.getElementById('adminLoginModal').classList.remove('active');
+                document.getElementById('mainContent').classList.add('hidden');
+                document.getElementById('adminPanel').classList.add('active');
+                document.getElementById('adminUsername').value = '';
+                document.getElementById('adminPassword').value = '';
+                updateAdminStats();
+                renderAdminTables();
+                showToast('Welcome to Admin Panel!', 'success');
+            } else {
+                showToast('Invalid credentials!', 'error');
+            }
+        }
+
+        function logoutAdmin() {
+            document.getElementById('adminPanel').classList.remove('active');
+            document.getElementById('mainContent').classList.remove('hidden');
+            showToast('Logged out successfully', 'info');
+        }
+
+        function updateAdminStats() {
+            const total = products.reduce((sum, p) => sum + p.stock, 0);
+            const available = products.filter(p => p.stock > 0).length;
+            const todayOrders = orders.filter(o => {
+                const orderDate = new Date(o.time).toDateString();
+                const today = new Date().toDateString();
+                return orderDate === today;
+            }).length;
+            const revenue = orders.reduce((sum, o) => sum + o.amount, 0);
+
+            document.getElementById('totalKeys').textContent = total;
+            document.getElementById('availableKeys').textContent = available;
+            document.getElementById('soldToday').textContent = todayOrders;
+            document.getElementById('revenue').textContent = 'Rs.' + revenue;
+        }
+
+        function renderAdminTables() {
+            const tbody = document.getElementById('adminTableBody');
+            tbody.innerHTML = products.map(p => {
+                const status = p.stock > 0 ? 
+                    '<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Active</span>' :
+                    '<span style="color: var(--danger);"><i class="fas fa-times-circle"></i> Out of Stock</span>';
+                return `
+                    <tr>
+                        <td>${p.name}</td>
+                        <td>Rs.${p.price}</td>
+                        <td>${p.stock}</td>
+                        <td>${status}</td>
+                        <td>
+                            <button class="action-btn edit" onclick="editProduct('${p.id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="action-btn delete" onclick="deleteProduct('${p.id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            const ordersBody = document.getElementById('ordersTableBody');
+            ordersBody.innerHTML = orders.slice(0, 10).map(o => `
+                <tr>
+                    <td>${o.id}</td>
+                    <td>${o.product}</td>
+                    <td>${o.telegramId}</td>
+                    <td>Rs.${o.amount}</td>
+                    <td><span style="color: var(--success);"><i class="fas fa-check"></i> ${o.status}</span></td>
+                    <td>${o.time}</td>
+                </tr>
+            `).join('') || '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No orders yet</td></tr>';
+        }
+
+        function showAddStockModal() {
+            document.getElementById('addStockModal').classList.add('active');
+        }
+
+        function addStock() {
+            const duration = document.getElementById('stockDuration').value;
+            const price = parseInt(document.getElementById('stockPrice').value);
+            const quantity = parseInt(document.getElementById('stockQuantity').value);
+            const keysInput = document.getElementById('stockKeys').value.trim();
+
+            if (!price || !quantity) {
+                showToast('Please fill in all required fields!', 'error');
+                return;
+            }
+
+            const product = products.find(p => p.id === duration);
+            if (product) {
+                product.price = price;
+                product.stock += quantity;
+
+                if (keysInput) {
+                    const customKeys = keysInput.split('\n').filter(k => k.trim());
+                    keys[duration].push(...customKeys);
+                } else {
+                    for (let i = 0; i < quantity; i++) {
+                        keys[duration].push(generateKey(duration));
+                    }
+                }
+
+                renderProducts();
+                updateAdminStats();
+                renderAdminTables();
+                closeModal('addStockModal');
+                showToast('Added ' + quantity + ' keys to ' + product.name + '!', 'success');
+
+                document.getElementById('stockPrice').value = '';
+                document.getElementById('stockQuantity').value = '';
+                document.getElementById('stockKeys').value = '';
+            }
+        }
+
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                const newPrice = prompt('Enter new price (Rs.):', product.price);
+                if (newPrice && !isNaN(newPrice)) {
+                    product.price = parseInt(newPrice);
+                    renderProducts();
+                    updateAdminStats();
+                    renderAdminTables();
+                    showToast('Product updated!', 'success');
+                }
+            }
+        }
+
+        function deleteProduct(id) {
+            if (confirm('Are you sure you want to reset stock for this product?')) {
+                const product = products.find(p => p.id === id);
+                if (product) {
+                    product.stock = 0;
+                    keys[id] = [];
+                    renderProducts();
+                    updateAdminStats();
+                    renderAdminTables();
+                    showToast('Stock cleared!', 'info');
+                }
+            }
+        }
+
+        function showToast(message, type) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-times-circle',
+                info: 'fa-info-circle'
+            };
+
+            toast.innerHTML = '<i class="fas ' + icons[type] + '"></i><span>' + message + '</span>';
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) overlay.classList.remove('active');
+            });
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.section === current) link.classList.add('active');
+            });
+        });
+
+        function observeProducts() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.product-card').forEach(card => observer.observe(card));
+        }
+
+        const featureObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.feature-item').forEach(item => featureObserver.observe(item));
+
+        renderProducts();
+        console.log('KeyStore loaded!');
+    </script>
+</body>
+</html>
