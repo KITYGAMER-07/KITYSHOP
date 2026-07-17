@@ -476,9 +476,9 @@
                     <input type="text" id="selectedPrice" readonly>
                 </div>
                 <div class="form-group">
-                    <label><i class="fab fa-telegram"></i> Telegram ID (with @)</label>
-                    <input type="text" id="telegramId" placeholder="@username" required>
-                    <small style="color: var(--text-muted);">Your key will be sent here automatically</small>
+                    <label><i class="fab fa-telegram"></i> Telegram ID or User ID</label>
+                    <input type="text" id="telegramId" placeholder="@username or 123456789" required>
+                    <small style="color: var(--text-muted);">Enter your @username OR numeric User ID. Your key will be sent here automatically.</small>
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-envelope"></i> Email (optional)</label>
@@ -703,7 +703,7 @@
             });
         }
 
-        // Load keys from Firebase
+        // Load keys from Firebase (skips admin credentials)
         function loadKeysFromFirebase() {
             if (!firebaseInitialized) return;
 
@@ -712,6 +712,8 @@
                 const data = snapshot.val();
                 if (data) {
                     Object.keys(data).forEach(productId => {
+                        // Skip admin credentials, only load product keys
+                        if (productId === "username" || productId === "password") return;
                         if (keys[productId]) {
                             keys[productId] = data[productId] || [];
                         }
@@ -730,12 +732,23 @@
             });
         }
 
-        // Save keys to Firebase
+        // Save keys to Firebase (preserves admin credentials)
         function saveKeysToFirebase() {
             if (!firebaseInitialized) return;
 
-            const keysRef = db.ref("keys");
-            keysRef.set(keys).catch(err => {
+            // First, fetch existing keys to preserve admin credentials
+            db.ref("keys").once("value").then((snapshot) => {
+                const existingData = snapshot.val() || {};
+
+                // Build new data: product keys + preserved admin credentials
+                const dataToSave = { ...keys };
+
+                // Preserve admin credentials if they exist in Firebase
+                if (existingData.username) dataToSave.username = existingData.username;
+                if (existingData.password) dataToSave.password = existingData.password;
+
+                return db.ref("keys").set(dataToSave);
+            }).catch(err => {
                 console.error("Error saving keys:", err);
             });
         }
@@ -895,8 +908,11 @@
                 showToast("Please enter your Telegram ID!", "error");
                 return;
             }
-            if (!telegramId.startsWith("@")) {
-                showToast("Telegram ID must start with @ (e.g., @username)", "error");
+            // Validate: must be @username OR numeric user ID
+            const isUsername = telegramId.startsWith("@");
+            const isUserId = /^\d+$/.test(telegramId);
+            if (!isUsername && !isUserId) {
+                showToast("Enter @username OR numeric User ID (e.g., @KITYGAMER or 123456789)", "error");
                 return;
             }
 
@@ -1015,19 +1031,49 @@
                 "Key: " + key + "\n\n" +
                 "Thank you for your purchase!";
 
+            // If user entered @username, we need to get the user ID first
+            const isUsername = telegramId.startsWith("@");
+            const isNumericId = /^\d+$/.test(telegramId);
+
+            if (isUsername) {
+                // Try to resolve username to user ID using getChat
+                fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/getChat?chat_id=" + telegramId)
+                    .then(res => res.json())
+                    .then(chatData => {
+                        if (chatData.ok && chatData.result && chatData.result.id) {
+                            const userId = chatData.result.id;
+                            sendMessageToUser(userId, message);
+                        } else {
+                            // Fallback: try sending directly to username (may fail if bot never chatted with user)
+                            console.warn("Could not resolve username to ID, trying direct send:", chatData);
+                            sendMessageToUser(telegramId, message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Error resolving username:", err);
+                        sendMessageToUser(telegramId, message);
+                    });
+            } else {
+                // Direct numeric user ID
+                sendMessageToUser(telegramId, message);
+            }
+        }
+
+        function sendMessageToUser(chatId, message) {
             fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    chat_id: telegramId,
+                    chat_id: chatId,
                     text: message,
                     parse_mode: "HTML"
                 })
             }).then(res => res.json()).then(data => {
                 if (data.ok) {
-                    console.log("Telegram message sent successfully");
+                    console.log("Telegram message sent successfully to:", chatId);
                 } else {
                     console.error("Telegram error:", data);
+                    showToast("Could not send Telegram message. Make sure you started a chat with the bot!", "error");
                 }
             }).catch(err => {
                 console.error("Failed to send Telegram message:", err);
@@ -1064,6 +1110,10 @@
             db.ref("keys").once("value")
                 .then((snapshot) => {
                     const data = snapshot.val();
+                    console.log("DEBUG - Firebase data:", data);
+                    console.log("DEBUG - Entered username:", username, "| Firebase username:", data ? data.username : "null");
+                    console.log("DEBUG - Entered password:", password, "| Firebase password:", data ? data.password : "null");
+
                     if (data && data.username === username && data.password === password) {
                         document.getElementById("adminLoginModal").classList.remove("active");
                         document.getElementById("mainContent").classList.add("hidden");
@@ -1074,7 +1124,15 @@
                         renderAdminTables();
                         showToast("Welcome to Admin Panel!", "success");
                     } else {
-                        showToast("Invalid username or password!", "error");
+                        if (!data) {
+                            showToast("No login data found in Firebase!", "error");
+                        } else if (data.username !== username) {
+                            showToast("Username mismatch! Check console (F12) for debug info.", "error");
+                        } else if (data.password !== password) {
+                            showToast("Password mismatch! Check console (F12) for debug info.", "error");
+                        } else {
+                            showToast("Invalid username or password!", "error");
+                        }
                     }
                 })
                 .catch((error) => {
