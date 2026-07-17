@@ -486,6 +486,9 @@
                 </button>
             </div>
             <div id="paymentSuccess" class="hidden" style="text-align: center;">
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 0.5rem;">
+                    <button class="close-btn" onclick="closeModal('buyModal'); resetBuyModal();" style="font-size: 1.5rem; cursor: pointer; background: none; border: none; color: var(--text-muted);">&times;</button>
+                </div>
                 <div class="success-check"><i class="fas fa-check"></i></div>
                 <h3>Payment Successful!</h3>
                 <p style="color: var(--text-muted); margin: 1rem 0;">
@@ -501,6 +504,9 @@
                 <div style="background: rgba(45,125,70,0.08); border: 1px solid rgba(45,125,70,0.3); border-radius: 12px; padding: 1rem; margin: 1rem 0; color: var(--success); font-size: 0.9rem;">
                     <i class="fas fa-shield-alt"></i> <b>Keep this key safe!</b> It will not be shown again.
                 </div>
+                <button class="btn-primary" onclick="closeModal('buyModal'); resetBuyModal();" style="margin-top: 0.5rem;">
+                    <i class="fas fa-check-circle"></i> Done
+                </button>
             </div>
         </div>
     </div>
@@ -919,7 +925,8 @@
                 description: currentProduct.name,
                 image: "https://cdn-icons-png.flaticon.com/512/2885/2885417.png",
                 handler: function (response) {
-                    handlePaymentSuccess(response, telegramId);
+                    const buyerEmail = document.getElementById("email").value.trim();
+                    handlePaymentSuccess(response, buyerEmail);
                 },
                 prefill: {
                     name: "",
