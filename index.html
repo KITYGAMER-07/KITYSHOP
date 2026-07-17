@@ -209,20 +209,22 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .modal {
             background: var(--white); border-radius: 20px; padding: 1.5rem;
-            max-width: 500px; width: 100%; border: 1px solid var(--border);
-            animation: slideUp 0.4s ease; max-height: 85vh; overflow-y: auto;
+            max-width: 420px; width: 92%; border: 1px solid var(--border);
+            animation: slideUp 0.4s ease;
             box-shadow: 0 20px 60px rgba(42, 26, 15, 0.2);
+            max-height: calc(100vh - 2rem);
+            overflow-y: auto;
         }
         @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
         .modal-header h2 { font-size: 1.5rem; color: var(--brown-darker); }
         .close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; transition: color 0.3s; }
         .close-btn:hover { color: var(--brown-dark); }
-        .form-group { margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-light); }
         .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 1rem; background: var(--cream); border: 2px solid var(--border);
-            border-radius: 12px; color: var(--text); font-size: 1rem; transition: all 0.3s;
+            width: 100%; padding: 0.75rem; background: var(--cream); border: 2px solid var(--border);
+            border-radius: 10px; color: var(--text); font-size: 0.95rem; transition: all 0.3s;
             font-family: 'Inter', sans-serif;
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--brown-light); }
@@ -267,7 +269,7 @@
             .hero-cta .btn-primary, .hero-cta .btn-secondary { width: 100%; justify-content: center; }
             .products-grid { grid-template-columns: 1fr; }
             .admin-table { overflow-x: auto; }
-            .modal { padding: 1.2rem; }
+            .modal { padding: 1.5rem; }
             .features-grid { grid-template-columns: 1fr; gap: 1.5rem; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .admin-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
@@ -277,7 +279,7 @@
         }
         .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(139, 105, 20, 0.3); border-radius: 50%; border-top-color: var(--brown); animation: spin 1s ease-in-out infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .success-check { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--success), #1e5c32); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 1.5rem; animation: scaleIn 0.5s ease; color: white; }
+        .success-check { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--success), #1e5c32); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem; animation: scaleIn 0.5s ease; color: white; }
         @keyframes scaleIn { from { transform: scale(0); } to { transform: scale(1); } }
         .menu-toggle { display: none; background: none; border: none; font-size: 1.5rem; color: var(--brown-dark); cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: all 0.3s; }
         .menu-toggle:hover { background: rgba(196, 168, 130, 0.2); }
@@ -464,45 +466,48 @@
     </div>
 
     <div class="modal-overlay" id="buyModal">
-        <div class="modal" style="max-width: 360px; padding: 1.2rem;">
-            <div class="modal-header" style="margin-bottom: 0.8rem;">
-                <h2 style="font-size: 1.05rem;"><i class="fas fa-shopping-cart"></i> Checkout</h2>
-                <button class="close-btn" onclick="closeModal('buyModal'); resetBuyModal();">&times;</button>
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-shopping-cart"></i> Complete Purchase</h2>
             </div>
             <div id="buyModalContent">
-                <div style="background: linear-gradient(135deg, rgba(196,168,130,0.12), rgba(139,105,20,0.06)); border-radius: 12px; padding: 0.8rem 1rem; margin-bottom: 0.8rem; border: 1px solid var(--border);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
-                        <span style="color: var(--text-muted); font-size: 0.8rem;"><i class="fas fa-box" style="margin-right: 0.3rem;"></i>Plan</span>
-                        <span id="selectedPlan" style="font-weight: 700; color: var(--brown-darker); font-size: 0.85rem;">-</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: var(--text-muted); font-size: 0.8rem;"><i class="fas fa-tag" style="margin-right: 0.3rem;"></i>Price</span>
-                        <span id="selectedPrice" style="font-weight: 800; color: var(--brown); font-size: 1rem;">-</span>
-                    </div>
+                <div class="form-group">
+                    <label><i class="fas fa-box"></i> Selected Plan</label>
+                    <input type="text" id="selectedPlan" readonly style="background: rgba(196, 168, 130, 0.1); border-color: var(--brown-light);">
                 </div>
-                <div class="form-group" style="margin-bottom: 0.7rem;">
-                    <label style="font-size: 0.8rem; margin-bottom: 0.3rem;"><i class="fas fa-envelope" style="margin-right: 0.3rem;"></i>Email <span style="color: var(--text-muted); font-weight: 400;">(optional)</span></label>
-                    <input type="email" id="email" placeholder="your@email.com" style="padding: 0.6rem 0.8rem; font-size: 0.85rem;">
+                <div class="form-group">
+                    <label><i class="fas fa-tag"></i> Price</label>
+                    <input type="text" id="selectedPrice" readonly>
                 </div>
-                <button class="btn-primary" id="payBtn" onclick="processPayment()" style="width: 100%; padding: 0.7rem; font-size: 0.9rem;">
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email (optional)</label>
+                    <input type="email" id="email" placeholder="your@email.com">
+                    <small style="color: var(--text-muted);">Enter your email for order confirmation.</small>
+                </div>
+                <button class="btn-primary" id="payBtn" onclick="processPayment()">
                     <i class="fas fa-credit-card"></i> Pay with Razorpay
                 </button>
             </div>
             <div id="paymentSuccess" class="hidden" style="text-align: center;">
-                <div class="success-check" style="width: 44px; height: 44px; font-size: 1.4rem; margin-bottom: 0.6rem;"><i class="fas fa-check"></i></div>
-                <h3 style="font-size: 1rem; margin-bottom: 0.2rem;">Payment Successful!</h3>
-                <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.6rem;">Your access key is ready below.</p>
-                <div style="background: linear-gradient(135deg, var(--cream), #fff); padding: 0.8rem; border-radius: 12px; margin-bottom: 0.6rem; border: 2px dashed var(--brown);" id="keyBox">
-                    <div style="font-size: 0.7rem; color: var(--brown); margin-bottom: 0.3rem; font-weight: 600; letter-spacing: 1px;"><i class="fas fa-key"></i> YOUR ACCESS KEY</div>
-                    <div style="font-family: 'Courier New', monospace; font-size: 0.95rem; font-weight: 700; color: var(--brown-darker); letter-spacing: 1.5px; word-break: break-all; padding: 0.5rem; background: white; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 0.5rem;" id="sentKeyDisplay">KEY-XXXX-XXXX-XXXX</div>
-                    <button onclick="copyKeyToClipboard()" style="background: linear-gradient(135deg, var(--brown), var(--brown-dark)); color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: all 0.3s;">
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 0.5rem;">
+                    <button class="close-btn" onclick="closeModal('buyModal'); resetBuyModal();" style="font-size: 1.5rem; cursor: pointer; background: none; border: none; color: var(--text-muted);">&times;</button>
+                </div>
+                <div class="success-check"><i class="fas fa-check"></i></div>
+                <h3>Payment Successful!</h3>
+                <p style="color: var(--text-muted); margin: 1rem 0;">
+                    Your access key is ready! Copy it below and keep it safe.
+                </p>
+                <div style="background: linear-gradient(135deg, var(--cream), #fff); padding: 1.2rem; border-radius: 14px; margin: 1rem 0; border: 2px dashed var(--brown); position: relative;" id="keyBox">
+                    <div style="font-size: 0.9rem; color: var(--brown); margin-bottom: 0.8rem; font-weight: 600;"><i class="fas fa-key"></i> YOUR ACCESS KEY</div>
+                    <div style="font-family: 'Courier New', monospace; font-size: 1.3rem; font-weight: 800; color: var(--brown-darker); letter-spacing: 2px; word-break: break-all; padding: 0.8rem; background: white; border-radius: 10px; border: 1px solid var(--border);" id="sentKeyDisplay">KEY-XXXX-XXXX-XXXX</div>
+                    <button onclick="copyKeyToClipboard()" style="margin-top: 1.2rem; background: linear-gradient(135deg, var(--brown), var(--brown-dark)); color: white; border: none; padding: 0.8rem 2rem; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 1rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(139,105,20,0.3);">
                         <i class="fas fa-copy"></i> Copy Key
                     </button>
                 </div>
-                <div style="background: rgba(45,125,70,0.08); border: 1px solid rgba(45,125,70,0.25); border-radius: 8px; padding: 0.5rem; margin-bottom: 0.5rem; color: var(--success); font-size: 0.75rem;">
-                    <i class="fas fa-shield-alt"></i> <b>Keep safe!</b> Key won't show again.
+                <div style="background: rgba(45,125,70,0.08); border: 1px solid rgba(45,125,70,0.3); border-radius: 12px; padding: 1rem; margin: 1rem 0; color: var(--success); font-size: 0.9rem;">
+                    <i class="fas fa-shield-alt"></i> <b>Keep this key safe!</b> It will not be shown again.
                 </div>
-                <button class="btn-primary" onclick="closeModal('buyModal'); resetBuyModal();" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">
+                <button class="btn-primary" onclick="closeModal('buyModal'); resetBuyModal();" style="margin-top: 0.5rem;">
                     <i class="fas fa-check-circle"></i> Done
                 </button>
             </div>
