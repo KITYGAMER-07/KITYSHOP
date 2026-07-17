@@ -291,6 +291,7 @@
         .sync-indicator.syncing .dot { background: var(--warning); animation: spin 1s linear infinite; border-radius: 0; width: 10px; height: 10px; border: 2px solid var(--warning); border-top-color: transparent; }
     </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -319,14 +320,14 @@
         <section class="hero" id="hero">
             <div class="hero-badge">
                 <i class="fas fa-bolt"></i>
-                Instant Delivery via Telegram
+                Instant Key Delivery
             </div>
             <h1>
                 Premium Access<br>
                 <span>Keys & Licenses</span>
             </h1>
             <p>
-                Secure, instant, and reliable access keys delivered directly to your Telegram.
+                Secure, instant, and reliable access keys delivered directly on screen after payment.
                 Choose your duration and get started in seconds.
             </p>
             <div class="hero-cta">
@@ -386,17 +387,17 @@
         </section>
 
         <section class="telegram-section" id="telegram">
-            <a href="https://t.me/KUTYSTORY" target="_blank" style="text-decoration: none; display: block;">
-                <div class="telegram-box">
-                    <i class="fab fa-telegram" style="color: var(--brown);"></i>
-                    <h3>Telegram Auto-Delivery</h3>
-                    <p style="color: var(--text-muted); margin-top: 0.5rem;">
-                        After successful payment, your key will be automatically sent to your Telegram ID.
-                        Make sure to enter your correct Telegram ID during checkout.<br><br>
-                        <span style="color: var(--brown); font-weight: 600;">Click here to contact Admin @KUTYSTORY</span>
-                    </p>
-                </div>
-            </a>
+            <div class="telegram-box">
+                <i class="fas fa-headset" style="color: var(--brown); font-size: 3rem; margin-bottom: 1rem;"></i>
+                <h3>Need Help?</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">
+                    After payment, your key will be displayed on screen.<br>
+                    Make sure to copy it immediately — it won't be shown again!<br><br>
+                    <a href="https://t.me/KUTYSTORY" target="_blank" style="color: var(--brown); font-weight: 600; text-decoration: none;">
+                        <i class="fab fa-telegram"></i> Contact Admin @KUTYSTORY
+                    </a>
+                </p>
+            </div>
         </section>
 
         <footer>
@@ -453,7 +454,7 @@
         <div class="admin-table">
             <table>
                 <thead>
-                    <tr><th>Order ID</th><th>Product</th><th>Telegram ID</th><th>Amount</th><th>Status</th><th>Time</th></tr>
+                    <tr><th>Order ID</th><th>Product</th><th>Email</th><th>Amount</th><th>Status</th><th>Time</th></tr>
                 </thead>
                 <tbody id="ordersTableBody"></tbody>
             </table>
@@ -464,7 +465,6 @@
         <div class="modal">
             <div class="modal-header">
                 <h2><i class="fas fa-shopping-cart"></i> Complete Purchase</h2>
-                <button class="close-btn" onclick="closeModal('buyModal')">&times;</button>
             </div>
             <div id="buyModalContent">
                 <div class="form-group">
@@ -476,9 +476,9 @@
                     <input type="text" id="selectedPrice" readonly>
                 </div>
                 <div class="form-group">
-                    <label><i class="fab fa-telegram"></i> Telegram ID or User ID</label>
-                    <input type="text" id="telegramId" placeholder="@username or 123456789" required>
-                    <small style="color: var(--text-muted);">Enter your @username OR numeric User ID. Your key will be sent here automatically.</small>
+                    <label><i class="fas fa-envelope"></i> Email (optional)</label>
+                    <input type="email" id="email" placeholder="your@email.com">
+                    <small style="color: var(--text-muted);">Enter your email for order confirmation (optional).</small>
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-envelope"></i> Email (optional)</label>
@@ -492,12 +492,18 @@
                 <div class="success-check"><i class="fas fa-check"></i></div>
                 <h3>Payment Successful!</h3>
                 <p style="color: var(--text-muted); margin: 1rem 0;">
-                    Your key has been sent to your Telegram ID.<br>Check your messages!
+                    Your access key is ready! Copy it below and keep it safe.
                 </p>
-                <div style="background: var(--cream); padding: 1rem; border-radius: 12px; margin: 1rem 0; font-family: monospace; border: 1px solid var(--border);" id="sentKeyDisplay">KEY-XXXX-XXXX-XXXX</div>
-                <button class="btn-primary" onclick="closeModal('buyModal'); resetBuyModal();">
-                    <i class="fas fa-check"></i> Done
-                </button>
+                <div style="background: linear-gradient(135deg, var(--cream), #fff); padding: 2rem; border-radius: 16px; margin: 1.5rem 0; border: 2px dashed var(--brown); position: relative;" id="keyBox">
+                    <div style="font-size: 0.9rem; color: var(--brown); margin-bottom: 0.8rem; font-weight: 600;"><i class="fas fa-key"></i> YOUR ACCESS KEY</div>
+                    <div style="font-family: 'Courier New', monospace; font-size: 1.5rem; font-weight: 800; color: var(--brown-darker); letter-spacing: 3px; word-break: break-all; padding: 1rem; background: white; border-radius: 12px; border: 1px solid var(--border);" id="sentKeyDisplay">KEY-XXXX-XXXX-XXXX</div>
+                    <button onclick="copyKeyToClipboard()" style="margin-top: 1.2rem; background: linear-gradient(135deg, var(--brown), var(--brown-dark)); color: white; border: none; padding: 0.8rem 2rem; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 1rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(139,105,20,0.3);">
+                        <i class="fas fa-copy"></i> Copy Key
+                    </button>
+                </div>
+                <div style="background: rgba(45,125,70,0.08); border: 1px solid rgba(45,125,70,0.3); border-radius: 12px; padding: 1rem; margin: 1rem 0; color: var(--success); font-size: 0.9rem;">
+                    <i class="fas fa-shield-alt"></i> <b>Keep this key safe!</b> It will not be shown again.
+                </div>
             </div>
         </div>
     </div>
@@ -604,7 +610,7 @@
         // APP CONFIGURATION
         // ========================
         const RAZORPAY_KEY_ID = "rzp_live_TD3L7tVFGUPTiA";
-        const TELEGRAM_BOT_TOKEN = "8740697101:AAG1b2QXxbV_Zm20tAH_uL2NbrBGtl0HVlI";
+        // Telegram Bot removed - keys displayed on screen after payment
 
         // Default products (used as fallback if Firebase is not configured)
         const defaultProducts = [
@@ -896,25 +902,13 @@
         }
 
         function resetBuyModal() {
-            document.getElementById("telegramId").value = "";
             document.getElementById("email").value = "";
             document.getElementById("buyModalContent").classList.remove("hidden");
             document.getElementById("paymentSuccess").classList.add("hidden");
         }
 
         function processPayment() {
-            const telegramId = document.getElementById("telegramId").value.trim();
-            if (!telegramId) {
-                showToast("Please enter your Telegram ID!", "error");
-                return;
-            }
-            // Validate: must be @username OR numeric user ID
-            const isUsername = telegramId.startsWith("@");
-            const isUserId = /^\d+$/.test(telegramId);
-            if (!isUsername && !isUserId) {
-                showToast("Enter @username OR numeric User ID (e.g., @KUTYSTORY or 123456789)", "error");
-                return;
-            }
+            const email = document.getElementById("email").value.trim();
 
             const payBtn = document.getElementById("payBtn");
             payBtn.innerHTML = '<div class="loading"></div> Loading...';
@@ -936,8 +930,7 @@
                     contact: ""
                 },
                 notes: {
-                    product: currentProduct.name,
-                    telegram_id: telegramId
+                    product: currentProduct.name
                 },
                 theme: {
                     color: "#8b6914"
@@ -972,7 +965,23 @@
             }
         }
 
-        function handlePaymentSuccess(response, telegramId) {
+        function copyKeyToClipboard() {
+            const keyText = document.getElementById("sentKeyDisplay").textContent;
+            navigator.clipboard.writeText(keyText).then(() => {
+                showToast("Key copied to clipboard!", "success");
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement("textarea");
+                textArea.value = keyText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textArea);
+                showToast("Key copied to clipboard!", "success");
+            });
+        }
+
+        function handlePaymentSuccess(response, email) {
             const productIndex = products.findIndex(p => p.id === currentProduct.id);
             if (productIndex > -1 && products[productIndex].stock > 0) {
                 products[productIndex].stock--;
@@ -988,7 +997,7 @@
                     id: "ORD-" + Date.now(),
                     product: currentProduct.name,
                     productId: currentProduct.id,
-                    telegramId: telegramId,
+                    email: email || "",
                     amount: currentProduct.price,
                     key: key,
                     paymentId: response.razorpay_payment_id,
@@ -997,11 +1006,10 @@
                 };
                 orders.unshift(order);
 
+                // Show success modal with key
                 document.getElementById("buyModalContent").classList.add("hidden");
                 document.getElementById("paymentSuccess").classList.remove("hidden");
                 document.getElementById("sentKeyDisplay").textContent = key;
-
-                sendToTelegram(telegramId, key, currentProduct);
 
                 saveProductsToFirebase();
                 saveKeysToFirebase();
@@ -1011,74 +1019,13 @@
                 updateAdminStats();
                 renderAdminTables();
 
-                showToast("Payment successful! Key sent to Telegram.", "success");
+                showToast("Payment successful! Your key is ready.", "success");
             } else {
                 showToast("Sorry, this product just went out of stock!", "error");
             }
         }
 
-        function sendToTelegram(telegramId, key, product) {
-            if (TELEGRAM_BOT_TOKEN === "YOUR_BOT_TOKEN_HERE") {
-                console.log("Telegram Bot Token not configured. Key would be sent to:", telegramId);
-                console.log("Key:", key);
-                return;
-            }
-
-            const message = "KITY SHOP Delivery\n\n" +
-                "Payment Successful!\n" +
-                "Product: " + product.name + "\n" +
-                "Duration: " + product.duration + "\n" +
-                "Key: " + key + "\n\n" +
-                "Thank you for your purchase!";
-
-            // If user entered @username, we need to get the user ID first
-            const isUsername = telegramId.startsWith("@");
-            const isNumericId = /^\d+$/.test(telegramId);
-
-            if (isUsername) {
-                // Try to resolve username to user ID using getChat
-                fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/getChat?chat_id=" + telegramId)
-                    .then(res => res.json())
-                    .then(chatData => {
-                        if (chatData.ok && chatData.result && chatData.result.id) {
-                            const userId = chatData.result.id;
-                            sendMessageToUser(userId, message);
-                        } else {
-                            // Fallback: try sending directly to username (may fail if bot never chatted with user)
-                            console.warn("Could not resolve username to ID, trying direct send:", chatData);
-                            sendMessageToUser(telegramId, message);
-                        }
-                    })
-                    .catch(err => {
-                        console.error("Error resolving username:", err);
-                        sendMessageToUser(telegramId, message);
-                    });
-            } else {
-                // Direct numeric user ID
-                sendMessageToUser(telegramId, message);
-            }
-        }
-
-        function sendMessageToUser(chatId, message) {
-            fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: message,
-                    parse_mode: "HTML"
-                })
-            }).then(res => res.json()).then(data => {
-                if (data.ok) {
-                    console.log("Telegram message sent successfully to:", chatId);
-                } else {
-                    console.error("Telegram error:", data);
-                    showToast("Could not send Telegram message. Make sure you started a chat with the bot!", "error");
-                }
-            }).catch(err => {
-                console.error("Failed to send Telegram message:", err);
-            });
-        }
+        // Telegram delivery removed - keys shown directly on screen after payment
 
         function showAdminLogin() {
             document.getElementById("adminLoginModal").classList.add("active");
@@ -1196,7 +1143,7 @@
                 <tr>
                     <td>${o.id}</td>
                     <td>${o.product}</td>
-                    <td>${o.telegramId}</td>
+                    <td>${o.email || "-"}</td>
                     <td>Rs.${o.amount}</td>
                     <td><span style="color: var(--success);"><i class="fas fa-check"></i> ${o.status}</span></td>
                     <td>${o.time}</td>
@@ -1302,13 +1249,19 @@
 
         document.querySelectorAll(".modal-overlay").forEach(overlay => {
             overlay.addEventListener("click", (e) => {
-                if (e.target === overlay) overlay.classList.remove("active");
+                // Don't close buy modal on outside click - user must see the key
+                if (e.target === overlay && overlay.id !== "buyModal") {
+                    overlay.classList.remove("active");
+                }
             });
         });
 
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape") {
-                document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("active"));
+                document.querySelectorAll(".modal-overlay").forEach(m => {
+                    // Don't close buy modal with Escape - user must see the key
+                    if (m.id !== "buyModal") m.classList.remove("active");
+                });
             }
         });
 
