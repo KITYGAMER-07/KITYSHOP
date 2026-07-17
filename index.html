@@ -1,1394 +1,1317 @@
 <!DOCTYPE html>
-<html lang="ta">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KITY SHOP - Premium Access Keys</title>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>KUTY STORY - Digital Book Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --cream: #faf6f1; --white: #ffffff; --brown-light: #c4a882; --brown: #8b6914;
-            --brown-dark: #5c3d1e; --brown-darker: #3d2817; --brown-deep: #2a1a0f;
-            --text: #2c1810; --text-light: #5c3d1e; --text-muted: #8b7355; --border: #e8ddd0;
-            --card-bg: #ffffff; --card-shadow: rgba(139, 105, 20, 0.08);
-            --success: #2d7d46; --danger: #b91c1c; --warning: #b45309;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        html { scroll-behavior: smooth; }
+
         body {
-            font-family: 'Inter', sans-serif; background: var(--cream); color: var(--text);
-            overflow-x: hidden; min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fff8f0 0%, #ffe8d6 100%);
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
         }
-        .bg-animation {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; background: var(--cream);
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #f0d5b8;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
         }
-        .bg-animation::before {
-            content: ''; position: absolute; width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(196, 168, 130, 0.2) 0%, transparent 70%);
-            top: -200px; right: -200px; animation: float 8s ease-in-out infinite;
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-        .bg-animation::after {
-            content: ''; position: absolute; width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(139, 105, 20, 0.1) 0%, transparent 70%);
-            bottom: -150px; left: -150px; animation: float 10s ease-in-out infinite reverse;
-        }
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(30px, -30px) scale(1.1); }
-        }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--cream); }
-        ::-webkit-scrollbar-thumb { background: var(--brown); border-radius: 4px; }
-        nav {
-            position: fixed; top: 0; width: 100%; padding: 1rem 2rem;
-            display: flex; justify-content: space-between; align-items: center;
-            z-index: 1000; background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
-        }
+
         .logo {
-            font-size: 1.5rem; font-weight: 800; color: var(--brown-darker);
-            display: flex; align-items: center; gap: 0.5rem;
-            cursor: pointer; user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: 800;
+            color: #8B4513;
+            text-decoration: none;
         }
-        .nav-links { display: flex; gap: 2rem; align-items: center; }
-        .nav-link {
-            color: var(--text-muted); text-decoration: none; font-weight: 500;
-            transition: all 0.3s; cursor: pointer; position: relative;
-            padding: 0.5rem 0; background: none; border: none;
-            font-size: 1rem; font-family: 'Inter', sans-serif;
+
+        .logo img {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 2px 8px rgba(139, 69, 19, 0.2);
         }
-        .nav-link::after {
-            content: ''; position: absolute; bottom: 0; left: 0;
-            width: 0; height: 2px;
-            background: linear-gradient(90deg, var(--brown), var(--brown-dark));
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #8B4513;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #8B4513;
             transition: width 0.3s;
         }
-        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
-        .nav-link:hover, .nav-link.active { color: var(--brown-dark); }
-        .nav-center-title {
-            position: absolute; left: 50%; transform: translateX(-50%);
-            font-size: 1.5rem; font-weight: 800; color: var(--brown-darker);
-            user-select: none; white-space: nowrap;
+
+        nav a:hover::after {
+            width: 100%;
         }
-        @media (max-width: 768px) { .nav-center-title { font-size: 1.2rem; } }
-        .admin-btn {
-            background: linear-gradient(135deg, var(--brown), var(--brown-dark));
-            color: white; padding: 0.5rem 1.5rem; border-radius: 50px;
-            border: none; cursor: pointer; font-weight: 600;
-            transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 1rem;
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #8B4513;
         }
-        .admin-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(139, 105, 20, 0.3);
-        }
+
+        /* Hero Section */
         .hero {
-            min-height: 100vh; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-            padding: 2rem; position: relative;
+            padding: 80px 20px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
-        .hero-badge {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            background: rgba(196, 168, 130, 0.15); border: 1px solid rgba(196, 168, 130, 0.4);
-            padding: 0.5rem 1.5rem; border-radius: 50px; font-size: 0.9rem;
-            color: var(--brown); margin-bottom: 2rem; animation: fadeInUp 0.8s ease;
+
+        .hero-bg-icon {
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            opacity: 0.04;
+            transform: rotate(-15deg);
+            pointer-events: none;
         }
+
+        .hero-bg-icon svg {
+            width: 300px;
+            height: 300px;
+        }
+
+        .hero-logo {
+            margin-bottom: 25px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .hero-logo img {
+            width: 220px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(139, 69, 19, 0.2);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
         .hero h1 {
-            font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 800;
-            line-height: 1.1; margin-bottom: 1.5rem;
-            animation: fadeInUp 0.8s ease 0.2s both; color: var(--brown-darker);
+            font-size: 56px;
+            font-weight: 800;
+            color: #5D2E0C;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
         }
-        .hero h1 span {
-            background: linear-gradient(135deg, var(--brown), var(--brown-dark), var(--brown-light));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+
+        .hero h2 {
+            font-size: 24px;
+            color: #8B4513;
+            font-weight: 400;
+            margin-bottom: 8px;
         }
+
         .hero p {
-            font-size: 1.2rem; color: var(--text-muted); max-width: 600px;
-            margin-bottom: 2rem; animation: fadeInUp 0.8s ease 0.4s both;
+            font-size: 18px;
+            color: #888;
+            max-width: 500px;
+            margin: 0 auto 40px;
         }
-        .hero-cta { display: flex; gap: 1rem; animation: fadeInUp 0.8s ease 0.6s both; }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
         .btn-primary {
-            background: linear-gradient(135deg, var(--brown), var(--brown-dark));
-            color: white; padding: 1rem 2.5rem; border-radius: 50px; border: none;
-            font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s;
-            text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
-            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #D2691E, #8B4513);
+            color: white;
+            box-shadow: 0 10px 30px rgba(139, 69, 19, 0.3);
         }
+
         .btn-primary:hover {
-            transform: translateY(-3px); box-shadow: 0 20px 40px rgba(139, 105, 20, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(139, 69, 19, 0.4);
         }
+
         .btn-secondary {
-            background: transparent; color: var(--brown-dark); padding: 1rem 2.5rem;
-            border-radius: 50px; border: 2px solid var(--border); font-size: 1rem;
-            font-weight: 600; cursor: pointer; transition: all 0.3s;
-            text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
-            font-family: 'Inter', sans-serif;
+            background: white;
+            color: #666;
+            border: 2px solid #e0d5c8;
         }
-        .btn-secondary:hover { border-color: var(--brown); background: rgba(196, 168, 130, 0.1); }
-        .scroll-indicator {
-            position: absolute; bottom: 2rem;
-            animation: bounce 2s infinite; cursor: pointer;
+
+        .btn-secondary:hover {
+            border-color: #8B4513;
+            color: #8B4513;
+            transform: translateY(-3px);
         }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .products-section { padding: 6rem 2rem; max-width: 1400px; margin: 0 auto; }
-        .section-header { text-align: center; margin-bottom: 4rem; }
-        .section-header h2 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 1rem; color: var(--brown-darker); }
-        .section-header p { color: var(--text-muted); font-size: 1.1rem; }
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-        .product-card {
-            background: var(--card-bg); border-radius: 20px; padding: 2rem;
-            border: 1px solid var(--border); transition: all 0.4s;
-            position: relative; overflow: hidden; opacity: 0; transform: translateY(30px);
-            box-shadow: 0 4px 20px var(--card-shadow);
+
+        .btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
         }
-        .product-card.visible { opacity: 1; transform: translateY(0); }
-        .product-card::before {
-            content: ''; position: absolute; top: 0; left: 0;
-            width: 100%; height: 3px;
-            background: linear-gradient(90deg, var(--brown-light), var(--brown));
-            transform: scaleX(0); transition: transform 0.4s;
+
+        /* Section Styles */
+        .section {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .product-card:hover::before { transform: scaleX(1); }
-        .product-card:hover {
-            transform: translateY(-10px); border-color: var(--brown-light);
-            box-shadow: 0 20px 50px rgba(139, 105, 20, 0.15);
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            color: #5D2E0C;
+            margin-bottom: 50px;
+            position: relative;
         }
-        .product-icon {
-            width: 60px; height: 60px;
-            background: linear-gradient(135deg, var(--brown-light), var(--brown));
-            border-radius: 16px; display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; margin-bottom: 1.5rem; color: white;
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #D2691E, #8B4513);
+            border-radius: 2px;
+            margin: 15px auto 0;
         }
-        .product-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--brown-darker); }
-        .product-card .duration { color: var(--brown); font-weight: 600; font-size: 0.95rem; margin-bottom: 1rem; }
-        .product-card .price {
-            font-size: 2rem; font-weight: 800;
-            background: linear-gradient(135deg, var(--brown-dark), var(--brown));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem;
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
         }
-        .stock-status {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            padding: 0.4rem 1rem; border-radius: 50px;
-            font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem;
+
+        .about-text {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.8;
         }
-        .stock-status.in-stock { background: rgba(45, 125, 70, 0.1); color: var(--success); border: 1px solid rgba(45, 125, 70, 0.3); }
-        .stock-status.out-stock { background: rgba(185, 28, 28, 0.1); color: var(--danger); border: 1px solid rgba(185, 28, 28, 0.3); }
-        .stock-status.low-stock { background: rgba(180, 83, 9, 0.1); color: var(--warning); border: 1px solid rgba(180, 83, 9, 0.3); }
-        .buy-btn { width: 100%; padding: 1rem; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 1rem; }
-        .buy-btn.available { background: linear-gradient(135deg, var(--brown), var(--brown-dark)); color: white; }
-        .buy-btn.available:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(139, 105, 20, 0.3); }
-        .buy-btn.unavailable { background: #f0ebe5; color: var(--text-muted); cursor: not-allowed; }
-        .features-section { padding: 6rem 2rem; background: linear-gradient(180deg, var(--white) 0%, var(--cream) 100%); }
-        .features-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; }
-        .feature-item { text-align: center; padding: 2rem; opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
-        .feature-item.visible { opacity: 1; transform: translateY(0); }
+
+        .about-text p {
+            margin-bottom: 15px;
+        }
+
+        .about-text strong {
+            color: #8B4513;
+        }
+
+        .about-card {
+            background: linear-gradient(135deg, #fff5eb, #ffe8d6);
+            border-radius: 24px;
+            padding: 50px;
+            text-align: center;
+            border: 1px solid #f0d5b8;
+        }
+
+        .about-card-icon {
+            margin-bottom: 20px;
+        }
+
+        .about-card-icon svg {
+            width: 70px;
+            height: 70px;
+        }
+
+        .about-card h3 {
+            font-size: 22px;
+            color: #5D2E0C;
+            margin-bottom: 10px;
+        }
+
+        .about-card p {
+            color: #777;
+            font-size: 15px;
+        }
+
+        /* Categories */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            border: 1px solid #f5efe8;
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            border-color: #D2691E;
+        }
+
+        .category-icon {
+            margin-bottom: 12px;
+        }
+
+        .category-icon svg {
+            width: 45px;
+            height: 45px;
+        }
+
+        .category-name {
+            font-weight: 600;
+            color: #444;
+            font-size: 14px;
+        }
+
+        /* How It Works */
+        .steps-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 25px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .step:nth-child(odd) {
+            background: linear-gradient(135deg, #fff8f0, #fff0e0);
+        }
+
+        .step:nth-child(even) {
+            background: linear-gradient(135deg, #fff0e0, #ffe8d6);
+        }
+
+        .step:hover {
+            transform: translateX(10px);
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #D2691E, #8B4513);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
+        }
+
+        .step-content h4 {
+            font-size: 18px;
+            color: #5D2E0C;
+            margin-bottom: 5px;
+        }
+
+        .step-content p {
+            color: #777;
+            font-size: 15px;
+        }
+
+        /* Why Choose Us */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 25px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            border: 1px solid #f5efe8;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
         .feature-icon {
-            width: 80px; height: 80px;
-            background: linear-gradient(135deg, rgba(196, 168, 130, 0.2), rgba(139, 105, 20, 0.1));
-            border-radius: 24px; display: flex; align-items: center; justify-content: center;
-            font-size: 2rem; margin: 0 auto 1.5rem; border: 1px solid var(--border); color: var(--brown);
+            margin-bottom: 15px;
         }
-        .feature-item h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--brown-darker); }
-        .feature-item p { color: var(--text-muted); font-size: 0.95rem; }
-        .telegram-section { padding: 4rem 2rem; text-align: center; background: linear-gradient(135deg, rgba(196, 168, 130, 0.05), rgba(139, 105, 20, 0.05)); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-        .telegram-box { max-width: 600px; margin: 0 auto; background: var(--white); padding: 2rem; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 4px 20px var(--card-shadow); }
-        .telegram-box i { font-size: 3rem; color: var(--brown); margin-bottom: 1rem; }
-        .telegram-box h3 { color: var(--brown-darker); }
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(42, 26, 15, 0.7); backdrop-filter: blur(10px);
-            display: none; justify-content: center; align-items: center;
-            z-index: 2000; padding: 1rem;
+
+        .feature-icon svg {
+            width: 50px;
+            height: 50px;
         }
-        .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .modal {
-            background: var(--white); border-radius: 24px; padding: 2.5rem;
-            max-width: 500px; width: 100%; border: 1px solid var(--border);
-            animation: slideUp 0.4s ease; max-height: 90vh; overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(42, 26, 15, 0.2);
+
+        .feature-card h4 {
+            font-size: 17px;
+            color: #5D2E0C;
+            margin-bottom: 8px;
         }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .modal-header h2 { font-size: 1.5rem; color: var(--brown-darker); }
-        .close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; transition: color 0.3s; }
-        .close-btn:hover { color: var(--brown-dark); }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-light); }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 1rem; background: var(--cream); border: 2px solid var(--border);
-            border-radius: 12px; color: var(--text); font-size: 1rem; transition: all 0.3s;
-            font-family: 'Inter', sans-serif;
+
+        .feature-card p {
+            color: #888;
+            font-size: 14px;
         }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--brown-light); }
-        .form-group input::placeholder { color: var(--text-muted); }
-        .modal .btn-primary { width: 100%; justify-content: center; }
-        .admin-panel { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; padding-top: 6rem; }
-        .admin-panel.active { display: block; }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .admin-header h2 { color: var(--brown-darker); }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
-        .stat-card { background: var(--white); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 4px 20px var(--card-shadow); }
-        .stat-card h4 { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem; }
-        .stat-card .value { font-size: 2rem; font-weight: 800; color: var(--brown); }
-        .admin-table { width: 100%; background: var(--white); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 4px 20px var(--card-shadow); }
-        .admin-table table { width: 100%; border-collapse: collapse; }
-        .admin-table th, .admin-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); }
-        .admin-table th { background: rgba(196, 168, 130, 0.1); font-weight: 600; color: var(--brown); }
-        .admin-table tr:hover { background: rgba(196, 168, 130, 0.05); }
-        .action-btn { padding: 0.4rem 1rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; font-size: 0.85rem; transition: all 0.3s; }
-        .action-btn.edit { background: rgba(196, 168, 130, 0.2); color: var(--brown); }
-        .action-btn.delete { background: rgba(185, 28, 28, 0.1); color: var(--danger); }
-        .action-btn:hover { transform: scale(1.05); }
-        .add-stock-btn { background: linear-gradient(135deg, var(--success), #1e5c32); color: white; padding: 0.8rem 1.5rem; border-radius: 12px; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 1rem; }
-        .add-stock-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(45, 125, 70, 0.3); }
-        .toast-container { position: fixed; top: 100px; right: 2rem; z-index: 3000; display: flex; flex-direction: column; gap: 1rem; }
-        .toast { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 10px 40px rgba(42, 26, 15, 0.15); animation: slideInRight 0.4s ease; min-width: 300px; }
-        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .toast.success { border-left: 4px solid var(--success); }
-        .toast.error { border-left: 4px solid var(--danger); }
-        .toast.info { border-left: 4px solid var(--brown); }
-        footer { padding: 3rem 2rem; text-align: center; border-top: 1px solid var(--border); color: var(--text-muted); background: var(--white); }
-        footer .logo { justify-content: center; margin-bottom: 1rem; }
-        @media (max-width: 768px) {
-            .nav-links { position: fixed; top: 70px; left: 0; right: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(20px); flex-direction: column; padding: 1.5rem; gap: 0.5rem; border-bottom: 1px solid var(--border); box-shadow: 0 10px 30px rgba(42, 26, 15, 0.1); transform: translateY(-150%); transition: transform 0.4s ease; z-index: 999; }
-            .nav-links.active { transform: translateY(0); }
-            .nav-links .nav-link { width: 100%; text-align: center; padding: 0.8rem; border-radius: 12px; }
-            .nav-links .nav-link:hover { background: rgba(196, 168, 130, 0.1); }
-            .nav-links .admin-btn { width: 100%; justify-content: center; margin-top: 0.5rem; }
-            .menu-toggle { display: flex !important; }
-            .hero h1 { font-size: 2.5rem; }
-            .hero-cta { flex-direction: column; width: 100%; }
-            .hero-cta .btn-primary, .hero-cta .btn-secondary { width: 100%; justify-content: center; }
-            .products-grid { grid-template-columns: 1fr; }
-            .admin-table { overflow-x: auto; }
-            .modal { padding: 1.5rem; }
-            .features-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .admin-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
-            .hero p { font-size: 1rem; }
-            .telegram-box { padding: 1.5rem; }
-            footer { padding: 2rem 1rem; }
+
+        /* FAQ */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
         }
-        .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(139, 105, 20, 0.3); border-radius: 50%; border-top-color: var(--brown); animation: spin 1s ease-in-out infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .success-check { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--success), #1e5c32); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 1.5rem; animation: scaleIn 0.5s ease; color: white; }
-        @keyframes scaleIn { from { transform: scale(0); } to { transform: scale(1); } }
-        .menu-toggle { display: none; background: none; border: none; font-size: 1.5rem; color: var(--brown-dark); cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: all 0.3s; }
-        .menu-toggle:hover { background: rgba(196, 168, 130, 0.2); }
-        .menu-toggle.active { color: var(--brown); }
-        .hidden { display: none !important; }
-        .main-content { display: block; }
-        .main-content.hidden { display: none; }
-        .sync-indicator { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--white); padding: 0.6rem 1rem; border-radius: 12px; border: 1px solid var(--border); font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
-        .sync-indicator .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-        .sync-indicator.syncing .dot { background: var(--warning); animation: spin 1s linear infinite; border-radius: 0; width: 10px; height: 10px; border: 2px solid var(--warning); border-top-color: transparent; }
+
+        .faq-item {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+            border: 1px solid #f5efe8;
+        }
+
+        .faq-question {
+            padding: 22px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #5D2E0C;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .faq-question:hover {
+            background: #fff8f0;
+        }
+
+        .faq-arrow {
+            font-size: 12px;
+            color: #D2691E;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-arrow {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s;
+            color: #666;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 25px 22px;
+            max-height: 200px;
+        }
+
+        /* Contact */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .contact-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            border: 1px solid #f5efe8;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .contact-icon {
+            margin-bottom: 15px;
+        }
+
+        .contact-icon svg {
+            width: 50px;
+            height: 50px;
+        }
+
+        .contact-card h4 {
+            font-size: 17px;
+            color: #5D2E0C;
+            margin-bottom: 8px;
+        }
+
+        .contact-card a {
+            color: #D2691E;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .contact-card a:hover {
+            text-decoration: underline;
+        }
+
+        .contact-card p {
+            color: #888;
+            font-size: 15px;
+        }
+
+        /* Policies */
+        .policies-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .policy-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 25px;
+            border: 1px solid #f0d5b8;
+            transition: all 0.3s;
+        }
+
+        .policy-card:hover {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transform: translateY(-5px);
+        }
+
+        .policy-card h4 {
+            font-size: 18px;
+            color: #5D2E0C;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .policy-card h4 svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .policy-card ul {
+            list-style: none;
+        }
+
+        .policy-card li {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+            padding-left: 5px;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #3d1f0a, #5D2E0C);
+            color: #e8c9a8;
+            padding: 60px 20px 30px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand {
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-brand img {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        .footer-desc {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #c9a87c;
+        }
+
+        .footer-col h4 {
+            color: white;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col a {
+            color: #c9a87c;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: white;
+        }
+
+        .footer-bot-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .footer-bot-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .footer-bot-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 25px;
+            text-align: center;
+            font-size: 13px;
+            color: #a08060;
+        }
+
+        .footer-bottom a {
+            color: #e8c9a8;
+            text-decoration: none;
+        }
+
+        .footer-bottom a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .hero h1 { font-size: 40px; }
+            .about-content { grid-template-columns: 1fr; }
+            .categories-grid { grid-template-columns: repeat(2, 1fr); }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .policies-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .hero-logo img { width: 180px; height: 180px; }
+        }
+
+        @media (max-width: 600px) {
+            nav ul { display: none; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 32px; }
+            .hero h2 { font-size: 18px; }
+            .categories-grid { grid-template-columns: 1fr 1fr; }
+            .features-grid { grid-template-columns: 1fr; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .step { flex-direction: column; text-align: center; }
+            .hero-logo img { width: 150px; height: 150px; }
+            .logo img { width: 36px; height: 36px; }
+            .logo { font-size: 18px; }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #f0d5b8;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu a {
+            display: block;
+            padding: 12px 0;
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid #f5efe8;
+        }
+
+        .mobile-menu a:last-child {
+            border-bottom: none;
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
     </style>
 <base target="_blank">
 </head>
 <body>
-    <div class="bg-animation"></div>
+    <!-- SVG Icons Definitions -->
+    <svg style="display:none;">
+        <defs>
+            <symbol id="icon-book" viewBox="0 0 64 64">
+                <rect x="8" y="4" width="48" height="56" rx="4" fill="none" stroke="#8B4513" stroke-width="3"/>
+                <line x1="24" y1="4" x2="24" y2="60" stroke="#8B4513" stroke-width="2"/>
+                <path d="M12 16h8M12 24h8M12 32h8M12 40h8" stroke="#D2691E" stroke-width="2" stroke-linecap="round"/>
+                <path d="M28 16h20M28 24h20M28 32h16" stroke="#8B4513" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+                <circle cx="44" cy="48" r="6" fill="#D2691E" opacity="0.8"/>
+            </symbol>
 
-    <nav id="navbar">
-        <div class="logo" onclick="smoothScrollTo('hero')">
-            <img src="logo.jpg" alt="KITY SHOP" style="height: 40px; width: auto; border-radius: 8px; object-fit: contain;">
-        </div>
-        <div class="nav-center-title">KITY SHOP</div>
-        <div class="nav-links" id="navLinks">
-            <button class="nav-link" data-section="hero" onclick="smoothScrollTo('hero'); closeMobileMenu();">Home</button>
-            <button class="nav-link" data-section="products" onclick="smoothScrollTo('products'); closeMobileMenu();">Products</button>
-            <button class="nav-link" data-section="features" onclick="smoothScrollTo('features'); closeMobileMenu();">Features</button>
-            <button class="admin-btn" onclick="showAdminLogin(); closeMobileMenu();">
-                <i class="fas fa-lock"></i> Admin
-            </button>
-        </div>
-        <button class="menu-toggle" id="menuToggle" onclick="toggleMobileMenu()">
-            <i class="fas fa-bars"></i>
-        </button>
-    </nav>
+            <symbol id="icon-telegram" viewBox="0 0 24 24">
+                <path d="M21.5 4.5L2.5 11.5L9.5 13.5L12.5 20.5L21.5 4.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M9.5 13.5L14.5 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </symbol>
 
-    <div class="toast-container" id="toastContainer"></div>
+            <symbol id="icon-message" viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M8 18l4 3l4-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
 
-    <div class="main-content" id="mainContent">
-        <section class="hero" id="hero">
-            <div class="hero-badge">
-                <i class="fas fa-bolt"></i>
-                Instant Delivery via Telegram
-            </div>
-            <h1>
-                Premium Access<br>
-                <span>Keys & Licenses</span>
-            </h1>
-            <p>
-                Secure, instant, and reliable access keys delivered directly to your Telegram.
-                Choose your duration and get started in seconds.
-            </p>
-            <div class="hero-cta">
-                <button class="btn-primary" onclick="smoothScrollTo('products')">
-                    <i class="fas fa-shopping-cart"></i>
-                    Buy Now
-                </button>
-                <button class="btn-secondary" onclick="smoothScrollTo('features')">
-                    Learn More
-                </button>
-            </div>
-            <div class="scroll-indicator" onclick="smoothScrollTo('products')">
-                <i class="fas fa-chevron-down" style="color: var(--text-muted); font-size: 1.5rem;"></i>
-            </div>
-        </section>
+            <symbol id="icon-target" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="24" fill="none" stroke="#8B4513" stroke-width="3"/>
+                <circle cx="32" cy="32" r="14" fill="none" stroke="#D2691E" stroke-width="3"/>
+                <circle cx="32" cy="32" r="5" fill="#D2691E"/>
+                <line x1="32" y1="4" x2="32" y2="12" stroke="#8B4513" stroke-width="2" stroke-linecap="round"/>
+                <line x1="32" y1="52" x2="32" y2="60" stroke="#8B4513" stroke-width="2" stroke-linecap="round"/>
+                <line x1="4" y1="32" x2="12" y2="32" stroke="#8B4513" stroke-width="2" stroke-linecap="round"/>
+                <line x1="52" y1="32" x2="60" y2="32" stroke="#8B4513" stroke-width="2" stroke-linecap="round"/>
+            </symbol>
 
-        <section class="products-section" id="products">
-            <div class="section-header">
-                <h2>Choose Your Plan</h2>
-                <p>Select the duration that fits your needs. All keys are instantly delivered.</p>
-            </div>
-            <div class="products-grid" id="productsGrid">
-                <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted);">
-                    <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
-                    <p>Loading products from Firebase...</p>
-                </div>
-            </div>
-        </section>
+            <symbol id="icon-adventure" viewBox="0 0 64 64">
+                <path d="M32 8L40 28L60 32L44 44L48 60L32 50L16 60L20 44L4 32L24 28Z" fill="none" stroke="#D2691E" stroke-width="2.5" stroke-linejoin="round"/>
+                <circle cx="32" cy="32" r="6" fill="#8B4513"/>
+            </symbol>
 
-        <section class="features-section" id="features">
-            <div class="section-header">
-                <h2>Why Choose Us?</h2>
-                <p>Trusted by thousands of users worldwide</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-item">
-                    <div class="feature-icon"><i class="fas fa-bolt"></i></div>
-                    <h3>Instant Delivery</h3>
-                    <p>Keys delivered to your Telegram within seconds of payment</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-                    <h3>Secure Payments</h3>
-                    <p>Powered by Razorpay with bank-grade encryption</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon"><i class="fas fa-headset"></i></div>
-                    <h3>24/7 Support</h3>
-                    <p>Our team is always ready to help you with any issues</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon"><i class="fas fa-sync"></i></div>
-                    <h3>Auto Stock Update</h3>
-                    <p>Real-time stock status synced across all devices</p>
-                </div>
-            </div>
-        </section>
+            <symbol id="icon-romance" viewBox="0 0 64 64">
+                <path d="M32 56C32 56 8 40 8 24C8 16 14 10 22 10C27 10 30 13 32 16C34 13 37 10 42 10C50 10 56 16 56 24C56 40 32 56 32 56Z" fill="none" stroke="#D2691E" stroke-width="2.5"/>
+            </symbol>
 
-        <section class="telegram-section" id="telegram">
-            <a href="https://t.me/KUTYSTORY" target="_blank" style="text-decoration: none; display: block;">
-                <div class="telegram-box">
-                    <i class="fab fa-telegram" style="color: var(--brown);"></i>
-                    <h3>Telegram Auto-Delivery</h3>
-                    <p style="color: var(--text-muted); margin-top: 0.5rem;">
-                        After successful payment, your key will be automatically sent to your Telegram ID.
-                        Make sure to enter your correct Telegram ID during checkout.<br><br>
-                        <span style="color: var(--brown); font-weight: 600;">Click here to contact Admin @KUTYSTORY</span>
-                    </p>
-                </div>
+            <symbol id="icon-mystery" viewBox="0 0 64 64">
+                <circle cx="32" cy="28" r="16" fill="none" stroke="#8B4513" stroke-width="2.5"/>
+                <path d="M32 20v8M32 36v2" stroke="#D2691E" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M20 48c0-6.6 5.4-12 12-12s12 5.4 12 12" fill="none" stroke="#8B4513" stroke-width="2.5"/>
+            </symbol>
+
+            <symbol id="icon-horror" viewBox="0 0 64 64">
+                <path d="M32 8c-13.3 0-24 8-24 18c0 8 5 14 12 16v8l8-6l8 6v-8c7-2 12-8 12-16C48 16 37.3 8 32 8z" fill="none" stroke="#8B4513" stroke-width="2.5"/>
+                <circle cx="24" cy="28" r="3" fill="#D2691E"/>
+                <circle cx="40" cy="28" r="3" fill="#D2691E"/>
+                <path d="M28 36c2 2 6 2 8 0" stroke="#D2691E" stroke-width="2" stroke-linecap="round" fill="none"/>
+            </symbol>
+
+            <symbol id="icon-fantasy" viewBox="0 0 64 64">
+                <path d="M32 4L36 24L56 28L36 32L32 52L28 32L8 28L28 24Z" fill="none" stroke="#D2691E" stroke-width="2" stroke-linejoin="round"/>
+                <circle cx="32" cy="28" r="4" fill="#8B4513"/>
+            </symbol>
+
+            <symbol id="icon-children" viewBox="0 0 64 64">
+                <circle cx="32" cy="20" r="10" fill="none" stroke="#8B4513" stroke-width="2.5"/>
+                <path d="M16 56c0-8.8 7.2-16 16-16s16 7.2 16 16" fill="none" stroke="#D2691E" stroke-width="2.5"/>
+                <circle cx="28" cy="18" r="2" fill="#D2691E"/>
+                <circle cx="36" cy="18" r="2" fill="#D2691E"/>
+                <path d="M28 24c2 2 6 2 8 0" stroke="#D2691E" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            </symbol>
+
+            <symbol id="icon-historical" viewBox="0 0 64 64">
+                <path d="M32 8L12 20v24l20 12l20-12V20L32 8z" fill="none" stroke="#8B4513" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M32 8v48M12 20l20 12l20-12" stroke="#8B4513" stroke-width="2" fill="none"/>
+                <circle cx="32" cy="32" r="6" fill="none" stroke="#D2691E" stroke-width="2"/>
+            </symbol>
+
+            <symbol id="icon-educational" viewBox="0 0 64 64">
+                <path d="M32 8L8 20v8c0 13.3 10.7 24 24 24s24-10.7 24-24v-8L32 8z" fill="none" stroke="#8B4513" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M32 8v44" stroke="#8B4513" stroke-width="2"/>
+                <path d="M32 24l-8 4l8 4l8-4z" fill="none" stroke="#D2691E" stroke-width="2"/>
+            </symbol>
+
+            <symbol id="icon-lock" viewBox="0 0 64 64">
+                <rect x="12" y="28" width="40" height="28" rx="4" fill="none" stroke="#8B4513" stroke-width="2.5"/>
+                <path d="M20 28V20a12 12 0 0124 0v8" fill="none" stroke="#D2691E" stroke-width="2.5"/>
+                <circle cx="32" cy="42" r="4" fill="#D2691E"/>
+                <line x1="32" y1="46" x2="32" y2="50" stroke="#D2691E" stroke-width="2" stroke-linecap="round"/>
+            </symbol>
+
+            <symbol id="icon-lightning" viewBox="0 0 64 64">
+                <path d="M36 4L16 32h16l-4 28l20-28H32l4-28z" fill="none" stroke="#D2691E" stroke-width="2.5" stroke-linejoin="round"/>
+            </symbol>
+
+            <symbol id="icon-phone" viewBox="0 0 64 64">
+                <rect x="18" y="4" width="28" height="56" rx="6" fill="none" stroke="#8B4513" stroke-width="2.5"/>
+                <line x1="26" y1="12" x2="38" y2="12" stroke="#D2691E" stroke-width="2" stroke-linecap="round"/>
+                <rect x="22" y="18" width="20" height="28" rx="2" fill="none" stroke="#D2691E" stroke-width="2"/>
+                <circle cx="32" cy="52" r="3" fill="#D2691E"/>
+            </symbol>
+
+            <symbol id="icon-cart" viewBox="0 0 64 64">
+                <path d="M8 12h8l4 32h32l4-24H20" fill="none" stroke="#8B4513" stroke-width="2.5" stroke-linejoin="round"/>
+                <circle cx="26" cy="52" r="4" fill="none" stroke="#D2691E" stroke-width="2"/>
+                <circle cx="50" cy="52" r="4" fill="none" stroke="#D2691E" stroke-width="2"/>
+            </symbol>
+
+            <symbol id="icon-headset" viewBox="0 0 64 64">
+                <path d="M32 8c-13.3 0-24 10.7-24 24v8h6v-8c0-9.9 8.1-18 18-18s18 8.1 18 18v8h6v-8C56 18.7 45.3 8 32 8z" fill="none" stroke="#8B4513" stroke-width="2.5"/>
+                <rect x="8" y="36" width="10" height="14" rx="3" fill="none" stroke="#D2691E" stroke-width="2.5"/>
+                <rect x="46" y="36" width="10" height="14" rx="3" fill="none" stroke="#D2691E" stroke-width="2.5"/>
+                <path d="M18 46c0 8 6 12 14 12s14-4 14-12" fill="none" stroke="#8B4513" stroke-width="2"/>
+            </symbol>
+
+            <symbol id="icon-money" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="24" fill="none" stroke="#8B4513" stroke-width="2.5"/>
+                <path d="M32 16v4M32 44v4M20 32h-4M48 32h-4" stroke="#D2691E" stroke-width="2" stroke-linecap="round"/>
+                <text x="32" y="38" text-anchor="middle" fill="#D2691E" font-size="20" font-weight="bold" font-family="Poppins,sans-serif">$</text>
+            </symbol>
+
+            <symbol id="icon-email" viewBox="0 0 64 64">
+                <rect x="8" y="12" width="48" height="40" rx="6" fill="none" stroke="#8B4513" stroke-width="2.5"/>
+                <path d="M8 16l24 20 24-20" fill="none" stroke="#D2691E" stroke-width="2.5" stroke-linejoin="round"/>
+            </symbol>
+
+            <symbol id="icon-bot" viewBox="0 0 64 64">
+                <rect x="16" y="16" width="32" height="28" rx="6" fill="none" stroke="#8B4513" stroke-width="2.5"/>
+                <circle cx="26" cy="28" r="3" fill="#D2691E"/>
+                <circle cx="38" cy="28" r="3" fill="#D2691E"/>
+                <rect x="28" y="36" width="8" height="3" rx="1.5" fill="#D2691E"/>
+                <line x1="32" y1="8" x2="32" y2="16" stroke="#8B4513" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="32" cy="6" r="3" fill="#D2691E"/>
+                <rect x="12" y="40" width="8" height="12" rx="2" fill="none" stroke="#8B4513" stroke-width="2"/>
+                <rect x="44" y="40" width="8" height="12" rx="2" fill="none" stroke="#8B4513" stroke-width="2"/>
+            </symbol>
+
+            <symbol id="icon-chat" viewBox="0 0 64 64">
+                <rect x="8" y="8" width="48" height="36" rx="8" fill="none" stroke="#8B4513" stroke-width="2.5"/>
+                <path d="M24 44l8 10 8-10" fill="none" stroke="#D2691E" stroke-width="2.5" stroke-linejoin="round"/>
+                <line x1="18" y1="22" x2="30" y2="22" stroke="#D2691E" stroke-width="2" stroke-linecap="round"/>
+                <line x1="18" y1="30" x2="42" y2="30" stroke="#D2691E" stroke-width="2" stroke-linecap="round"/>
+            </symbol>
+
+            <symbol id="icon-clock" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="24" fill="none" stroke="#8B4513" stroke-width="2.5"/>
+                <line x1="32" y1="32" x2="32" y2="16" stroke="#D2691E" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="32" y1="32" x2="42" y2="32" stroke="#D2691E" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="32" cy="32" r="2" fill="#8B4513"/>
+            </symbol>
+
+            <symbol id="icon-privacy" viewBox="0 0 64 64">
+                <path d="M32 4L8 16v12c0 14.4 10.2 27.8 24 32 13.8-4.2 24-17.6 24-32V16L32 4z" fill="none" stroke="#8B4513" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M22 32l8 8 12-14" fill="none" stroke="#D2691E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+
+            <symbol id="icon-document" viewBox="0 0 64 64">
+                <path d="M16 4h24l16 16v40H16V4z" fill="none" stroke="#8B4513" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M40 4v16h16" fill="none" stroke="#D2691E" stroke-width="2.5"/>
+                <line x1="22" y1="32" x2="42" y2="32" stroke="#D2691E" stroke-width="2" stroke-linecap="round"/>
+                <line x1="22" y1="40" x2="38" y2="40" stroke="#D2691E" stroke-width="2" stroke-linecap="round"/>
+                <line x1="22" y1="48" x2="34" y2="48" stroke="#D2691E" stroke-width="2" stroke-linecap="round"/>
+            </symbol>
+
+            <symbol id="icon-refund" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="24" fill="none" stroke="#8B4513" stroke-width="2.5"/>
+                <path d="M32 16v16l10 6" fill="none" stroke="#D2691E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M20 12l-4 4 4 4" fill="none" stroke="#8B4513" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+        </defs>
+    </svg>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">
+                <img src="logo.jpg" alt="KUTY STORY">
+                KUTY STORY
             </a>
-        </section>
-
-        <footer>
-            <div class="logo" onclick="smoothScrollTo('hero')">
-                <i class="fas fa-key"></i>
-                KITY SHOP
-            </div>
-            <p>2026 KITY SHOP. All rights reserved. | Secure Key Distribution Platform</p>
-        </footer>
-    </div>
-
-    <div class="admin-panel" id="adminPanel">
-        <div class="admin-header">
-            <h2><i class="fas fa-cog"></i> Admin Dashboard</h2>
-            <div style="display: flex; gap: 1rem;">
-                <button class="add-stock-btn" onclick="showAddStockModal()">
-                    <i class="fas fa-plus"></i> Add Stock
-                </button>
-                <button class="btn-secondary" onclick="logoutAdmin()">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-            </div>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h4>Total Keys</h4>
-                <div class="value" id="totalKeys">0</div>
-            </div>
-            <div class="stat-card">
-                <h4>Available</h4>
-                <div class="value" id="availableKeys">0</div>
-            </div>
-            <div class="stat-card">
-                <h4>Sold Today</h4>
-                <div class="value" id="soldToday">0</div>
-            </div>
-            <div class="stat-card">
-                <h4>Revenue</h4>
-                <div class="value" id="revenue">Rs.0</div>
-            </div>
-        </div>
-
-        <div class="admin-table">
-            <table>
-                <thead>
-                    <tr><th>Duration</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr>
-                </thead>
-                <tbody id="adminTableBody"></tbody>
-            </table>
-        </div>
-
-        <h3 style="margin: 2rem 0 1rem;"><i class="fas fa-history"></i> Recent Orders</h3>
-        <div class="admin-table">
-            <table>
-                <thead>
-                    <tr><th>Order ID</th><th>Product</th><th>Telegram ID</th><th>Amount</th><th>Status</th><th>Time</th></tr>
-                </thead>
-                <tbody id="ordersTableBody"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="buyModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2><i class="fas fa-shopping-cart"></i> Complete Purchase</h2>
-                <button class="close-btn" onclick="closeModal('buyModal')">&times;</button>
-            </div>
-            <div id="buyModalContent">
-                <div class="form-group">
-                    <label><i class="fas fa-box"></i> Selected Plan</label>
-                    <input type="text" id="selectedPlan" readonly style="background: rgba(196, 168, 130, 0.1); border-color: var(--brown-light);">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-tag"></i> Price</label>
-                    <input type="text" id="selectedPrice" readonly>
-                </div>
-                <div class="form-group">
-                    <label><i class="fab fa-telegram"></i> Telegram ID or User ID</label>
-                    <input type="text" id="telegramId" placeholder="@username or 123456789" required>
-                    <small style="color: var(--text-muted);">Enter your @username OR numeric User ID. Your key will be sent here automatically.</small>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-envelope"></i> Email (optional)</label>
-                    <input type="email" id="email" placeholder="your@email.com">
-                </div>
-                <button class="btn-primary" id="payBtn" onclick="processPayment()">
-                    <i class="fas fa-credit-card"></i> Pay with Razorpay
-                </button>
-            </div>
-            <div id="paymentSuccess" class="hidden" style="text-align: center;">
-                <div class="success-check"><i class="fas fa-check"></i></div>
-                <h3>Payment Successful!</h3>
-                <p style="color: var(--text-muted); margin: 1rem 0;">
-                    Your key has been sent to your Telegram ID.<br>Check your messages!
-                </p>
-                <div style="background: var(--cream); padding: 1rem; border-radius: 12px; margin: 1rem 0; font-family: monospace; border: 1px solid var(--border);" id="sentKeyDisplay">KEY-XXXX-XXXX-XXXX</div>
-                <button class="btn-primary" onclick="closeModal('buyModal'); resetBuyModal();">
-                    <i class="fas fa-check"></i> Done
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="adminLoginModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2><i class="fas fa-lock"></i> Admin Login</h2>
-                <button class="close-btn" onclick="closeModal('adminLoginModal')">&times;</button>
-            </div>
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" id="adminUsername" placeholder="admin">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="adminPassword" placeholder="password">
-            </div>
-            <button class="btn-primary" onclick="loginAdmin()">
-                <i class="fas fa-sign-in-alt"></i> Login
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#howitworks">How It Works</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
             </button>
         </div>
-    </div>
-
-    <div class="modal-overlay" id="addStockModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2><i class="fas fa-plus"></i> Add Stock</h2>
-                <button class="close-btn" onclick="closeModal('addStockModal')">&times;</button>
-            </div>
-            <div class="form-group">
-                <label>Duration</label>
-                <select id="stockDuration">
-                    <option value="5hours">5 Hours</option>
-                    <option value="1day">1 Day</option>
-                    <option value="3days">3 Days</option>
-                    <option value="7days">7 Days</option>
-                    <option value="14days">14 Days</option>
-                    <option value="30days">30 Days</option>
-                    <option value="60days">60 Days</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Price (Rs.)</label>
-                <input type="number" id="stockPrice" placeholder="199">
-            </div>
-            <div class="form-group">
-                <label>Quantity to Add</label>
-                <input type="number" id="stockQuantity" placeholder="10">
-            </div>
-            <div class="form-group">
-                <label>Keys (one per line, optional)</label>
-                <textarea id="stockKeys" rows="5" placeholder="KEY-ABC-123-XYZ"></textarea>
-            </div>
-            <button class="btn-primary" onclick="addStock()">
-                <i class="fas fa-plus"></i> Add Stock
-            </button>
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#home" onclick="toggleMenu()">Home</a>
+            <a href="#about" onclick="toggleMenu()">About Us</a>
+            <a href="#howitworks" onclick="toggleMenu()">How It Works</a>
+            <a href="#faq" onclick="toggleMenu()">FAQ</a>
+            <a href="#contact" onclick="toggleMenu()">Contact</a>
         </div>
-    </div>
+    </header>
 
-    <div class="sync-indicator" id="syncIndicator">
-        <div class="dot"></div>
-        <span id="syncText">Connected to Firebase</span>
-    </div>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg-icon">
+            <svg><use href="#icon-book"/></svg>
+        </div>
+        <div class="hero-logo">
+            <img src="logo.jpg" alt="KUTY STORY Logo">
+        </div>
+        <h1>KUTY STORY</h1>
+        <h2>Read Your Favourite Story Books Anytime, Anywhere.</h2>
+        <p>We provide digital story books through our official Telegram Bot. Secure, fast, and easy digital book purchases.</p>
+        <div class="hero-buttons">
+            <a href="https://t.me/KUTYSTORYBOT" target="_blank" class="btn btn-primary">
+                <svg><use href="#icon-telegram"/></svg> Open Telegram Bot
+            </a>
+            <a href="https://t.me/KUTYSTORY" target="_blank" class="btn btn-secondary">
+                <svg><use href="#icon-message"/></svg> Contact Support
+            </a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" id="about">
+        <h2 class="section-title">About Us</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <p><strong>KUTY STORY</strong> is an online digital book store.</p>
+                <p>We provide digital story books through our official Telegram Bot.</p>
+                <p>Our mission is to provide readers with an easy, secure and fast way to purchase digital books.</p>
+                <p>We focus on quality service, quick delivery and customer support.</p>
+            </div>
+            <div class="about-card">
+                <div class="about-card-icon">
+                    <svg><use href="#icon-target"/></svg>
+                </div>
+                <h3>Our Mission</h3>
+                <p>Making digital reading accessible to everyone through Telegram.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Book Categories -->
+    <section class="section" style="background: linear-gradient(135deg, #fff0e0, #ffe8d6); margin: 0; max-width: 100%; padding: 80px 20px;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title">Book Categories</h2>
+            <div class="categories-grid">
+                <div class="category-card">
+                    <div class="category-icon">
+                        <svg><use href="#icon-adventure"/></svg>
+                    </div>
+                    <div class="category-name">Adventure</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">
+                        <svg><use href="#icon-romance"/></svg>
+                    </div>
+                    <div class="category-name">Romance</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">
+                        <svg><use href="#icon-mystery"/></svg>
+                    </div>
+                    <div class="category-name">Mystery</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">
+                        <svg><use href="#icon-horror"/></svg>
+                    </div>
+                    <div class="category-name">Horror</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">
+                        <svg><use href="#icon-fantasy"/></svg>
+                    </div>
+                    <div class="category-name">Fantasy</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">
+                        <svg><use href="#icon-children"/></svg>
+                    </div>
+                    <div class="category-name">Children's Stories</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">
+                        <svg><use href="#icon-historical"/></svg>
+                    </div>
+                    <div class="category-name">Historical Stories</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">
+                        <svg><use href="#icon-educational"/></svg>
+                    </div>
+                    <div class="category-name">Educational Stories</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section" id="howitworks">
+        <h2 class="section-title">How It Works</h2>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Open Telegram Bot</h4>
+                    <p>Click the button to open our official Telegram Bot @KUTYSTORYBOT</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Browse Available Story Books</h4>
+                    <p>Browse available story books across multiple categories.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>Select Your Favourite Book</h4>
+                    <p>Select your favourite book and complete secure payment.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h4>Receive Your Digital Book</h4>
+                    <p>After payment, your digital book is delivered instantly through Telegram.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="section" style="background: linear-gradient(135deg, #fff0e0, #ffe8d6); margin: 0; max-width: 100%; padding: 80px 20px;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title">Why Choose Us</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg><use href="#icon-lock"/></svg>
+                    </div>
+                    <h4>Secure Payment</h4>
+                    <p>All transactions are encrypted and secure.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg><use href="#icon-lightning"/></svg>
+                    </div>
+                    <h4>Fast Delivery</h4>
+                    <p>Instant digital delivery after payment.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg><use href="#icon-phone"/></svg>
+                    </div>
+                    <h4>Digital Books</h4>
+                    <p>Read anytime, anywhere on any device.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg><use href="#icon-cart"/></svg>
+                    </div>
+                    <h4>Easy Purchase</h4>
+                    <p>Simple 4-step purchase process.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg><use href="#icon-headset"/></svg>
+                    </div>
+                    <h4>Customer Support</h4>
+                    <p>24/7 support via Telegram & Email.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg><use href="#icon-money"/></svg>
+                    </div>
+                    <h4>Best Prices</h4>
+                    <p>Affordable digital books for everyone.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section" id="faq">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I purchase a book?</span>
+                    <span class="faq-arrow">&#9660;</span>
+                </div>
+                <div class="faq-answer">
+                    Open our Telegram Bot @KUTYSTORYBOT, choose a book from the catalog, and complete the secure payment. Your book will be delivered instantly.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How will I receive my book?</span>
+                    <span class="faq-arrow">&#9660;</span>
+                </div>
+                <div class="faq-answer">
+                    After successful payment, your digital book will be delivered directly through Telegram as a downloadable file.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Can I contact support?</span>
+                    <span class="faq-arrow">&#9660;</span>
+                </div>
+                <div class="faq-answer">
+                    Yes! You can contact us through our Telegram Support @KUTYSTORY or email us at gamertrashbin@gmail.com
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>What payment methods are accepted?</span>
+                    <span class="faq-arrow">&#9660;</span>
+                </div>
+                <div class="faq-answer">
+                    We accept UPI, Paytm, and other secure digital payment methods through our Telegram Bot.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section" id="contact" style="background: linear-gradient(135deg, #fff0e0, #ffe8d6); margin: 0; max-width: 100%; padding: 80px 20px;">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <svg><use href="#icon-email"/></svg>
+                    </div>
+                    <h4>Support Email</h4>
+                    <a href="mailto:gamertrashbin@gmail.com">gamertrashbin@gmail.com</a>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <svg><use href="#icon-bot"/></svg>
+                    </div>
+                    <h4>Official Telegram Bot</h4>
+                    <a href="https://t.me/KUTYSTORYBOT" target="_blank">@KUTYSTORYBOT</a>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <svg><use href="#icon-chat"/></svg>
+                    </div>
+                    <h4>Telegram Support</h4>
+                    <a href="https://t.me/KUTYSTORE" target="_blank">@KUTYSTORE</a>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <svg><use href="#icon-clock"/></svg>
+                    </div>
+                    <h4>Support Hours</h4>
+                    <p>24/7 Online Support</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Policies Section -->
+    <section class="section">
+        <h2 class="section-title">Our Policies</h2>
+        <div class="policies-grid">
+            <div class="policy-card">
+                <h4><svg><use href="#icon-privacy"/></svg> Privacy Policy</h4>
+                <ul>
+                    <li>• Customer information is kept secure.</li>
+                    <li>• Personal information is used only for order processing.</li>
+                    <li>• Payment information is processed securely.</li>
+                    <li>• We never sell customer information.</li>
+                </ul>
+            </div>
+            <div class="policy-card">
+                <h4><svg><use href="#icon-document"/></svg> Terms & Conditions</h4>
+                <ul>
+                    <li>• All products are digital books.</li>
+                    <li>• Customers must provide correct information.</li>
+                    <li>• Purchased books are for personal use.</li>
+                    <li>• Unauthorized redistribution is prohibited.</li>
+                </ul>
+            </div>
+            <div class="policy-card">
+                <h4><svg><use href="#icon-refund"/></svg> Refund Policy</h4>
+                <ul>
+                    <li>• Refund requests are reviewed according to our policy.</li>
+                    <li>• Technical issues eligible for refund or replacement.</li>
+                    <li>• Replacement option available.</li>
+                    <li>• Contact support for assistance.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand">
+                        <img src="logo.jpg" alt="KUTY STORY"> KUTY STORY
+                    </div>
+                    <p class="footer-desc">Your trusted digital bookstore on Telegram. Quality books, instant delivery, secure payments.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#howitworks">How It Works</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#contact">Contact Us</a></li>
+                        <li><a href="https://t.me/KUTYSTORE" target="_blank">Telegram Support</a></li>
+                        <li><a href="mailto:gamertrashbin@gmail.com">Email Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <a href="https://t.me/KUTYSTORYBOT" target="_blank" class="footer-bot-btn">
+                        <svg><use href="#icon-bot"/></svg> Open Bot
+                    </a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 KUTY STORY. All Rights Reserved.</p>
+                <p style="margin-top: 8px;">Official Bot: <a href="https://t.me/KUTYSTORYBOT" target="_blank">@KUTYSTORYBOT</a> | Support: <a href="https://t.me/KUTYSTORE" target="_blank">@KUTYSTORE</a></p>
+            </div>
+        </div>
+    </footer>
 
     <script>
-
-        // ========================
-        // FIREBASE CONFIGURATION
-        // ========================
-        // INSTRUCTIONS: Replace this with your own Firebase config
-        // 1. Go to https://console.firebase.google.com
-        // 2. Create a new project
-        // 3. Go to Project Settings > General > Your apps > Web app
-        // 4. Copy the firebaseConfig object and paste it below
-        // 5. Go to Realtime Database > Create Database > Start in test mode
-        // 6. Copy the database URL and update it below
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyB2URaYC1ZY38bOT7IxFSaJ7NxN6W5qt2o",
-            authDomain: "kityshop-c228f.firebaseapp.com",
-            databaseURL: "https://kityshop-c228f-default-rtdb.firebaseio.com",
-            projectId: "kityshop-c228f",
-            storageBucket: "kityshop-c228f.firebasestorage.app",
-            messagingSenderId: "295672767981",
-            appId: "1:295672767981:web:0d42458836972020ffb3e4"
-        };
-
-        // Initialize Firebase
-        let db;
-        let firebaseInitialized = false;
-
-        try {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.database();
-            firebaseInitialized = true;
-            console.log("Firebase initialized successfully");
-        } catch (e) {
-            console.error("Firebase initialization failed:", e);
-            showToast("Firebase config missing! Using local data.", "error");
+        function toggleMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
         }
 
-        // ========================
-        // APP CONFIGURATION
-        // ========================
-        const RAZORPAY_KEY_ID = "rzp_live_TD3L7tVFGUPTiA";
-        const TELEGRAM_BOT_TOKEN = "8740697101:AAG1b2QXxbV_Zm20tAH_uL2NbrBGtl0HVlI";
+        function toggleFaq(element) {
+            const item = element.parentElement;
+            const wasActive = item.classList.contains('active');
 
-        // Default products (used as fallback if Firebase is not configured)
-        const defaultProducts = [
-            { id: "5hours", name: "5 Hours Access", duration: "5 Hours", price: 49, stock: 15, icon: "fa-clock" },
-            { id: "1day", name: "1 Day Access", duration: "1 Day", price: 99, stock: 25, icon: "fa-calendar-day" },
-            { id: "3days", name: "3 Days Access", duration: "3 Days", price: 199, stock: 20, icon: "fa-calendar-day" },
-            { id: "7days", name: "7 Days Access", duration: "7 Days", price: 399, stock: 18, icon: "fa-calendar-week" },
-            { id: "14days", name: "14 Days Access", duration: "14 Days", price: 699, stock: 12, icon: "fa-calendar-alt" },
-            { id: "30days", name: "30 Days Access", duration: "30 Days", price: 1299, stock: 8, icon: "fa-calendar" },
-            { id: "60days", name: "60 Days Access", duration: "60 Days", price: 2299, stock: 5, icon: "fa-calendar" }
-        ];
+            document.querySelectorAll('.faq-item').forEach(faq => {
+                faq.classList.remove('active');
+            });
 
-        let products = JSON.parse(JSON.stringify(defaultProducts));
-        let keys = {};
-        let orders = [];
-        let currentProduct = null;
+            if (!wasActive) {
+                item.classList.add('active');
+            }
+        }
 
-        // Initialize keys object
-        products.forEach(p => {
-            keys[p.id] = [];
-            for (let i = 0; i < p.stock; i++) {
-                keys[p.id].push(generateKey(p.id));
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 600) {
+                document.getElementById('mobileMenu').classList.remove('active');
             }
         });
-
-        // ========================
-        // FIREBASE FUNCTIONS
-        // ========================
-
-        function setSyncing(isSyncing) {
-            const indicator = document.getElementById("syncIndicator");
-            const text = document.getElementById("syncText");
-            if (isSyncing) {
-                indicator.classList.add("syncing");
-                text.textContent = "Syncing with Firebase...";
-            } else {
-                indicator.classList.remove("syncing");
-                text.textContent = firebaseInitialized ? "Connected to Firebase" : "Local Mode (No Firebase)";
-            }
-        }
-
-        // Load products from Firebase
-        function loadProductsFromFirebase() {
-            if (!firebaseInitialized) {
-                renderProducts();
-                return;
-            }
-
-            setSyncing(true);
-            const productsRef = db.ref("products");
-
-            productsRef.once("value", (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    products = defaultProducts.map(def => {
-                        const saved = data[def.id];
-                        if (saved) {
-                            return {
-                                ...def,
-                                price: saved.price !== undefined ? saved.price : def.price,
-                                stock: saved.stock !== undefined ? saved.stock : def.stock
-                            };
-                        }
-                        return def;
-                    });
-                }
-                loadKeysFromFirebase();
-                setSyncing(false);
-                renderProducts();
-            }, (error) => {
-                console.error("Error loading products:", error);
-                setSyncing(false);
-                renderProducts();
-            });
-        }
-
-        // Save products to Firebase
-        function saveProductsToFirebase() {
-            if (!firebaseInitialized) return;
-
-            setSyncing(true);
-            const productsRef = db.ref("products");
-            const dataToSave = {};
-            products.forEach(p => {
-                dataToSave[p.id] = {
-                    price: p.price,
-                    stock: p.stock
-                };
-            });
-
-            productsRef.set(dataToSave).then(() => {
-                setSyncing(false);
-            }).catch(err => {
-                console.error("Error saving products:", err);
-                setSyncing(false);
-            });
-        }
-
-        // Load keys from Firebase (skips admin credentials)
-        function loadKeysFromFirebase() {
-            if (!firebaseInitialized) return;
-
-            const keysRef = db.ref("keys");
-            keysRef.once("value", (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    Object.keys(data).forEach(productId => {
-                        // Skip admin credentials, only load product keys
-                        if (productId === "username" || productId === "password") return;
-                        if (keys[productId]) {
-                            keys[productId] = data[productId] || [];
-                        }
-                    });
-                }
-                products.forEach(p => {
-                    const needed = p.stock;
-                    const current = keys[p.id] ? keys[p.id].length : 0;
-                    if (current < needed) {
-                        for (let i = 0; i < needed - current; i++) {
-                            keys[p.id].push(generateKey(p.id));
-                        }
-                        saveKeysToFirebase();
-                    }
-                });
-            });
-        }
-
-        // Save keys to Firebase (preserves admin credentials)
-        function saveKeysToFirebase() {
-            if (!firebaseInitialized) return;
-
-            // First, fetch existing keys to preserve admin credentials
-            db.ref("keys").once("value").then((snapshot) => {
-                const existingData = snapshot.val() || {};
-
-                // Build new data: product keys + preserved admin credentials
-                const dataToSave = { ...keys };
-
-                // Preserve admin credentials if they exist in Firebase
-                if (existingData.username) dataToSave.username = existingData.username;
-                if (existingData.password) dataToSave.password = existingData.password;
-
-                return db.ref("keys").set(dataToSave);
-            }).catch(err => {
-                console.error("Error saving keys:", err);
-            });
-        }
-
-        // Load orders from Firebase
-        function loadOrdersFromFirebase() {
-            if (!firebaseInitialized) return;
-
-            const ordersRef = db.ref("orders");
-            ordersRef.once("value", (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    orders = Object.values(data).reverse();
-                }
-                updateAdminStats();
-                renderAdminTables();
-            });
-        }
-
-        // Save order to Firebase
-        function saveOrderToFirebase(order) {
-            if (!firebaseInitialized) return;
-
-            const ordersRef = db.ref("orders/" + order.id);
-            ordersRef.set(order).catch(err => {
-                console.error("Error saving order:", err);
-            });
-        }
-
-        // Listen for real-time updates
-        function setupRealtimeListeners() {
-            if (!firebaseInitialized) return;
-
-            db.ref("products").on("value", (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    products = defaultProducts.map(def => {
-                        const saved = data[def.id];
-                        if (saved) {
-                            return {
-                                ...def,
-                                price: saved.price !== undefined ? saved.price : def.price,
-                                stock: saved.stock !== undefined ? saved.stock : def.stock
-                            };
-                        }
-                        return def;
-                    });
-                    renderProducts();
-                    updateAdminStats();
-                    renderAdminTables();
-                }
-            });
-
-            db.ref("orders").on("value", (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    orders = Object.values(data).reverse();
-                    updateAdminStats();
-                    renderAdminTables();
-                }
-            });
-        }
-
-        // ========================
-        // UTILITY FUNCTIONS
-        // ========================
-
-        function generateKey(productId) {
-            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            let key = "KEY-";
-            for (let i = 0; i < 3; i++) {
-                for (let j = 0; j < 4; j++) {
-                    key += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-                if (i < 2) key += "-";
-            }
-            return key;
-        }
-
-        // ========================
-        // UI FUNCTIONS
-        // ========================
-
-        function renderProducts() {
-            const grid = document.getElementById("productsGrid");
-            grid.innerHTML = products.map(product => {
-                const stockStatus = product.stock > 10 ? "in-stock" : product.stock > 0 ? "low-stock" : "out-stock";
-                const stockText = product.stock > 10 ? "In Stock" : product.stock > 0 ? "Only " + product.stock + " left" : "Out of Stock";
-                const btnClass = product.stock > 0 ? "available" : "unavailable";
-                const btnText = product.stock > 0 ? "Buy Now" : "Out of Stock";
-
-                return `
-                    <div class="product-card">
-                        <div class="product-icon"><i class="fas ${product.icon}"></i></div>
-                        <h3>${product.name}</h3>
-                        <div class="duration"><i class="fas fa-hourglass-half"></i> ${product.duration}</div>
-                        <div class="price">Rs.${product.price}</div>
-                        <div class="stock-status ${stockStatus}">
-                            <i class="fas fa-circle" style="font-size: 0.5rem;"></i>
-                            ${stockText}
-                        </div>
-                        <button class="buy-btn ${btnClass}" onclick="openBuyModal('${product.id}')" ${product.stock === 0 ? "disabled" : ""}>
-                            <i class="fas fa-shopping-cart"></i> ${btnText}
-                        </button>
-                    </div>
-                `;
-            }).join("");
-            observeProducts();
-        }
-
-        function smoothScrollTo(targetId) {
-            const element = document.getElementById(targetId);
-            if (element) {
-                const navHeight = document.getElementById("navbar").offsetHeight;
-                const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-                const offsetPosition = elementPosition - navHeight - 20;
-                window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-            }
-            updateActiveNav(targetId);
-        }
-
-        function updateActiveNav(activeId) {
-            document.querySelectorAll(".nav-link").forEach(link => {
-                link.classList.remove("active");
-                if (link.dataset.section === activeId) link.classList.add("active");
-            });
-        }
-
-        function openBuyModal(productId) {
-            const product = products.find(p => p.id === productId);
-            if (!product || product.stock <= 0) {
-                showToast("Product is out of stock!", "error");
-                return;
-            }
-            currentProduct = product;
-            document.getElementById("selectedPlan").value = product.name;
-            document.getElementById("selectedPrice").value = "Rs." + product.price;
-            document.getElementById("buyModal").classList.add("active");
-            document.getElementById("buyModalContent").classList.remove("hidden");
-            document.getElementById("paymentSuccess").classList.add("hidden");
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove("active");
-        }
-
-        function resetBuyModal() {
-            document.getElementById("telegramId").value = "";
-            document.getElementById("email").value = "";
-            document.getElementById("buyModalContent").classList.remove("hidden");
-            document.getElementById("paymentSuccess").classList.add("hidden");
-        }
-
-        function processPayment() {
-            const telegramId = document.getElementById("telegramId").value.trim();
-            if (!telegramId) {
-                showToast("Please enter your Telegram ID!", "error");
-                return;
-            }
-            // Validate: must be @username OR numeric user ID
-            const isUsername = telegramId.startsWith("@");
-            const isUserId = /^\d+$/.test(telegramId);
-            if (!isUsername && !isUserId) {
-                showToast("Enter @username OR numeric User ID (e.g., @KUTYSTORY or 123456789)", "error");
-                return;
-            }
-
-            const payBtn = document.getElementById("payBtn");
-            payBtn.innerHTML = '<div class="loading"></div> Loading...';
-            payBtn.disabled = true;
-
-            const options = {
-                key: RAZORPAY_KEY_ID,
-                amount: currentProduct.price * 100,
-                currency: "INR",
-                name: "KITY SHOP",
-                description: currentProduct.name,
-                image: "https://cdn-icons-png.flaticon.com/512/2885/2885417.png",
-                handler: function (response) {
-                    handlePaymentSuccess(response, telegramId);
-                },
-                prefill: {
-                    name: "",
-                    email: document.getElementById("email").value || "",
-                    contact: ""
-                },
-                notes: {
-                    product: currentProduct.name,
-                    telegram_id: telegramId
-                },
-                theme: {
-                    color: "#8b6914"
-                },
-                modal: {
-                    ondismiss: function() {
-                        showToast("Payment cancelled", "info");
-                        payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
-                        payBtn.disabled = false;
-                    },
-                    escape: true,
-                    backdropclose: false
-                }
-            };
-
-            try {
-                const rzp = new Razorpay(options);
-                rzp.on("payment.failed", function (response) {
-                    showToast("Payment failed: " + response.error.description, "error");
-                    payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
-                    payBtn.disabled = false;
-                });
-                rzp.open();
-                setTimeout(() => {
-                    payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
-                    payBtn.disabled = false;
-                }, 1000);
-            } catch (error) {
-                showToast("Error loading Razorpay: " + error.message, "error");
-                payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
-                payBtn.disabled = false;
-            }
-        }
-
-        function handlePaymentSuccess(response, telegramId) {
-            const productIndex = products.findIndex(p => p.id === currentProduct.id);
-            if (productIndex > -1 && products[productIndex].stock > 0) {
-                products[productIndex].stock--;
-
-                let key;
-                if (keys[currentProduct.id] && keys[currentProduct.id].length > 0) {
-                    key = keys[currentProduct.id].pop();
-                } else {
-                    key = generateKey(currentProduct.id);
-                }
-
-                const order = {
-                    id: "ORD-" + Date.now(),
-                    product: currentProduct.name,
-                    productId: currentProduct.id,
-                    telegramId: telegramId,
-                    amount: currentProduct.price,
-                    key: key,
-                    paymentId: response.razorpay_payment_id,
-                    status: "Delivered",
-                    time: new Date().toLocaleString()
-                };
-                orders.unshift(order);
-
-                document.getElementById("buyModalContent").classList.add("hidden");
-                document.getElementById("paymentSuccess").classList.remove("hidden");
-                document.getElementById("sentKeyDisplay").textContent = key;
-
-                sendToTelegram(telegramId, key, currentProduct);
-
-                saveProductsToFirebase();
-                saveKeysToFirebase();
-                saveOrderToFirebase(order);
-
-                renderProducts();
-                updateAdminStats();
-                renderAdminTables();
-
-                showToast("Payment successful! Key sent to Telegram.", "success");
-            } else {
-                showToast("Sorry, this product just went out of stock!", "error");
-            }
-        }
-
-        function sendToTelegram(telegramId, key, product) {
-            if (TELEGRAM_BOT_TOKEN === "YOUR_BOT_TOKEN_HERE") {
-                console.log("Telegram Bot Token not configured. Key would be sent to:", telegramId);
-                console.log("Key:", key);
-                return;
-            }
-
-            const message = "KITY SHOP Delivery\n\n" +
-                "Payment Successful!\n" +
-                "Product: " + product.name + "\n" +
-                "Duration: " + product.duration + "\n" +
-                "Key: " + key + "\n\n" +
-                "Thank you for your purchase!";
-
-            // If user entered @username, we need to get the user ID first
-            const isUsername = telegramId.startsWith("@");
-            const isNumericId = /^\d+$/.test(telegramId);
-
-            if (isUsername) {
-                // Try to resolve username to user ID using getChat
-                fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/getChat?chat_id=" + telegramId)
-                    .then(res => res.json())
-                    .then(chatData => {
-                        if (chatData.ok && chatData.result && chatData.result.id) {
-                            const userId = chatData.result.id;
-                            sendMessageToUser(userId, message);
-                        } else {
-                            // Fallback: try sending directly to username (may fail if bot never chatted with user)
-                            console.warn("Could not resolve username to ID, trying direct send:", chatData);
-                            sendMessageToUser(telegramId, message);
-                        }
-                    })
-                    .catch(err => {
-                        console.error("Error resolving username:", err);
-                        sendMessageToUser(telegramId, message);
-                    });
-            } else {
-                // Direct numeric user ID
-                sendMessageToUser(telegramId, message);
-            }
-        }
-
-        function sendMessageToUser(chatId, message) {
-            fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: message,
-                    parse_mode: "HTML"
-                })
-            }).then(res => res.json()).then(data => {
-                if (data.ok) {
-                    console.log("Telegram message sent successfully to:", chatId);
-                } else {
-                    console.error("Telegram error:", data);
-                    showToast("Could not send Telegram message. Make sure you started a chat with the bot!", "error");
-                }
-            }).catch(err => {
-                console.error("Failed to send Telegram message:", err);
-            });
-        }
-
-        function showAdminLogin() {
-            document.getElementById("adminLoginModal").classList.add("active");
-        }
-
-        function loginAdmin() {
-            const username = document.getElementById("adminUsername").value.trim();
-            const password = document.getElementById("adminPassword").value;
-
-            if (!username || !password) {
-                showToast("Please enter username and password!", "error");
-                return;
-            }
-
-            // Show loading state
-            const loginBtn = document.querySelector("#adminLoginModal .btn-primary");
-            const originalText = loginBtn.innerHTML;
-            loginBtn.innerHTML = '<div class="loading"></div> Verifying...';
-            loginBtn.disabled = true;
-
-            // Fetch credentials from Firebase
-            if (!firebaseInitialized) {
-                showToast("Firebase not connected! Cannot verify login.", "error");
-                loginBtn.innerHTML = originalText;
-                loginBtn.disabled = false;
-                return;
-            }
-
-            db.ref("keys").once("value")
-                .then((snapshot) => {
-                    const data = snapshot.val();
-                    console.log("DEBUG - Firebase data:", data);
-                    console.log("DEBUG - Entered username:", username, "| Firebase username:", data ? data.username : "null");
-                    console.log("DEBUG - Entered password:", password, "| Firebase password:", data ? data.password : "null");
-
-                    if (data && data.username === username && data.password === password) {
-                        document.getElementById("adminLoginModal").classList.remove("active");
-                        document.getElementById("mainContent").classList.add("hidden");
-                        document.getElementById("adminPanel").classList.add("active");
-                        document.getElementById("adminUsername").value = "";
-                        document.getElementById("adminPassword").value = "";
-                        updateAdminStats();
-                        renderAdminTables();
-                        showToast("Welcome to Admin Panel!", "success");
-                    } else {
-                        if (!data) {
-                            showToast("No login data found in Firebase!", "error");
-                        } else if (data.username !== username) {
-                            showToast("Username mismatch! Check console (F12) for debug info.", "error");
-                        } else if (data.password !== password) {
-                            showToast("Password mismatch! Check console (F12) for debug info.", "error");
-                        } else {
-                            showToast("Invalid username or password!", "error");
-                        }
-                    }
-                })
-                .catch((error) => {
-                    console.error("Login verification failed:", error);
-                    showToast("Login verification failed! Check connection.", "error");
-                })
-                .finally(() => {
-                    loginBtn.innerHTML = originalText;
-                    loginBtn.disabled = false;
-                });
-        }
-
-        function logoutAdmin() {
-            document.getElementById("adminPanel").classList.remove("active");
-            document.getElementById("mainContent").classList.remove("hidden");
-            showToast("Logged out successfully", "info");
-        }
-
-        function updateAdminStats() {
-            const total = products.reduce((sum, p) => sum + p.stock, 0);
-            const available = products.filter(p => p.stock > 0).length;
-            const todayOrders = orders.filter(o => {
-                const orderDate = new Date(o.time).toDateString();
-                const today = new Date().toDateString();
-                return orderDate === today;
-            }).length;
-            const revenue = orders.reduce((sum, o) => sum + o.amount, 0);
-
-            document.getElementById("totalKeys").textContent = total;
-            document.getElementById("availableKeys").textContent = available;
-            document.getElementById("soldToday").textContent = todayOrders;
-            document.getElementById("revenue").textContent = "Rs." + revenue;
-        }
-
-        function renderAdminTables() {
-            const tbody = document.getElementById("adminTableBody");
-            tbody.innerHTML = products.map(p => {
-                const status = p.stock > 0 ? 
-                    '<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Active</span>' :
-                    '<span style="color: var(--danger);"><i class="fas fa-times-circle"></i> Out of Stock</span>';
-                return `
-                    <tr>
-                        <td>${p.name}</td>
-                        <td>Rs.${p.price}</td>
-                        <td>${p.stock}</td>
-                        <td>${status}</td>
-                        <td>
-                            <button class="action-btn edit" onclick="editProduct('${p.id}')">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="action-btn delete" onclick="deleteProduct('${p.id}')">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join("");
-
-            const ordersBody = document.getElementById("ordersTableBody");
-            ordersBody.innerHTML = orders.slice(0, 10).map(o => `
-                <tr>
-                    <td>${o.id}</td>
-                    <td>${o.product}</td>
-                    <td>${o.telegramId}</td>
-                    <td>Rs.${o.amount}</td>
-                    <td><span style="color: var(--success);"><i class="fas fa-check"></i> ${o.status}</span></td>
-                    <td>${o.time}</td>
-                </tr>
-            `).join("") || '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No orders yet</td></tr>';
-        }
-
-        function showAddStockModal() {
-            document.getElementById("addStockModal").classList.add("active");
-        }
-
-        function addStock() {
-            const duration = document.getElementById("stockDuration").value;
-            const price = parseInt(document.getElementById("stockPrice").value);
-            const quantity = parseInt(document.getElementById("stockQuantity").value);
-            const keysInput = document.getElementById("stockKeys").value.trim();
-
-            if (!price || !quantity) {
-                showToast("Please fill in all required fields!", "error");
-                return;
-            }
-
-            const product = products.find(p => p.id === duration);
-            if (product) {
-                product.price = price;
-                product.stock += quantity;
-
-                if (keysInput) {
-                    const customKeys = keysInput.split("\n").filter(k => k.trim());
-                    keys[duration].push(...customKeys);
-                } else {
-                    for (let i = 0; i < quantity; i++) {
-                        keys[duration].push(generateKey(duration));
-                    }
-                }
-
-                saveProductsToFirebase();
-                saveKeysToFirebase();
-
-                renderProducts();
-                updateAdminStats();
-                renderAdminTables();
-                closeModal("addStockModal");
-                showToast("Added " + quantity + " keys to " + product.name + "!", "success");
-
-                document.getElementById("stockPrice").value = "";
-                document.getElementById("stockQuantity").value = "";
-                document.getElementById("stockKeys").value = "";
-            }
-        }
-
-        function editProduct(id) {
-            const product = products.find(p => p.id === id);
-            if (product) {
-                const newPrice = prompt("Enter new price (Rs.):", product.price);
-                if (newPrice && !isNaN(newPrice)) {
-                    product.price = parseInt(newPrice);
-                    saveProductsToFirebase();
-                    renderProducts();
-                    updateAdminStats();
-                    renderAdminTables();
-                    showToast("Product updated!", "success");
-                }
-            }
-        }
-
-        function deleteProduct(id) {
-            if (confirm("Are you sure you want to reset stock for this product?")) {
-                const product = products.find(p => p.id === id);
-                if (product) {
-                    product.stock = 0;
-                    keys[id] = [];
-                    saveProductsToFirebase();
-                    saveKeysToFirebase();
-                    renderProducts();
-                    updateAdminStats();
-                    renderAdminTables();
-                    showToast("Stock cleared!", "info");
-                }
-            }
-        }
-
-        function showToast(message, type) {
-            const container = document.getElementById("toastContainer");
-            const toast = document.createElement("div");
-            toast.className = "toast " + type;
-
-            const icons = {
-                success: "fa-check-circle",
-                error: "fa-times-circle",
-                info: "fa-info-circle"
-            };
-
-            toast.innerHTML = '<i class="fas ' + icons[type] + '"></i><span>' + message + '</span>';
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.style.opacity = "0";
-                toast.style.transform = "translateX(100%)";
-                setTimeout(() => toast.remove(), 400);
-            }, 3000);
-        }
-
-        document.querySelectorAll(".modal-overlay").forEach(overlay => {
-            overlay.addEventListener("click", (e) => {
-                if (e.target === overlay) overlay.classList.remove("active");
-            });
-        });
-
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") {
-                document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("active"));
-            }
-        });
-
-        const sections = document.querySelectorAll("section[id]");
-        const navLinks = document.querySelectorAll(".nav-link");
-
-        window.addEventListener("scroll", () => {
-            let current = "";
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (scrollY >= sectionTop - 200) {
-                    current = section.getAttribute("id");
-                }
-            });
-            navLinks.forEach(link => {
-                link.classList.remove("active");
-                if (link.dataset.section === current) link.classList.add("active");
-            });
-        });
-
-        function observeProducts() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) entry.target.classList.add("visible");
-                });
-            }, { threshold: 0.1 });
-            document.querySelectorAll(".product-card").forEach(card => observer.observe(card));
-        }
-
-        const featureObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add("visible");
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll(".feature-item").forEach(item => featureObserver.observe(item));
-
-        function toggleMobileMenu() {
-            const navLinks = document.getElementById("navLinks");
-            const menuToggle = document.getElementById("menuToggle");
-            navLinks.classList.toggle("active");
-            menuToggle.classList.toggle("active");
-            const icon = menuToggle.querySelector("i");
-            if (navLinks.classList.contains("active")) {
-                icon.classList.remove("fa-bars");
-                icon.classList.add("fa-times");
-            } else {
-                icon.classList.remove("fa-times");
-                icon.classList.add("fa-bars");
-            }
-        }
-
-        function closeMobileMenu() {
-            const navLinks = document.getElementById("navLinks");
-            const menuToggle = document.getElementById("menuToggle");
-            navLinks.classList.remove("active");
-            menuToggle.classList.remove("active");
-            const icon = menuToggle.querySelector("i");
-            icon.classList.remove("fa-times");
-            icon.classList.add("fa-bars");
-        }
-
-        document.addEventListener("click", (e) => {
-            const navLinks = document.getElementById("navLinks");
-            const menuToggle = document.getElementById("menuToggle");
-            if (navLinks.classList.contains("active") && 
-                !navLinks.contains(e.target) && 
-                !menuToggle.contains(e.target)) {
-                closeMobileMenu();
-            }
-        });
-
-        // ========================
-        // INITIALIZATION
-        // ========================
-
-        loadProductsFromFirebase();
-        loadOrdersFromFirebase();
-        setupRealtimeListeners();
-
-        console.log("KITY SHOP with Firebase loaded!");
     </script>
 </body>
 </html>
