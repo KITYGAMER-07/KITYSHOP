@@ -296,6 +296,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -880,6 +881,10 @@
                 window.scrollTo({ top: offsetPosition, behavior: "smooth" });
             }
             updateActiveNav(targetId);
+            // Push state for back button support
+            if (window.location.hash !== '#' + targetId) {
+                history.pushState({ section: targetId }, '', '#' + targetId);
+            }
         }
 
         function updateActiveNav(activeId) {
@@ -1288,6 +1293,40 @@
                 if (link.dataset.section === current) link.classList.add("active");
             });
         });
+
+        // Handle browser back button (popstate)
+        window.addEventListener("popstate", (e) => {
+            if (e.state && e.state.section) {
+                const targetId = e.state.section;
+                const element = document.getElementById(targetId);
+                if (element) {
+                    const navHeight = document.getElementById("navbar").offsetHeight;
+                    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                    const offsetPosition = elementPosition - navHeight - 20;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                }
+                updateActiveNav(targetId);
+            } else {
+                // If no state, go to hero (home)
+                const element = document.getElementById("hero");
+                if (element) {
+                    const navHeight = document.getElementById("navbar").offsetHeight;
+                    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                    const offsetPosition = elementPosition - navHeight - 20;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                }
+                updateActiveNav("hero");
+            }
+        });
+
+        // Set initial state for hero on page load
+        if (!window.location.hash) {
+            history.replaceState({ section: "hero" }, '', '#hero');
+        } else {
+            // If loaded with a hash, set the state properly
+            const initialSection = window.location.hash.replace('#', '') || 'hero';
+            history.replaceState({ section: initialSection }, '', '#' + initialSection);
+        }
 
         function observeProducts() {
             const observer = new IntersectionObserver((entries) => {
