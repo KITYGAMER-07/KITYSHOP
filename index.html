@@ -1039,21 +1039,52 @@
         }
 
         function loginAdmin() {
-            const username = document.getElementById("adminUsername").value;
+            const username = document.getElementById("adminUsername").value.trim();
             const password = document.getElementById("adminPassword").value;
 
-            if (username === "admin" && password === "admin123") {
-                document.getElementById("adminLoginModal").classList.remove("active");
-                document.getElementById("mainContent").classList.add("hidden");
-                document.getElementById("adminPanel").classList.add("active");
-                document.getElementById("adminUsername").value = "";
-                document.getElementById("adminPassword").value = "";
-                updateAdminStats();
-                renderAdminTables();
-                showToast("Welcome to Admin Panel!", "success");
-            } else {
-                showToast("Invalid credentials!", "error");
+            if (!username || !password) {
+                showToast("Please enter username and password!", "error");
+                return;
             }
+
+            // Show loading state
+            const loginBtn = document.querySelector("#adminLoginModal .btn-primary");
+            const originalText = loginBtn.innerHTML;
+            loginBtn.innerHTML = '<div class="loading"></div> Verifying...';
+            loginBtn.disabled = true;
+
+            // Fetch credentials from Firebase
+            if (!firebaseInitialized) {
+                showToast("Firebase not connected! Cannot verify login.", "error");
+                loginBtn.innerHTML = originalText;
+                loginBtn.disabled = false;
+                return;
+            }
+
+            db.ref("keys").once("value")
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    if (data && data.username === username && data.password === password) {
+                        document.getElementById("adminLoginModal").classList.remove("active");
+                        document.getElementById("mainContent").classList.add("hidden");
+                        document.getElementById("adminPanel").classList.add("active");
+                        document.getElementById("adminUsername").value = "";
+                        document.getElementById("adminPassword").value = "";
+                        updateAdminStats();
+                        renderAdminTables();
+                        showToast("Welcome to Admin Panel!", "success");
+                    } else {
+                        showToast("Invalid username or password!", "error");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Login verification failed:", error);
+                    showToast("Login verification failed! Check connection.", "error");
+                })
+                .finally(() => {
+                    loginBtn.innerHTML = originalText;
+                    loginBtn.disabled = false;
+                });
         }
 
         function logoutAdmin() {
