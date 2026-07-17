@@ -1097,6 +1097,10 @@
             db.ref("keys").once("value")
                 .then((snapshot) => {
                     const data = snapshot.val();
+                    console.log("DEBUG - Firebase data:", data);
+                    console.log("DEBUG - Entered username:", username, "| Firebase username:", data ? data.username : "null");
+                    console.log("DEBUG - Entered password:", password, "| Firebase password:", data ? data.password : "null");
+
                     if (data && data.username === username && data.password === password) {
                         document.getElementById("adminLoginModal").classList.remove("active");
                         document.getElementById("mainContent").classList.add("hidden");
@@ -1107,7 +1111,15 @@
                         renderAdminTables();
                         showToast("Welcome to Admin Panel!", "success");
                     } else {
-                        showToast("Invalid username or password!", "error");
+                        if (!data) {
+                            showToast("No login data found in Firebase!", "error");
+                        } else if (data.username !== username) {
+                            showToast("Username mismatch! Check console (F12) for debug info.", "error");
+                        } else if (data.password !== password) {
+                            showToast("Password mismatch! Check console (F12) for debug info.", "error");
+                        } else {
+                            showToast("Invalid username or password!", "error");
+                        }
                     }
                 })
                 .catch((error) => {
