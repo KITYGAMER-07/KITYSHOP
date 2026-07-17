@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KITY SHOP - Premium Access Keys</title>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -22,7 +24,8 @@
             overflow-x: hidden; min-height: 100vh;
         }
         .bg-animation {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: var(--cream);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; background: var(--cream);
         }
         .bg-animation::before {
             content: ''; position: absolute; width: 600px; height: 600px;
@@ -49,17 +52,20 @@
         }
         .logo {
             font-size: 1.5rem; font-weight: 800; color: var(--brown-darker);
-            display: flex; align-items: center; gap: 0.5rem; cursor: pointer; user-select: none;
+            display: flex; align-items: center; gap: 0.5rem;
+            cursor: pointer; user-select: none;
         }
         .nav-links { display: flex; gap: 2rem; align-items: center; }
         .nav-link {
             color: var(--text-muted); text-decoration: none; font-weight: 500;
-            transition: all 0.3s; cursor: pointer; position: relative; padding: 0.5rem 0;
-            background: none; border: none; font-size: 1rem; font-family: 'Inter', sans-serif;
+            transition: all 0.3s; cursor: pointer; position: relative;
+            padding: 0.5rem 0; background: none; border: none;
+            font-size: 1rem; font-family: 'Inter', sans-serif;
         }
         .nav-link::after {
             content: ''; position: absolute; bottom: 0; left: 0;
-            width: 0; height: 2px; background: linear-gradient(90deg, var(--brown), var(--brown-dark));
+            width: 0; height: 2px;
+            background: linear-gradient(90deg, var(--brown), var(--brown-dark));
             transition: width 0.3s;
         }
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
@@ -72,12 +78,13 @@
         @media (max-width: 768px) { .nav-center-title { font-size: 1.2rem; } }
         .admin-btn {
             background: linear-gradient(135deg, var(--brown), var(--brown-dark));
-            color: white; padding: 0.5rem 1.5rem; border-radius: 50px; border: none;
-            cursor: pointer; font-weight: 600; transition: all 0.3s;
-            font-family: 'Inter', sans-serif; font-size: 1rem;
+            color: white; padding: 0.5rem 1.5rem; border-radius: 50px;
+            border: none; cursor: pointer; font-weight: 600;
+            transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 1rem;
         }
         .admin-btn:hover {
-            transform: translateY(-2px); box-shadow: 0 10px 30px rgba(139, 105, 20, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 105, 20, 0.3);
         }
         .hero {
             min-height: 100vh; display: flex; flex-direction: column;
@@ -91,9 +98,9 @@
             color: var(--brown); margin-bottom: 2rem; animation: fadeInUp 0.8s ease;
         }
         .hero h1 {
-            font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 800; line-height: 1.1;
-            margin-bottom: 1.5rem; animation: fadeInUp 0.8s ease 0.2s both;
-            color: var(--brown-darker);
+            font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 800;
+            line-height: 1.1; margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease 0.2s both; color: var(--brown-darker);
         }
         .hero h1 span {
             background: linear-gradient(135deg, var(--brown), var(--brown-dark), var(--brown-light));
@@ -103,9 +110,7 @@
             font-size: 1.2rem; color: var(--text-muted); max-width: 600px;
             margin-bottom: 2rem; animation: fadeInUp 0.8s ease 0.4s both;
         }
-        .hero-cta {
-            display: flex; gap: 1rem; animation: fadeInUp 0.8s ease 0.6s both;
-        }
+        .hero-cta { display: flex; gap: 1rem; animation: fadeInUp 0.8s ease 0.6s both; }
         .btn-primary {
             background: linear-gradient(135deg, var(--brown), var(--brown-dark));
             color: white; padding: 1rem 2.5rem; border-radius: 50px; border: none;
@@ -119,12 +124,14 @@
         .btn-secondary {
             background: transparent; color: var(--brown-dark); padding: 1rem 2.5rem;
             border-radius: 50px; border: 2px solid var(--border); font-size: 1rem;
-            font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none;
-            display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif;
+            font-weight: 600; cursor: pointer; transition: all 0.3s;
+            text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
         }
         .btn-secondary:hover { border-color: var(--brown); background: rgba(196, 168, 130, 0.1); }
         .scroll-indicator {
-            position: absolute; bottom: 2rem; animation: bounce 2s infinite; cursor: pointer;
+            position: absolute; bottom: 2rem;
+            animation: bounce 2s infinite; cursor: pointer;
         }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -134,14 +141,16 @@
         .section-header p { color: var(--text-muted); font-size: 1.1rem; }
         .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
         .product-card {
-            background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border);
-            transition: all 0.4s; position: relative; overflow: hidden;
-            opacity: 0; transform: translateY(30px); box-shadow: 0 4px 20px var(--card-shadow);
+            background: var(--card-bg); border-radius: 20px; padding: 2rem;
+            border: 1px solid var(--border); transition: all 0.4s;
+            position: relative; overflow: hidden; opacity: 0; transform: translateY(30px);
+            box-shadow: 0 4px 20px var(--card-shadow);
         }
         .product-card.visible { opacity: 1; transform: translateY(0); }
         .product-card::before {
             content: ''; position: absolute; top: 0; left: 0;
-            width: 100%; height: 3px; background: linear-gradient(90deg, var(--brown-light), var(--brown));
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, var(--brown-light), var(--brown));
             transform: scaleX(0); transition: transform 0.4s;
         }
         .product-card:hover::before { transform: scaleX(1); }
@@ -150,7 +159,8 @@
             box-shadow: 0 20px 50px rgba(139, 105, 20, 0.15);
         }
         .product-icon {
-            width: 60px; height: 60px; background: linear-gradient(135deg, var(--brown-light), var(--brown));
+            width: 60px; height: 60px;
+            background: linear-gradient(135deg, var(--brown-light), var(--brown));
             border-radius: 16px; display: flex; align-items: center; justify-content: center;
             font-size: 1.5rem; margin-bottom: 1.5rem; color: white;
         }
@@ -163,16 +173,13 @@
         }
         .stock-status {
             display: inline-flex; align-items: center; gap: 0.5rem;
-            padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.85rem;
-            font-weight: 600; margin-bottom: 1.5rem;
+            padding: 0.4rem 1rem; border-radius: 50px;
+            font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem;
         }
         .stock-status.in-stock { background: rgba(45, 125, 70, 0.1); color: var(--success); border: 1px solid rgba(45, 125, 70, 0.3); }
         .stock-status.out-stock { background: rgba(185, 28, 28, 0.1); color: var(--danger); border: 1px solid rgba(185, 28, 28, 0.3); }
         .stock-status.low-stock { background: rgba(180, 83, 9, 0.1); color: var(--warning); border: 1px solid rgba(180, 83, 9, 0.3); }
-        .buy-btn {
-            width: 100%; padding: 1rem; border-radius: 12px; border: none;
-            font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 1rem;
-        }
+        .buy-btn { width: 100%; padding: 1rem; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 1rem; }
         .buy-btn.available { background: linear-gradient(135deg, var(--brown), var(--brown-dark)); color: white; }
         .buy-btn.available:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(139, 105, 20, 0.3); }
         .buy-btn.unavailable { background: #f0ebe5; color: var(--text-muted); cursor: not-allowed; }
@@ -188,16 +195,8 @@
         }
         .feature-item h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--brown-darker); }
         .feature-item p { color: var(--text-muted); font-size: 0.95rem; }
-        .telegram-section {
-            padding: 4rem 2rem; text-align: center;
-            background: linear-gradient(135deg, rgba(196, 168, 130, 0.05), rgba(139, 105, 20, 0.05));
-            border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-        }
-        .telegram-box {
-            max-width: 600px; margin: 0 auto; background: var(--white);
-            padding: 2rem; border-radius: 20px; border: 1px solid var(--border);
-            box-shadow: 0 4px 20px var(--card-shadow);
-        }
+        .telegram-section { padding: 4rem 2rem; text-align: center; background: linear-gradient(135deg, rgba(196, 168, 130, 0.05), rgba(139, 105, 20, 0.05)); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .telegram-box { max-width: 600px; margin: 0 auto; background: var(--white); padding: 2rem; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 4px 20px var(--card-shadow); }
         .telegram-box i { font-size: 3rem; color: var(--brown); margin-bottom: 1rem; }
         .telegram-box h3 { color: var(--brown-darker); }
         .modal-overlay {
@@ -231,7 +230,7 @@
         .modal .btn-primary { width: 100%; justify-content: center; }
         .admin-panel { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; padding-top: 6rem; }
         .admin-panel.active { display: block; }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
         .admin-header h2 { color: var(--brown-darker); }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
         .stat-card { background: var(--white); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 4px 20px var(--card-shadow); }
@@ -246,19 +245,10 @@
         .action-btn.edit { background: rgba(196, 168, 130, 0.2); color: var(--brown); }
         .action-btn.delete { background: rgba(185, 28, 28, 0.1); color: var(--danger); }
         .action-btn:hover { transform: scale(1.05); }
-        .add-stock-btn {
-            background: linear-gradient(135deg, var(--success), #1e5c32); color: white;
-            padding: 0.8rem 1.5rem; border-radius: 12px; border: none; cursor: pointer;
-            font-weight: 600; display: flex; align-items: center; gap: 0.5rem;
-            transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 1rem;
-        }
+        .add-stock-btn { background: linear-gradient(135deg, var(--success), #1e5c32); color: white; padding: 0.8rem 1.5rem; border-radius: 12px; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 1rem; }
         .add-stock-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(45, 125, 70, 0.3); }
         .toast-container { position: fixed; top: 100px; right: 2rem; z-index: 3000; display: flex; flex-direction: column; gap: 1rem; }
-        .toast {
-            background: var(--white); border: 1px solid var(--border); border-radius: 12px;
-            padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem;
-            box-shadow: 0 10px 40px rgba(42, 26, 15, 0.15); animation: slideInRight 0.4s ease; min-width: 300px;
-        }
+        .toast { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 10px 40px rgba(42, 26, 15, 0.15); animation: slideInRight 0.4s ease; min-width: 300px; }
         @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .toast.success { border-left: 4px solid var(--success); }
         .toast.error { border-left: 4px solid var(--danger); }
@@ -295,24 +285,10 @@
         .hidden { display: none !important; }
         .main-content { display: block; }
         .main-content.hidden { display: none; }
-        .data-management { background: var(--white); padding: 2rem; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 2rem; box-shadow: 0 4px 20px var(--card-shadow); }
-        .data-management h3 { color: var(--brown-darker); margin-bottom: 1rem; }
-        .data-management p { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem; }
-        .data-management code { background: #f0ebe5; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9rem; }
-        .data-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
-        .data-actions button, .data-actions label {
-            padding: 0.8rem 1.5rem; border-radius: 12px; border: none; cursor: pointer;
-            font-weight: 600; font-family: 'Inter', sans-serif; font-size: 0.95rem;
-            transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;
-        }
-        .btn-export { background: linear-gradient(135deg, var(--brown), var(--brown-dark)); color: white; }
-        .btn-export:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(139, 105, 20, 0.3); }
-        .btn-import { background: var(--cream); color: var(--brown-dark); border: 2px solid var(--border); }
-        .btn-import:hover { border-color: var(--brown); background: rgba(196, 168, 130, 0.1); }
-        .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; }
-        .file-input-wrapper input[type=file] { position: absolute; left: -9999px; }
-        .file-input-label { padding: 0.8rem 1.5rem; border-radius: 12px; background: var(--cream); color: var(--brown-dark); border: 2px solid var(--border); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s; }
-        .file-input-label:hover { border-color: var(--brown); background: rgba(196, 168, 130, 0.1); }
+        .sync-indicator { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--white); padding: 0.6rem 1rem; border-radius: 12px; border: 1px solid var(--border); font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .sync-indicator .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .sync-indicator.syncing .dot { background: var(--warning); animation: spin 1s linear infinite; border-radius: 0; width: 10px; height: 10px; border: 2px solid var(--warning); border-top-color: transparent; }
     </style>
 <base target="_blank">
 </head>
@@ -350,7 +326,7 @@
                 <span>Keys & Licenses</span>
             </h1>
             <p>
-                Secure, instant, and reliable access keys delivered directly to your Telegram. 
+                Secure, instant, and reliable access keys delivered directly to your Telegram.
                 Choose your duration and get started in seconds.
             </p>
             <div class="hero-cta">
@@ -372,7 +348,12 @@
                 <h2>Choose Your Plan</h2>
                 <p>Select the duration that fits your needs. All keys are instantly delivered.</p>
             </div>
-            <div class="products-grid" id="productsGrid"></div>
+            <div class="products-grid" id="productsGrid">
+                <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted);">
+                    <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
+                    <p>Loading products from Firebase...</p>
+                </div>
+            </div>
         </section>
 
         <section class="features-section" id="features">
@@ -399,7 +380,7 @@
                 <div class="feature-item">
                     <div class="feature-icon"><i class="fas fa-sync"></i></div>
                     <h3>Auto Stock Update</h3>
-                    <p>Real-time stock status. Never buy out-of-stock items</p>
+                    <p>Real-time stock status synced across all devices</p>
                 </div>
             </div>
         </section>
@@ -410,7 +391,7 @@
                     <i class="fab fa-telegram" style="color: var(--brown);"></i>
                     <h3>Telegram Auto-Delivery</h3>
                     <p style="color: var(--text-muted); margin-top: 0.5rem;">
-                        After successful payment, your key will be automatically sent to your Telegram ID. 
+                        After successful payment, your key will be automatically sent to your Telegram ID.
                         Make sure to enter your correct Telegram ID during checkout.<br><br>
                         <span style="color: var(--brown); font-weight: 600;">Click here to contact Admin @KITYGAMER</span>
                     </p>
@@ -421,46 +402,21 @@
         <footer>
             <div class="logo" onclick="smoothScrollTo('hero')">
                 <i class="fas fa-key"></i>
-                KeyStore
+                KITY SHOP
             </div>
-            <p>2026 KeyStore. All rights reserved. | Secure Key Distribution Platform</p>
+            <p>2026 KITY SHOP. All rights reserved. | Secure Key Distribution Platform</p>
         </footer>
     </div>
 
     <div class="admin-panel" id="adminPanel">
         <div class="admin-header">
             <h2><i class="fas fa-cog"></i> Admin Dashboard</h2>
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <div style="display: flex; gap: 1rem;">
                 <button class="add-stock-btn" onclick="showAddStockModal()">
                     <i class="fas fa-plus"></i> Add Stock
                 </button>
                 <button class="btn-secondary" onclick="logoutAdmin()">
                     <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-            </div>
-        </div>
-
-        <div class="data-management">
-            <h3><i class="fas fa-database"></i> GitHub Pages Data Management</h3>
-            <p>
-                GitHub Pages is <strong>static hosting</strong> (no backend server). Stock data is loaded from <code>products.json</code> file in your repo.
-                To update stock for ALL users: Export JSON -> Replace <code>products.json</code> in your repo -> Commit & Push.
-            </p>
-            <div class="data-actions">
-                <button class="btn-export" onclick="exportProductsJSON()">
-                    <i class="fas fa-download"></i> Export products.json
-                </button>
-                <div class="file-input-wrapper">
-                    <input type="file" id="importFile" accept=".json" onchange="importProductsJSON(event)">
-                    <label for="importFile" class="file-input-label">
-                        <i class="fas fa-upload"></i> Import products.json
-                    </label>
-                </div>
-                <button class="btn-import" onclick="exportOrdersCSV()">
-                    <i class="fas fa-file-csv"></i> Export Orders
-                </button>
-                <button class="btn-import" onclick="resetAllStock()">
-                    <i class="fas fa-undo"></i> Reset All Stock
                 </button>
             </div>
         </div>
@@ -471,15 +427,15 @@
                 <div class="value" id="totalKeys">0</div>
             </div>
             <div class="stat-card">
-                <h4>Available Products</h4>
+                <h4>Available</h4>
                 <div class="value" id="availableKeys">0</div>
             </div>
             <div class="stat-card">
-                <h4>Sold This Session</h4>
+                <h4>Sold Today</h4>
                 <div class="value" id="soldToday">0</div>
             </div>
             <div class="stat-card">
-                <h4>Revenue This Session</h4>
+                <h4>Revenue</h4>
                 <div class="value" id="revenue">Rs.0</div>
             </div>
         </div>
@@ -493,7 +449,7 @@
             </table>
         </div>
 
-        <h3 style="margin: 2rem 0 1rem;"><i class="fas fa-history"></i> Recent Orders (This Session)</h3>
+        <h3 style="margin: 2rem 0 1rem;"><i class="fas fa-history"></i> Recent Orders</h3>
         <div class="admin-table">
             <table>
                 <thead>
@@ -601,191 +557,276 @@
             </button>
         </div>
     </div>
+
+    <div class="sync-indicator" id="syncIndicator">
+        <div class="dot"></div>
+        <span id="syncText">Connected to Firebase</span>
+    </div>
+
     <script>
-        // ============================================
-        // KITY SHOP - GitHub Pages Compatible
-        // ============================================
 
-        const RAZORPAY_KEY_ID = 'rzp_live_TD3L7tVFGUPTiA';
-        const TELEGRAM_BOT_TOKEN = '8740697101:AAG1b2QXxbV_Zm20tAH_uL2NbrBGtl0HVlI';
+        // ========================
+        // FIREBASE CONFIGURATION
+        // ========================
+        // INSTRUCTIONS: Replace this with your own Firebase config
+        // 1. Go to https://console.firebase.google.com
+        // 2. Create a new project
+        // 3. Go to Project Settings > General > Your apps > Web app
+        // 4. Copy the firebaseConfig object and paste it below
+        // 5. Go to Realtime Database > Create Database > Start in test mode
+        // 6. Copy the database URL and update it below
 
-        const DEFAULT_PRODUCTS = [
-            { id: '5hours', name: '5 Hours Access', duration: '5 Hours', price: 49, stock: 15, icon: 'fa-clock' },
-            { id: '1day', name: '1 Day Access', duration: '1 Day', price: 99, stock: 25, icon: 'fa-calendar-day' },
-            { id: '3days', name: '3 Days Access', duration: '3 Days', price: 199, stock: 20, icon: 'fa-calendar-day' },
-            { id: '7days', name: '7 Days Access', duration: '7 Days', price: 399, stock: 18, icon: 'fa-calendar-week' },
-            { id: '14days', name: '14 Days Access', duration: '14 Days', price: 699, stock: 12, icon: 'fa-calendar-alt' },
-            { id: '30days', name: '30 Days Access', duration: '30 Days', price: 1299, stock: 8, icon: 'fa-calendar' },
-            { id: '60days', name: '60 Days Access', duration: '60 Days', price: 2299, stock: 5, icon: 'fa-calendar' }
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2URaYC1ZY38bOT7IxFSaJ7NxN6W5qt2o",
+            authDomain: "kityshop-c228f.firebaseapp.com",
+            databaseURL: "https://kityshop-c228f-default-rtdb.firebaseio.com",
+            projectId: "kityshop-c228f",
+            storageBucket: "kityshop-c228f.firebasestorage.app",
+            messagingSenderId: "295672767981",
+            appId: "1:295672767981:web:0d42458836972020ffb3e4"
+        };
+
+        // Initialize Firebase
+        let db;
+        let firebaseInitialized = false;
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+            firebaseInitialized = true;
+            console.log("Firebase initialized successfully");
+        } catch (e) {
+            console.error("Firebase initialization failed:", e);
+            showToast("Firebase config missing! Using local data.", "error");
+        }
+
+        // ========================
+        // APP CONFIGURATION
+        // ========================
+        const RAZORPAY_KEY_ID = "rzp_live_TD3L7tVFGUPTiA";
+        const TELEGRAM_BOT_TOKEN = "8740697101:AAG1b2QXxbV_Zm20tAH_uL2NbrBGtl0HVlI";
+
+        // Default products (used as fallback if Firebase is not configured)
+        const defaultProducts = [
+            { id: "5hours", name: "5 Hours Access", duration: "5 Hours", price: 49, stock: 15, icon: "fa-clock" },
+            { id: "1day", name: "1 Day Access", duration: "1 Day", price: 99, stock: 25, icon: "fa-calendar-day" },
+            { id: "3days", name: "3 Days Access", duration: "3 Days", price: 199, stock: 20, icon: "fa-calendar-day" },
+            { id: "7days", name: "7 Days Access", duration: "7 Days", price: 399, stock: 18, icon: "fa-calendar-week" },
+            { id: "14days", name: "14 Days Access", duration: "14 Days", price: 699, stock: 12, icon: "fa-calendar-alt" },
+            { id: "30days", name: "30 Days Access", duration: "30 Days", price: 1299, stock: 8, icon: "fa-calendar" },
+            { id: "60days", name: "60 Days Access", duration: "60 Days", price: 2299, stock: 5, icon: "fa-calendar" }
         ];
 
-        let products = [];
+        let products = JSON.parse(JSON.stringify(defaultProducts));
         let keys = {};
         let orders = [];
         let currentProduct = null;
-        let isAdminLoggedIn = false;
 
-        const ADMIN_USER = 'admin';
-        const ADMIN_HASH = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9';
-
-        async function sha256(str) {
-            const buf = new TextEncoder().encode(str);
-            const hash = await crypto.subtle.digest('SHA-256', buf);
-            return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        async function loadProducts() {
-            try {
-                const response = await fetch('products.json?v=' + Date.now());
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.products && Array.isArray(data.products)) {
-                        products = JSON.parse(JSON.stringify(data.products));
-                        keys = data.keys || {};
-                        products.forEach(p => {
-                            if (!keys[p.id]) keys[p.id] = [];
-                            while (keys[p.id].length < p.stock) {
-                                keys[p.id].push(generateKey(p.id));
-                            }
-                        });
-                        console.log('Loaded from products.json');
-                        return;
-                    }
-                }
-            } catch (e) {
-                console.log('products.json not found, using defaults');
+        // Initialize keys object
+        products.forEach(p => {
+            keys[p.id] = [];
+            for (let i = 0; i < p.stock; i++) {
+                keys[p.id].push(generateKey(p.id));
             }
-            resetToDefaults();
+        });
+
+        // ========================
+        // FIREBASE FUNCTIONS
+        // ========================
+
+        function setSyncing(isSyncing) {
+            const indicator = document.getElementById("syncIndicator");
+            const text = document.getElementById("syncText");
+            if (isSyncing) {
+                indicator.classList.add("syncing");
+                text.textContent = "Syncing with Firebase...";
+            } else {
+                indicator.classList.remove("syncing");
+                text.textContent = firebaseInitialized ? "Connected to Firebase" : "Local Mode (No Firebase)";
+            }
         }
 
-        function resetToDefaults() {
-            products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
-            keys = {};
+        // Load products from Firebase
+        function loadProductsFromFirebase() {
+            if (!firebaseInitialized) {
+                renderProducts();
+                return;
+            }
+
+            setSyncing(true);
+            const productsRef = db.ref("products");
+
+            productsRef.once("value", (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    products = defaultProducts.map(def => {
+                        const saved = data[def.id];
+                        if (saved) {
+                            return {
+                                ...def,
+                                price: saved.price !== undefined ? saved.price : def.price,
+                                stock: saved.stock !== undefined ? saved.stock : def.stock
+                            };
+                        }
+                        return def;
+                    });
+                }
+                loadKeysFromFirebase();
+                setSyncing(false);
+                renderProducts();
+            }, (error) => {
+                console.error("Error loading products:", error);
+                setSyncing(false);
+                renderProducts();
+            });
+        }
+
+        // Save products to Firebase
+        function saveProductsToFirebase() {
+            if (!firebaseInitialized) return;
+
+            setSyncing(true);
+            const productsRef = db.ref("products");
+            const dataToSave = {};
             products.forEach(p => {
-                keys[p.id] = [];
-                for (let i = 0; i < p.stock; i++) {
-                    keys[p.id].push(generateKey(p.id));
+                dataToSave[p.id] = {
+                    price: p.price,
+                    stock: p.stock
+                };
+            });
+
+            productsRef.set(dataToSave).then(() => {
+                setSyncing(false);
+            }).catch(err => {
+                console.error("Error saving products:", err);
+                setSyncing(false);
+            });
+        }
+
+        // Load keys from Firebase
+        function loadKeysFromFirebase() {
+            if (!firebaseInitialized) return;
+
+            const keysRef = db.ref("keys");
+            keysRef.once("value", (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    Object.keys(data).forEach(productId => {
+                        if (keys[productId]) {
+                            keys[productId] = data[productId] || [];
+                        }
+                    });
+                }
+                products.forEach(p => {
+                    const needed = p.stock;
+                    const current = keys[p.id] ? keys[p.id].length : 0;
+                    if (current < needed) {
+                        for (let i = 0; i < needed - current; i++) {
+                            keys[p.id].push(generateKey(p.id));
+                        }
+                        saveKeysToFirebase();
+                    }
+                });
+            });
+        }
+
+        // Save keys to Firebase
+        function saveKeysToFirebase() {
+            if (!firebaseInitialized) return;
+
+            const keysRef = db.ref("keys");
+            keysRef.set(keys).catch(err => {
+                console.error("Error saving keys:", err);
+            });
+        }
+
+        // Load orders from Firebase
+        function loadOrdersFromFirebase() {
+            if (!firebaseInitialized) return;
+
+            const ordersRef = db.ref("orders");
+            ordersRef.once("value", (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    orders = Object.values(data).reverse();
+                }
+                updateAdminStats();
+                renderAdminTables();
+            });
+        }
+
+        // Save order to Firebase
+        function saveOrderToFirebase(order) {
+            if (!firebaseInitialized) return;
+
+            const ordersRef = db.ref("orders/" + order.id);
+            ordersRef.set(order).catch(err => {
+                console.error("Error saving order:", err);
+            });
+        }
+
+        // Listen for real-time updates
+        function setupRealtimeListeners() {
+            if (!firebaseInitialized) return;
+
+            db.ref("products").on("value", (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    products = defaultProducts.map(def => {
+                        const saved = data[def.id];
+                        if (saved) {
+                            return {
+                                ...def,
+                                price: saved.price !== undefined ? saved.price : def.price,
+                                stock: saved.stock !== undefined ? saved.stock : def.stock
+                            };
+                        }
+                        return def;
+                    });
+                    renderProducts();
+                    updateAdminStats();
+                    renderAdminTables();
+                }
+            });
+
+            db.ref("orders").on("value", (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    orders = Object.values(data).reverse();
+                    updateAdminStats();
+                    renderAdminTables();
                 }
             });
         }
 
-        function saveAdminSession() {
-            if (!isAdminLoggedIn) return;
-            const data = { products, keys, orders, time: Date.now() };
-            sessionStorage.setItem('kity_admin', JSON.stringify(data));
-        }
-
-        function loadAdminSession() {
-            const saved = sessionStorage.getItem('kity_admin');
-            if (saved) {
-                try {
-                    const data = JSON.parse(saved);
-                    products = data.products || products;
-                    keys = data.keys || keys;
-                    orders = data.orders || [];
-                    return true;
-                } catch (e) {}
-            }
-            return false;
-        }
-
-        function clearAdminSession() {
-            sessionStorage.removeItem('kity_admin');
-            sessionStorage.removeItem('kity_auth');
-            isAdminLoggedIn = false;
-        }
-
-        function exportProductsJSON() {
-            const data = { products, keys, exportDate: new Date().toISOString() };
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'products.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showToast('products.json exported! Upload to your GitHub repo.', 'success');
-        }
-
-        function importProductsJSON(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (data.products && data.keys) {
-                        products = data.products;
-                        keys = data.keys;
-                        saveAdminSession();
-                        renderProducts();
-                        updateAdminStats();
-                        renderAdminTables();
-                        showToast('Products imported successfully!', 'success');
-                    } else {
-                        throw new Error('Invalid format');
-                    }
-                } catch (err) {
-                    showToast('Error: ' + err.message, 'error');
-                }
-            };
-            reader.readAsText(file);
-            event.target.value = '';
-        }
-
-        function exportOrdersCSV() {
-            if (orders.length === 0) {
-                showToast('No orders to export', 'info');
-                return;
-            }
-            const csv = [
-                ['Order ID', 'Product', 'Telegram ID', 'Amount', 'Key', 'Payment ID', 'Status', 'Time'].join(','),
-                ...orders.map(o => [
-                    o.id, o.product, o.telegramId, o.amount, o.key, o.paymentId, o.status, o.time
-                ].map(v => '"' + v + '"').join(','))
-            ].join('\n');
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'orders_' + new Date().toISOString().split('T')[0] + '.csv';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showToast('Orders exported!', 'success');
-        }
-
-        function resetAllStock() {
-            if (!confirm('Reset ALL stock to default values?')) return;
-            resetToDefaults();
-            orders = [];
-            saveAdminSession();
-            renderProducts();
-            updateAdminStats();
-            renderAdminTables();
-            showToast('All stock reset to defaults!', 'info');
-        }
+        // ========================
+        // UTILITY FUNCTIONS
+        // ========================
 
         function generateKey(productId) {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let key = 'KEY-';
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            let key = "KEY-";
             for (let i = 0; i < 3; i++) {
-                for (let j = 0; j < 4; j++) key += chars.charAt(Math.floor(Math.random() * chars.length));
-                if (i < 2) key += '-';
+                for (let j = 0; j < 4; j++) {
+                    key += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                if (i < 2) key += "-";
             }
             return key;
         }
 
+        // ========================
+        // UI FUNCTIONS
+        // ========================
+
         function renderProducts() {
-            const grid = document.getElementById('productsGrid');
+            const grid = document.getElementById("productsGrid");
             grid.innerHTML = products.map(product => {
-                const stockStatus = product.stock > 10 ? 'in-stock' : product.stock > 0 ? 'low-stock' : 'out-stock';
-                const stockText = product.stock > 10 ? 'In Stock' : product.stock > 0 ? 'Only ' + product.stock + ' left' : 'Out of Stock';
-                const btnClass = product.stock > 0 ? 'available' : 'unavailable';
-                const btnText = product.stock > 0 ? 'Buy Now' : 'Out of Stock';
+                const stockStatus = product.stock > 10 ? "in-stock" : product.stock > 0 ? "low-stock" : "out-stock";
+                const stockText = product.stock > 10 ? "In Stock" : product.stock > 0 ? "Only " + product.stock + " left" : "Out of Stock";
+                const btnClass = product.stock > 0 ? "available" : "unavailable";
+                const btnText = product.stock > 0 ? "Buy Now" : "Out of Stock";
+
                 return `
                     <div class="product-card">
                         <div class="product-icon"><i class="fas ${product.icon}"></i></div>
@@ -793,59 +834,73 @@
                         <div class="duration"><i class="fas fa-hourglass-half"></i> ${product.duration}</div>
                         <div class="price">Rs.${product.price}</div>
                         <div class="stock-status ${stockStatus}">
-                            <i class="fas fa-circle" style="font-size: 0.5rem;"></i> ${stockText}
+                            <i class="fas fa-circle" style="font-size: 0.5rem;"></i>
+                            ${stockText}
                         </div>
-                        <button class="buy-btn ${btnClass}" onclick="openBuyModal('${product.id}')" ${product.stock === 0 ? 'disabled' : ''}>
+                        <button class="buy-btn ${btnClass}" onclick="openBuyModal('${product.id}')" ${product.stock === 0 ? "disabled" : ""}>
                             <i class="fas fa-shopping-cart"></i> ${btnText}
                         </button>
-                    </div>`;
-            }).join('');
+                    </div>
+                `;
+            }).join("");
             observeProducts();
         }
 
         function smoothScrollTo(targetId) {
             const element = document.getElementById(targetId);
             if (element) {
-                const navHeight = document.getElementById('navbar').offsetHeight;
+                const navHeight = document.getElementById("navbar").offsetHeight;
                 const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-                window.scrollTo({ top: elementPosition - navHeight - 20, behavior: 'smooth' });
+                const offsetPosition = elementPosition - navHeight - 20;
+                window.scrollTo({ top: offsetPosition, behavior: "smooth" });
             }
             updateActiveNav(targetId);
         }
 
         function updateActiveNav(activeId) {
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-                if (link.dataset.section === activeId) link.classList.add('active');
+            document.querySelectorAll(".nav-link").forEach(link => {
+                link.classList.remove("active");
+                if (link.dataset.section === activeId) link.classList.add("active");
             });
         }
 
         function openBuyModal(productId) {
             const product = products.find(p => p.id === productId);
-            if (!product || product.stock <= 0) { showToast('Product is out of stock!', 'error'); return; }
+            if (!product || product.stock <= 0) {
+                showToast("Product is out of stock!", "error");
+                return;
+            }
             currentProduct = product;
-            document.getElementById('selectedPlan').value = product.name;
-            document.getElementById('selectedPrice').value = 'Rs.' + product.price;
-            document.getElementById('buyModal').classList.add('active');
-            document.getElementById('buyModalContent').classList.remove('hidden');
-            document.getElementById('paymentSuccess').classList.add('hidden');
+            document.getElementById("selectedPlan").value = product.name;
+            document.getElementById("selectedPrice").value = "Rs." + product.price;
+            document.getElementById("buyModal").classList.add("active");
+            document.getElementById("buyModalContent").classList.remove("hidden");
+            document.getElementById("paymentSuccess").classList.add("hidden");
         }
 
-        function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove("active");
+        }
 
         function resetBuyModal() {
-            document.getElementById('telegramId').value = '';
-            document.getElementById('email').value = '';
-            document.getElementById('buyModalContent').classList.remove('hidden');
-            document.getElementById('paymentSuccess').classList.add('hidden');
+            document.getElementById("telegramId").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("buyModalContent").classList.remove("hidden");
+            document.getElementById("paymentSuccess").classList.add("hidden");
         }
 
         function processPayment() {
-            const telegramId = document.getElementById('telegramId').value.trim();
-            if (!telegramId) { showToast('Please enter your Telegram ID!', 'error'); return; }
-            if (!telegramId.startsWith('@')) { showToast('Telegram ID must start with @', 'error'); return; }
+            const telegramId = document.getElementById("telegramId").value.trim();
+            if (!telegramId) {
+                showToast("Please enter your Telegram ID!", "error");
+                return;
+            }
+            if (!telegramId.startsWith("@")) {
+                showToast("Telegram ID must start with @ (e.g., @username)", "error");
+                return;
+            }
 
-            const payBtn = document.getElementById('payBtn');
+            const payBtn = document.getElementById("payBtn");
             payBtn.innerHTML = '<div class="loading"></div> Loading...';
             payBtn.disabled = true;
 
@@ -856,13 +911,24 @@
                 name: "KITY SHOP",
                 description: currentProduct.name,
                 image: "https://cdn-icons-png.flaticon.com/512/2885/2885417.png",
-                handler: function (response) { handlePaymentSuccess(response, telegramId); },
-                prefill: { name: "", email: document.getElementById('email').value || "", contact: "" },
-                notes: { product: currentProduct.name, telegram_id: telegramId },
-                theme: { color: "#8b6914" },
+                handler: function (response) {
+                    handlePaymentSuccess(response, telegramId);
+                },
+                prefill: {
+                    name: "",
+                    email: document.getElementById("email").value || "",
+                    contact: ""
+                },
+                notes: {
+                    product: currentProduct.name,
+                    telegram_id: telegramId
+                },
+                theme: {
+                    color: "#8b6914"
+                },
                 modal: {
                     ondismiss: function() {
-                        showToast('Payment cancelled', 'info');
+                        showToast("Payment cancelled", "info");
                         payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
                         payBtn.disabled = false;
                     },
@@ -873,8 +939,8 @@
 
             try {
                 const rzp = new Razorpay(options);
-                rzp.on('payment.failed', function (response) {
-                    showToast('Payment failed: ' + response.error.description, 'error');
+                rzp.on("payment.failed", function (response) {
+                    showToast("Payment failed: " + response.error.description, "error");
                     payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
                     payBtn.disabled = false;
                 });
@@ -884,7 +950,7 @@
                     payBtn.disabled = false;
                 }, 1000);
             } catch (error) {
-                showToast('Error: ' + error.message, 'error');
+                showToast("Error loading Razorpay: " + error.message, "error");
                 payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
                 payBtn.disabled = false;
             }
@@ -894,285 +960,346 @@
             const productIndex = products.findIndex(p => p.id === currentProduct.id);
             if (productIndex > -1 && products[productIndex].stock > 0) {
                 products[productIndex].stock--;
-                const key = keys[currentProduct.id].pop() || generateKey(currentProduct.id);
+
+                let key;
+                if (keys[currentProduct.id] && keys[currentProduct.id].length > 0) {
+                    key = keys[currentProduct.id].pop();
+                } else {
+                    key = generateKey(currentProduct.id);
+                }
+
                 const order = {
-                    id: 'ORD-' + Date.now(),
+                    id: "ORD-" + Date.now(),
                     product: currentProduct.name,
                     productId: currentProduct.id,
                     telegramId: telegramId,
                     amount: currentProduct.price,
                     key: key,
                     paymentId: response.razorpay_payment_id,
-                    status: 'Delivered',
+                    status: "Delivered",
                     time: new Date().toLocaleString()
                 };
                 orders.unshift(order);
-                if (isAdminLoggedIn) saveAdminSession();
 
-                document.getElementById('buyModalContent').classList.add('hidden');
-                document.getElementById('paymentSuccess').classList.remove('hidden');
-                document.getElementById('sentKeyDisplay').textContent = key;
+                document.getElementById("buyModalContent").classList.add("hidden");
+                document.getElementById("paymentSuccess").classList.remove("hidden");
+                document.getElementById("sentKeyDisplay").textContent = key;
 
                 sendToTelegram(telegramId, key, currentProduct);
+
+                saveProductsToFirebase();
+                saveKeysToFirebase();
+                saveOrderToFirebase(order);
+
                 renderProducts();
                 updateAdminStats();
                 renderAdminTables();
-                showToast('Payment successful! Key sent to Telegram.', 'success');
+
+                showToast("Payment successful! Key sent to Telegram.", "success");
             } else {
-                showToast('Sorry, this product just went out of stock!', 'error');
+                showToast("Sorry, this product just went out of stock!", "error");
             }
         }
 
         function sendToTelegram(telegramId, key, product) {
-            if (TELEGRAM_BOT_TOKEN === 'YOUR_BOT_TOKEN_HERE') {
-                console.log('Telegram not configured. Key:', key);
+            if (TELEGRAM_BOT_TOKEN === "YOUR_BOT_TOKEN_HERE") {
+                console.log("Telegram Bot Token not configured. Key would be sent to:", telegramId);
+                console.log("Key:", key);
                 return;
             }
-            const message = 'KITY SHOP Delivery\n\nPayment Successful!\nProduct: ' + product.name + '\nDuration: ' + product.duration + '\nKey: ' + key + '\n\nThank you for your purchase!';
-            fetch('https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: telegramId, text: message, parse_mode: 'HTML' })
+
+            const message = "KITY SHOP Delivery\n\n" +
+                "Payment Successful!\n" +
+                "Product: " + product.name + "\n" +
+                "Duration: " + product.duration + "\n" +
+                "Key: " + key + "\n\n" +
+                "Thank you for your purchase!";
+
+            fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chat_id: telegramId,
+                    text: message,
+                    parse_mode: "HTML"
+                })
             }).then(res => res.json()).then(data => {
-                if (data.ok) console.log('Telegram sent');
-                else console.error('Telegram error:', data);
-            }).catch(err => console.error('Telegram failed:', err));
+                if (data.ok) {
+                    console.log("Telegram message sent successfully");
+                } else {
+                    console.error("Telegram error:", data);
+                }
+            }).catch(err => {
+                console.error("Failed to send Telegram message:", err);
+            });
         }
 
         function showAdminLogin() {
-            document.getElementById('adminLoginModal').classList.add('active');
-            document.getElementById('adminUsername').value = '';
-            document.getElementById('adminPassword').value = '';
-            setTimeout(() => document.getElementById('adminUsername').focus(), 100);
+            document.getElementById("adminLoginModal").classList.add("active");
         }
 
-        async function loginAdmin() {
-            const username = document.getElementById('adminUsername').value.trim();
-            const password = document.getElementById('adminPassword').value;
+        function loginAdmin() {
+            const username = document.getElementById("adminUsername").value;
+            const password = document.getElementById("adminPassword").value;
 
-            if (!username || !password) {
-                showToast('Please enter both username and password!', 'error');
-                return;
-            }
-
-            try {
-                const hashedPassword = await sha256(password);
-
-                if (username === ADMIN_USER && hashedPassword === ADMIN_HASH) {
-                    isAdminLoggedIn = true;
-                    const hasSession = loadAdminSession();
-
-                    document.getElementById('adminLoginModal').classList.remove('active');
-                    document.getElementById('mainContent').classList.add('hidden');
-                    document.getElementById('adminPanel').classList.add('active');
-                    document.getElementById('adminUsername').value = '';
-                    document.getElementById('adminPassword').value = '';
-
-                    updateAdminStats();
-                    renderAdminTables();
-                    showToast(hasSession ? 'Welcome back! Session restored.' : 'Welcome to Admin Panel!', 'success');
-                } else {
-                    showToast('Invalid username or password!', 'error');
-                    document.getElementById('adminPassword').value = '';
-                }
-            } catch (error) {
-                showToast('Login error: ' + error.message, 'error');
+            if (username === "admin" && password === "admin123") {
+                document.getElementById("adminLoginModal").classList.remove("active");
+                document.getElementById("mainContent").classList.add("hidden");
+                document.getElementById("adminPanel").classList.add("active");
+                document.getElementById("adminUsername").value = "";
+                document.getElementById("adminPassword").value = "";
+                updateAdminStats();
+                renderAdminTables();
+                showToast("Welcome to Admin Panel!", "success");
+            } else {
+                showToast("Invalid credentials!", "error");
             }
         }
 
         function logoutAdmin() {
-            clearAdminSession();
-            document.getElementById('adminPanel').classList.remove('active');
-            document.getElementById('mainContent').classList.remove('hidden');
-            showToast('Logged out successfully', 'info');
+            document.getElementById("adminPanel").classList.remove("active");
+            document.getElementById("mainContent").classList.remove("hidden");
+            showToast("Logged out successfully", "info");
         }
 
         function updateAdminStats() {
             const total = products.reduce((sum, p) => sum + p.stock, 0);
             const available = products.filter(p => p.stock > 0).length;
-            const sessionOrders = orders.length;
+            const todayOrders = orders.filter(o => {
+                const orderDate = new Date(o.time).toDateString();
+                const today = new Date().toDateString();
+                return orderDate === today;
+            }).length;
             const revenue = orders.reduce((sum, o) => sum + o.amount, 0);
-            document.getElementById('totalKeys').textContent = total;
-            document.getElementById('availableKeys').textContent = available;
-            document.getElementById('soldToday').textContent = sessionOrders;
-            document.getElementById('revenue').textContent = 'Rs.' + revenue;
+
+            document.getElementById("totalKeys").textContent = total;
+            document.getElementById("availableKeys").textContent = available;
+            document.getElementById("soldToday").textContent = todayOrders;
+            document.getElementById("revenue").textContent = "Rs." + revenue;
         }
 
         function renderAdminTables() {
-            const tbody = document.getElementById('adminTableBody');
+            const tbody = document.getElementById("adminTableBody");
             tbody.innerHTML = products.map(p => {
-                const status = p.stock > 0 
-                    ? '<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Active</span>' 
-                    : '<span style="color: var(--danger);"><i class="fas fa-times-circle"></i> Out</span>';
-                return `<tr>
-                    <td>${p.name}</td>
-                    <td>Rs.${p.price}</td>
-                    <td>${p.stock}</td>
-                    <td>${status}</td>
-                    <td>
-                        <button class="action-btn edit" onclick="editProduct('${p.id}')"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn delete" onclick="deleteProduct('${p.id}')"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>`;
-            }).join('');
+                const status = p.stock > 0 ? 
+                    '<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Active</span>' :
+                    '<span style="color: var(--danger);"><i class="fas fa-times-circle"></i> Out of Stock</span>';
+                return `
+                    <tr>
+                        <td>${p.name}</td>
+                        <td>Rs.${p.price}</td>
+                        <td>${p.stock}</td>
+                        <td>${status}</td>
+                        <td>
+                            <button class="action-btn edit" onclick="editProduct('${p.id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="action-btn delete" onclick="deleteProduct('${p.id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
 
-            const ordersBody = document.getElementById('ordersTableBody');
-            ordersBody.innerHTML = orders.slice(0, 10).map(o =>
-                `<tr>
+            const ordersBody = document.getElementById("ordersTableBody");
+            ordersBody.innerHTML = orders.slice(0, 10).map(o => `
+                <tr>
                     <td>${o.id}</td>
                     <td>${o.product}</td>
                     <td>${o.telegramId}</td>
                     <td>Rs.${o.amount}</td>
                     <td><span style="color: var(--success);"><i class="fas fa-check"></i> ${o.status}</span></td>
                     <td>${o.time}</td>
-                </tr>`
-            ).join('') || '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No orders yet</td></tr>';
+                </tr>
+            `).join("") || '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No orders yet</td></tr>';
         }
 
-        function showAddStockModal() { document.getElementById('addStockModal').classList.add('active'); }
+        function showAddStockModal() {
+            document.getElementById("addStockModal").classList.add("active");
+        }
 
         function addStock() {
-            const duration = document.getElementById('stockDuration').value;
-            const price = parseInt(document.getElementById('stockPrice').value);
-            const quantity = parseInt(document.getElementById('stockQuantity').value);
-            const keysInput = document.getElementById('stockKeys').value.trim();
+            const duration = document.getElementById("stockDuration").value;
+            const price = parseInt(document.getElementById("stockPrice").value);
+            const quantity = parseInt(document.getElementById("stockQuantity").value);
+            const keysInput = document.getElementById("stockKeys").value.trim();
 
-            if (!price || !quantity) { showToast('Please fill in all required fields!', 'error'); return; }
+            if (!price || !quantity) {
+                showToast("Please fill in all required fields!", "error");
+                return;
+            }
 
             const product = products.find(p => p.id === duration);
             if (product) {
                 product.price = price;
                 product.stock += quantity;
+
                 if (keysInput) {
-                    const customKeys = keysInput.split('\n').filter(k => k.trim());
+                    const customKeys = keysInput.split("\n").filter(k => k.trim());
                     keys[duration].push(...customKeys);
                 } else {
-                    for (let i = 0; i < quantity; i++) keys[duration].push(generateKey(duration));
+                    for (let i = 0; i < quantity; i++) {
+                        keys[duration].push(generateKey(duration));
+                    }
                 }
-                saveAdminSession();
+
+                saveProductsToFirebase();
+                saveKeysToFirebase();
+
                 renderProducts();
                 updateAdminStats();
                 renderAdminTables();
-                closeModal('addStockModal');
-                showToast('Added ' + quantity + ' keys to ' + product.name + '!', 'success');
-                document.getElementById('stockPrice').value = '';
-                document.getElementById('stockQuantity').value = '';
-                document.getElementById('stockKeys').value = '';
+                closeModal("addStockModal");
+                showToast("Added " + quantity + " keys to " + product.name + "!", "success");
+
+                document.getElementById("stockPrice").value = "";
+                document.getElementById("stockQuantity").value = "";
+                document.getElementById("stockKeys").value = "";
             }
         }
 
         function editProduct(id) {
             const product = products.find(p => p.id === id);
             if (product) {
-                const newPrice = prompt('Enter new price (Rs.):', product.price);
+                const newPrice = prompt("Enter new price (Rs.):", product.price);
                 if (newPrice && !isNaN(newPrice)) {
                     product.price = parseInt(newPrice);
-                    saveAdminSession();
+                    saveProductsToFirebase();
                     renderProducts();
                     updateAdminStats();
                     renderAdminTables();
-                    showToast('Product updated!', 'success');
+                    showToast("Product updated!", "success");
                 }
             }
         }
 
         function deleteProduct(id) {
-            if (confirm('Are you sure you want to reset stock for this product?')) {
+            if (confirm("Are you sure you want to reset stock for this product?")) {
                 const product = products.find(p => p.id === id);
                 if (product) {
                     product.stock = 0;
                     keys[id] = [];
-                    saveAdminSession();
+                    saveProductsToFirebase();
+                    saveKeysToFirebase();
                     renderProducts();
                     updateAdminStats();
                     renderAdminTables();
-                    showToast('Stock cleared!', 'info');
+                    showToast("Stock cleared!", "info");
                 }
             }
         }
 
         function showToast(message, type) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = 'toast ' + type;
-            const icons = { success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle' };
+            const container = document.getElementById("toastContainer");
+            const toast = document.createElement("div");
+            toast.className = "toast " + type;
+
+            const icons = {
+                success: "fa-check-circle",
+                error: "fa-times-circle",
+                info: "fa-info-circle"
+            };
+
             toast.innerHTML = '<i class="fas ' + icons[type] + '"></i><span>' + message + '</span>';
             container.appendChild(toast);
+
             setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = "0";
+                toast.style.transform = "translateX(100%)";
                 setTimeout(() => toast.remove(), 400);
             }, 3000);
         }
 
-        document.querySelectorAll('.modal-overlay').forEach(overlay => {
-            overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('active'); });
+        document.querySelectorAll(".modal-overlay").forEach(overlay => {
+            overlay.addEventListener("click", (e) => {
+                if (e.target === overlay) overlay.classList.remove("active");
+            });
         });
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("active"));
+            }
         });
 
-        const sections = document.querySelectorAll('section[id]');
-        const navLinks = document.querySelectorAll('.nav-link');
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(section => { if (scrollY >= section.offsetTop - 200) current = section.getAttribute('id'); });
-            navLinks.forEach(link => { link.classList.remove('active'); if (link.dataset.section === current) link.classList.add('active'); });
+        const sections = document.querySelectorAll("section[id]");
+        const navLinks = document.querySelectorAll(".nav-link");
+
+        window.addEventListener("scroll", () => {
+            let current = "";
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute("id");
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove("active");
+                if (link.dataset.section === current) link.classList.add("active");
+            });
         });
 
         function observeProducts() {
             const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add("visible");
+                });
             }, { threshold: 0.1 });
-            document.querySelectorAll('.product-card').forEach(card => observer.observe(card));
+            document.querySelectorAll(".product-card").forEach(card => observer.observe(card));
         }
 
         const featureObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add("visible");
+            });
         }, { threshold: 0.1 });
-        document.querySelectorAll('.feature-item').forEach(item => featureObserver.observe(item));
+        document.querySelectorAll(".feature-item").forEach(item => featureObserver.observe(item));
 
         function toggleMobileMenu() {
-            const navLinks = document.getElementById('navLinks');
-            const menuToggle = document.getElementById('menuToggle');
-            navLinks.classList.toggle('active');
-            menuToggle.classList.toggle('active');
-            const icon = menuToggle.querySelector('i');
-            if (navLinks.classList.contains('active')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
+            const navLinks = document.getElementById("navLinks");
+            const menuToggle = document.getElementById("menuToggle");
+            navLinks.classList.toggle("active");
+            menuToggle.classList.toggle("active");
+            const icon = menuToggle.querySelector("i");
+            if (navLinks.classList.contains("active")) {
+                icon.classList.remove("fa-bars");
+                icon.classList.add("fa-times");
             } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
+                icon.classList.remove("fa-times");
+                icon.classList.add("fa-bars");
             }
         }
 
         function closeMobileMenu() {
-            const navLinks = document.getElementById('navLinks');
-            const menuToggle = document.getElementById('menuToggle');
-            navLinks.classList.remove('active');
-            menuToggle.classList.remove('active');
-            const icon = menuToggle.querySelector('i');
-            icon.classList.remove('fa-times');
-            icon.classList.add('fa-bars');
+            const navLinks = document.getElementById("navLinks");
+            const menuToggle = document.getElementById("menuToggle");
+            navLinks.classList.remove("active");
+            menuToggle.classList.remove("active");
+            const icon = menuToggle.querySelector("i");
+            icon.classList.remove("fa-times");
+            icon.classList.add("fa-bars");
         }
 
-        document.addEventListener('click', (e) => {
-            const navLinks = document.getElementById('navLinks');
-            const menuToggle = document.getElementById('menuToggle');
-            if (navLinks.classList.contains('active') && !navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
+        document.addEventListener("click", (e) => {
+            const navLinks = document.getElementById("navLinks");
+            const menuToggle = document.getElementById("menuToggle");
+            if (navLinks.classList.contains("active") && 
+                !navLinks.contains(e.target) && 
+                !menuToggle.contains(e.target)) {
                 closeMobileMenu();
             }
         });
 
-        async function init() {
-            await loadProducts();
-            renderProducts();
-            console.log('KITY SHOP initialized!');
-        }
+        // ========================
+        // INITIALIZATION
+        // ========================
 
-        init();
+        loadProductsFromFirebase();
+        loadOrdersFromFirebase();
+        setupRealtimeListeners();
+
+        console.log("KITY SHOP with Firebase loaded!");
     </script>
 </body>
 </html>
