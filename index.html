@@ -420,9 +420,9 @@
         </div>
         <div class="nav-center-title">KITY SHOP</div>
         <div class="nav-links" id="navLinks">
-            <button class="nav-link" data-section="hero" onclick="smoothScrollTo('hero'); closeMobileMenu();">Home</button>
-            <button class="nav-link" data-section="products" onclick="smoothScrollTo('products'); closeMobileMenu();">Products</button>
-            <button class="nav-link" data-section="features" onclick="smoothScrollTo('features'); closeMobileMenu();">Features</button>
+            <button class="nav-link main-nav-item" data-section="hero" onclick="smoothScrollTo('hero'); closeMobileMenu();">Home</button>
+            <button class="nav-link main-nav-item" data-section="products" onclick="smoothScrollTo('products'); closeMobileMenu();">Products</button>
+            <button class="nav-link main-nav-item" data-section="features" onclick="smoothScrollTo('features'); closeMobileMenu();">Features</button>
         </div>
         <button class="menu-toggle" id="menuToggle" onclick="toggleMobileMenu()">
             <i class="fas fa-bars"></i>
@@ -1101,11 +1101,13 @@
             document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("navbar").classList.add("nav-hidden");
             document.getElementById("syncIndicator").style.display = "none";
-            // Remove all user nav items
+            // Remove all user nav items AND hide main nav items
             const navLinks = document.getElementById("navLinks");
             if (navLinks) {
                 const existingUserItems = navLinks.querySelectorAll('.user-nav-item');
                 existingUserItems.forEach(el => el.remove());
+                const mainItems = navLinks.querySelectorAll('.main-nav-item');
+                mainItems.forEach(el => el.style.display = 'none');
             }
         }
 
@@ -1115,6 +1117,13 @@
             document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("navbar").classList.remove("nav-hidden");
             document.getElementById("syncIndicator").style.display = "flex";
+
+            // Show main nav links
+            const navLinks = document.getElementById("navLinks");
+            if (navLinks) {
+                const mainItems = navLinks.querySelectorAll('.main-nav-item');
+                mainItems.forEach(el => el.style.display = '');
+            }
 
             // Small delay to ensure navbar is rendered before adding user menu
             setTimeout(() => {
