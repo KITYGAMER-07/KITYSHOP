@@ -269,6 +269,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -528,7 +529,6 @@
         <div class="modal">
             <div class="modal-header">
                 <h2 style="white-space: nowrap;"><i class="fas fa-shopping-cart"></i> Complete Purchase</h2>
-                <button class="close-btn" onclick="closeModal('buyModal'); resetBuyModal();" style="margin-top: -6px;">&times;</button>
             </div>
             <div id="buyModalContent">
                 <div class="form-group">
@@ -563,6 +563,9 @@
                 </div>
                 <button class="btn-primary" id="payBtn" onclick="processPayment()" style="padding: 0.8rem; font-size: 0.95rem;">
                     <i class="fas fa-credit-card"></i> Pay with Razorpay
+                </button>
+                <button class="btn-secondary" onclick="closeModal('buyModal'); resetBuyModal();" style="width: 100%; margin-top: 0.8rem; padding: 0.8rem; font-size: 0.95rem; justify-content: center;">
+                    <i class="fas fa-arrow-left"></i> Skip
                 </button>
             </div>
             <div id="paymentSuccess" class="hidden" style="text-align: center;">
