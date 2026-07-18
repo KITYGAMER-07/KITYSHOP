@@ -28,7 +28,10 @@
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--cream); }
         ::-webkit-scrollbar-thumb { background: var(--brown); border-radius: 4px; }
-        nav { position: fixed; top: 0; width: 100%; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 1000; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+
+        /* NAV - Hidden on auth page */
+        nav { position: fixed; top: 0; width: 100%; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 1000; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); transition: transform 0.3s ease; }
+        nav.nav-hidden { transform: translateY(-100%); pointer-events: none; }
         .logo { font-size: 1.5rem; font-weight: 800; color: var(--brown-darker); display: flex; align-items: center; gap: 0.5rem; cursor: pointer; user-select: none; }
         .nav-links { display: flex; gap: 2rem; align-items: center; }
         .nav-link { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: all 0.3s; cursor: pointer; position: relative; padding: 0.5rem 0; background: none; border: none; font-size: 1rem; font-family: 'Inter', sans-serif; }
@@ -39,6 +42,7 @@
         @media (max-width: 768px) { .nav-center-title { font-size: 1.2rem; } }
         .admin-btn { background: linear-gradient(135deg, var(--brown), var(--brown-dark)); color: white; padding: 0.5rem 1.5rem; border-radius: 50px; border: none; cursor: pointer; font-weight: 600; transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 1rem; }
         .admin-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(139, 105, 20, 0.3); }
+
         .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem; position: relative; }
         .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(196, 168, 130, 0.15); border: 1px solid rgba(196, 168, 130, 0.4); padding: 0.5rem 1.5rem; border-radius: 50px; font-size: 0.9rem; color: var(--brown); margin-bottom: 2rem; animation: fadeInUp 0.8s ease; }
         .hero h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; animation: fadeInUp 0.8s ease 0.2s both; color: var(--brown-darker); }
@@ -146,8 +150,8 @@
             .hero p { font-size: 1rem; }
             .telegram-box { padding: 1.5rem; }
             footer { padding: 2rem 1rem; }
-            .auth-page { padding: 1rem !important; }
-            .auth-card { padding: 1.5rem !important; }
+            .auth-page { padding: 0.5rem !important; }
+            .auth-card { padding: 1.2rem !important; max-width: 340px !important; width: 92% !important; }
         }
         .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(139, 105, 20, 0.3); border-radius: 50%; border-top-color: var(--brown); animation: spin 1s ease-in-out infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -164,60 +168,246 @@
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         .sync-indicator.syncing .dot { background: var(--warning); animation: spin 1s linear infinite; border-radius: 0; width: 10px; height: 10px; border: 2px solid var(--warning); border-top-color: transparent; }
 
-        /* AUTH PAGES */
-        .auth-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; position: relative; }
-        .auth-card { background: var(--white); border-radius: 24px; padding: 2.5rem; width: 100%; max-width: 420px; border: 1px solid var(--border); box-shadow: 0 20px 60px rgba(42, 26, 15, 0.12); animation: slideUp 0.5s ease; }
-        .auth-card .auth-logo { text-align: center; margin-bottom: 1.5rem; }
-        .auth-card .auth-logo img { height: 50px; width: auto; border-radius: 10px; object-fit: contain; margin-bottom: 0.5rem; }
-        .auth-card .auth-logo h2 { font-size: 1.5rem; color: var(--brown-darker); font-weight: 800; }
-        .auth-card .auth-logo p { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.3rem; }
-        .auth-tabs { display: flex; gap: 0.5rem; background: var(--cream); border-radius: 14px; padding: 0.4rem; margin-bottom: 1.5rem; }
-        .auth-tab { flex: 1; padding: 0.7rem; border: none; border-radius: 10px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; color: var(--text-muted); background: transparent; }
-        .auth-tab.active { background: linear-gradient(135deg, var(--brown), var(--brown-dark)); color: white; box-shadow: 0 4px 15px rgba(139, 105, 20, 0.25); }
+        /* ===== AUTH PAGE - COMPACT, NO SCROLL, FITS SCREEN ===== */
+        .auth-page {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            z-index: 500;
+            overflow: hidden;
+        }
+        .auth-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 1.5rem 1.8rem;
+            width: 100%;
+            max-width: 360px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 60px rgba(42, 26, 15, 0.12);
+            animation: slideUp 0.5s ease;
+            max-height: 95vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+        .auth-card::-webkit-scrollbar { display: none; }
+        .auth-card { -ms-overflow-style: none; scrollbar-width: none; }
+        .auth-card .auth-logo { text-align: center; margin-bottom: 0.8rem; }
+        .auth-card .auth-logo img { height: 40px; width: auto; border-radius: 10px; object-fit: contain; margin-bottom: 0.3rem; }
+        .auth-card .auth-logo h2 { font-size: 1.3rem; color: var(--brown-darker); font-weight: 800; }
+        .auth-card .auth-logo p { color: var(--text-muted); font-size: 0.8rem; margin-top: 0.2rem; }
+        .auth-tabs {
+            display: flex;
+            gap: 0.4rem;
+            background: var(--cream);
+            border-radius: 12px;
+            padding: 0.3rem;
+            margin-bottom: 1rem;
+        }
+        .auth-tab {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-muted);
+            background: transparent;
+        }
+        .auth-tab.active {
+            background: linear-gradient(135deg, var(--brown), var(--brown-dark));
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 105, 20, 0.25);
+        }
         .auth-tab:hover:not(.active) { color: var(--brown-dark); }
-        .auth-form .form-group { margin-bottom: 1.1rem; }
-        .auth-form .form-group label { font-size: 0.85rem; font-weight: 600; color: var(--brown-darker); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.4rem; }
-        .auth-form .form-group input { padding: 0.85rem 1rem; font-size: 0.95rem; background: var(--cream); border: 2px solid var(--border); border-radius: 12px; width: 100%; transition: all 0.3s; font-family: 'Inter', sans-serif; color: var(--text); }
-        .auth-form .form-group input:focus { outline: none; border-color: var(--brown-light); box-shadow: 0 0 0 4px rgba(196, 168, 130, 0.15); }
+        .auth-form .form-group { margin-bottom: 0.7rem; }
+        .auth-form .form-group label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--brown-darker);
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .auth-form .form-group input {
+            padding: 0.65rem 0.8rem;
+            font-size: 0.9rem;
+            background: var(--cream);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            width: 100%;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+        }
+        .auth-form .form-group input:focus {
+            outline: none;
+            border-color: var(--brown-light);
+            box-shadow: 0 0 0 3px rgba(196, 168, 130, 0.15);
+        }
         .auth-form .form-group .input-wrap { position: relative; }
-        .auth-form .form-group .input-wrap i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.9rem; }
-        .auth-form .form-group .input-wrap input { padding-left: 2.5rem; }
-        .auth-form .form-group .input-wrap .toggle-pass { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); cursor: pointer; font-size: 0.85rem; background: none; border: none; }
-        .auth-form .btn-primary { width: 100%; padding: 0.9rem; border-radius: 12px; font-size: 1rem; margin-top: 0.5rem; justify-content: center; }
+        .auth-form .form-group .input-wrap i { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; }
+        .auth-form .form-group .input-wrap input { padding-left: 2.2rem; }
+        .auth-form .form-group .input-wrap .toggle-pass {
+            position: absolute;
+            right: 0.7rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.8rem;
+            background: none;
+            border: none;
+            padding: 0.2rem;
+        }
+        .auth-form .btn-primary {
+            width: 100%;
+            padding: 0.7rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            justify-content: center;
+        }
         .auth-form .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
-        .auth-divider { display: flex; align-items: center; gap: 1rem; margin: 1.2rem 0; color: var(--text-muted); font-size: 0.8rem; }
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 0.8rem 0;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
         .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-        .google-btn { width: 100%; padding: 0.85rem; border-radius: 12px; border: 2px solid var(--border); background: var(--white); color: var(--text); font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.6rem; font-family: 'Inter', sans-serif; }
+        .google-btn {
+            width: 100%;
+            padding: 0.7rem;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            background: var(--white);
+            color: var(--text);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
         .google-btn:hover { border-color: var(--brown-light); background: rgba(196, 168, 130, 0.05); }
-        .google-btn img { width: 20px; height: 20px; }
-        .auth-footer { text-align: center; margin-top: 1.2rem; font-size: 0.85rem; color: var(--text-muted); }
+        .google-btn img { width: 18px; height: 18px; }
+        .auth-footer { text-align: center; margin-top: 0.8rem; font-size: 0.8rem; color: var(--text-muted); }
         .auth-footer a { color: var(--brown); font-weight: 600; text-decoration: none; cursor: pointer; }
         .auth-footer a:hover { text-decoration: underline; }
-        .auth-error { background: rgba(185, 28, 28, 0.08); border: 1px solid rgba(185, 28, 28, 0.3); color: var(--danger); padding: 0.7rem 1rem; border-radius: 10px; font-size: 0.85rem; margin-bottom: 1rem; display: none; align-items: center; gap: 0.5rem; }
+        .auth-error {
+            background: rgba(185, 28, 28, 0.08);
+            border: 1px solid rgba(185, 28, 28, 0.3);
+            color: var(--danger);
+            padding: 0.5rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            margin-bottom: 0.7rem;
+            display: none;
+            align-items: center;
+            gap: 0.4rem;
+        }
         .auth-error.show { display: flex; }
-        .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--brown), var(--brown-dark)); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: 2px solid var(--border); transition: all 0.3s; }
+        .user-avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--brown), var(--brown-dark));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: 2px solid var(--border);
+            transition: all 0.3s;
+        }
         .user-avatar:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(139, 105, 20, 0.3); }
-        .user-dropdown { position: absolute; top: 50px; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 0.5rem; box-shadow: 0 10px 40px rgba(42, 26, 15, 0.15); min-width: 180px; display: none; flex-direction: column; gap: 0.2rem; z-index: 1001; }
+        .user-dropdown {
+            position: absolute;
+            top: 50px; right: 0;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 0.5rem;
+            box-shadow: 0 10px 40px rgba(42, 26, 15, 0.15);
+            min-width: 180px;
+            display: none;
+            flex-direction: column;
+            gap: 0.2rem;
+            z-index: 1001;
+        }
         .user-dropdown.show { display: flex; }
-        .user-dropdown-item { padding: 0.7rem 1rem; border-radius: 10px; font-size: 0.9rem; color: var(--text); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.6rem; border: none; background: none; font-family: 'Inter', sans-serif; width: 100%; text-align: left; }
+        .user-dropdown-item {
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border: none;
+            background: none;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+            text-align: left;
+        }
         .user-dropdown-item:hover { background: rgba(196, 168, 130, 0.1); }
         .user-dropdown-item.danger { color: var(--danger); }
         .user-dropdown-item.danger:hover { background: rgba(185, 28, 28, 0.08); }
         .user-dropdown-divider { height: 1px; background: var(--border); margin: 0.3rem 0; }
         .user-menu-wrap { position: relative; }
         .user-name-display { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; margin-right: 0.5rem; }
-        .forgot-link { font-size: 0.8rem; color: var(--brown); text-decoration: none; font-weight: 500; float: right; margin-top: -0.3rem; cursor: pointer; }
+        .forgot-link { font-size: 0.75rem; color: var(--brown); text-decoration: none; font-weight: 500; float: right; margin-top: -0.2rem; cursor: pointer; }
         .forgot-link:hover { text-decoration: underline; }
-        .reset-sent { text-align: center; padding: 1rem; display: none; }
+        .reset-sent { text-align: center; padding: 0.8rem; display: none; }
         .reset-sent.show { display: block; }
-        .reset-sent i { font-size: 3rem; color: var(--success); margin-bottom: 0.5rem; }
+        .reset-sent i { font-size: 2.5rem; color: var(--success); margin-bottom: 0.3rem; }
+        .reset-sent h3 { font-size: 1rem; color: var(--brown-darker); margin-bottom: 0.2rem; }
+        .reset-sent p { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* Admin login button in auth */
+        .admin-login-btn {
+            width: 100%;
+            padding: 0.6rem;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            font-family: 'Inter', sans-serif;
+            margin-top: 0.5rem;
+        }
+        .admin-login-btn:hover { border-color: var(--brown); color: var(--brown); background: rgba(196, 168, 130, 0.05); }
     </style>
 <base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
 
-    <nav id="navbar">
+    <!-- NAVBAR - Hidden on auth page, shown after login -->
+    <nav id="navbar" class="nav-hidden">
         <div class="logo" onclick="smoothScrollTo('hero')">
             <img src="logo.jpg" alt="KITY SHOP" style="height: 40px; width: auto; border-radius: 8px; object-fit: contain;">
         </div>
@@ -226,9 +416,6 @@
             <button class="nav-link" data-section="hero" onclick="smoothScrollTo('hero'); closeMobileMenu();">Home</button>
             <button class="nav-link" data-section="products" onclick="smoothScrollTo('products'); closeMobileMenu();">Products</button>
             <button class="nav-link" data-section="features" onclick="smoothScrollTo('features'); closeMobileMenu();">Features</button>
-            <button class="admin-btn" onclick="showAdminLogin(); closeMobileMenu();">
-                <i class="fas fa-lock"></i> Admin
-            </button>
         </div>
         <button class="menu-toggle" id="menuToggle" onclick="toggleMobileMenu()">
             <i class="fas fa-bars"></i>
@@ -237,13 +424,13 @@
 
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- AUTH PAGE -->
+    <!-- ==================== AUTH PAGE ==================== -->
     <div class="auth-page" id="authPage">
         <div class="auth-card">
             <div class="auth-logo">
                 <img src="logo.jpg" alt="KITY SHOP" onerror="this.style.display='none'">
                 <h2>KITY SHOP</h2>
-                <p>Sign in to access your keys & orders</p>
+                <p>Sign in to access your keys and orders</p>
             </div>
 
             <div class="auth-tabs">
@@ -256,24 +443,25 @@
                 <div class="auth-error" id="signInError"><i class="fas fa-exclamation-circle"></i> <span></span></div>
                 <div class="form-group">
                     <label><i class="fas fa-envelope" style="color: var(--brown);"></i> Email</label>
-                    <div class="input-wrap">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" id="signInEmail" placeholder="your@email.com" required>
-                    </div>
+                    <input type="email" id="signInEmail" placeholder="your@email.com" required>
                 </div>
                 <div class="form-group">
-                    <label><i class="fas fa-lock" style="color: var(--brown);"></i> Password</label>
-                    <a class="forgot-link" onclick="showForgotPassword()">Forgot?</a>
-                    <div class="input-wrap">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="signInPassword" placeholder="Enter password" required>
-                        <button type="button" class="toggle-pass" onclick="togglePassword('signInPassword', this)">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                        <label style="margin-bottom: 0;"><i class="fas fa-lock" style="color: var(--brown);"></i> Password</label>
+                        <a onclick="showForgotPassword()" style="font-size: 0.75rem; color: var(--brown); text-decoration: none; font-weight: 500; cursor: pointer;">Forgot?</a>
+                    </div>
+                    <div style="position: relative;">
+                        <input type="password" id="signInPassword" placeholder="Enter password" required style="padding-right: 2.2rem;">
+                        <button type="button" onclick="togglePassword('signInPassword', this)" style="position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; padding: 0.2rem;">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
                 </div>
                 <button type="submit" class="btn-primary" id="signInBtn">
                     <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+                <button type="button" class="admin-login-btn" onclick="showAdminLogin()">
+                    <i class="fas fa-lock"></i> Admin Login
                 </button>
             </form>
 
@@ -282,40 +470,35 @@
                 <div class="auth-error" id="signUpError"><i class="fas fa-exclamation-circle"></i> <span></span></div>
                 <div class="form-group">
                     <label><i class="fas fa-user" style="color: var(--brown);"></i> Full Name</label>
-                    <div class="input-wrap">
-                        <i class="fas fa-user"></i>
-                        <input type="text" id="signUpName" placeholder="John Doe" required>
-                    </div>
+                    <input type="text" id="signUpName" placeholder="John Doe" required>
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-envelope" style="color: var(--brown);"></i> Email</label>
-                    <div class="input-wrap">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" id="signUpEmail" placeholder="your@email.com" required>
-                    </div>
+                    <input type="email" id="signUpEmail" placeholder="your@email.com" required>
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-lock" style="color: var(--brown);"></i> Password</label>
-                    <div class="input-wrap">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="signUpPassword" placeholder="Min 6 characters" required minlength="6">
-                        <button type="button" class="toggle-pass" onclick="togglePassword('signUpPassword', this)">
+                    <div style="position: relative;">
+                        <input type="password" id="signUpPassword" placeholder="Min 6 characters" required minlength="6" style="padding-right: 2.2rem;">
+                        <button type="button" onclick="togglePassword('signUpPassword', this)" style="position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; padding: 0.2rem;">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-lock" style="color: var(--brown);"></i> Confirm Password</label>
-                    <div class="input-wrap">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="signUpConfirm" placeholder="Confirm password" required>
-                        <button type="button" class="toggle-pass" onclick="togglePassword('signUpConfirm', this)">
+                    <div style="position: relative;">
+                        <input type="password" id="signUpConfirm" placeholder="Confirm password" required style="padding-right: 2.2rem;">
+                        <button type="button" onclick="togglePassword('signUpConfirm', this)" style="position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; padding: 0.2rem;">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
                 </div>
                 <button type="submit" class="btn-primary" id="signUpBtn">
                     <i class="fas fa-user-plus"></i> Create Account
+                </button>
+                <button type="button" class="admin-login-btn" onclick="showAdminLogin()">
+                    <i class="fas fa-lock"></i> Admin Login
                 </button>
             </form>
 
@@ -324,25 +507,25 @@
                 <div class="auth-error" id="forgotError"><i class="fas fa-exclamation-circle"></i> <span></span></div>
                 <div class="reset-sent" id="resetSent">
                     <i class="fas fa-paper-plane"></i>
-                    <h3 style="color: var(--brown-darker); margin-bottom: 0.3rem;">Reset Link Sent!</h3>
-                    <p style="color: var(--text-muted); font-size: 0.85rem;">Check your email inbox.</p>
-                    <button type="button" class="btn-primary" style="margin-top: 1rem;" onclick="switchAuthTab('signin')">
+                    <h3>Reset Link Sent!</h3>
+                    <p>Check your email inbox.</p>
+                    <button type="button" class="btn-primary" style="margin-top: 0.8rem;" onclick="switchAuthTab('signin')">
                         <i class="fas fa-arrow-left"></i> Back to Sign In
                     </button>
                 </div>
                 <div id="forgotFields">
                     <div class="form-group">
                         <label><i class="fas fa-envelope" style="color: var(--brown);"></i> Email</label>
-                        <div class="input-wrap">
-                            <i class="fas fa-envelope"></i>
-                            <input type="email" id="forgotEmail" placeholder="your@email.com" required>
-                        </div>
+                        <input type="email" id="forgotEmail" placeholder="your@email.com" required>
                     </div>
                     <button type="submit" class="btn-primary" id="forgotBtn">
                         <i class="fas fa-paper-plane"></i> Send Reset Link
                     </button>
-                    <div class="auth-footer" style="margin-top: 1rem;">
-                        <a onclick="switchAuthTab('signin')">Back to Sign In</a>
+                    <button type="button" class="admin-login-btn" onclick="showAdminLogin()">
+                        <i class="fas fa-lock"></i> Admin Login
+                    </button>
+                    <div class="auth-footer" style="margin-top: 0.8rem;">
+                        <a onclick="switchAuthTab('signin')" style="color: var(--brown); font-weight: 600; text-decoration: none; cursor: pointer;">Back to Sign In</a>
                     </div>
                 </div>
             </form>
@@ -359,7 +542,7 @@
         </div>
     </div>
 
-    <!-- MAIN CONTENT (shown after login) -->
+    <!-- ==================== MAIN CONTENT (after login) ==================== -->
     <div class="main-content hidden" id="mainContent">
         <section class="hero" id="hero">
             <div class="hero-badge">
@@ -453,6 +636,7 @@
         </footer>
     </div>
 
+    <!-- ==================== ADMIN PANEL ==================== -->
     <div class="admin-panel" id="adminPanel">
         <div class="admin-header">
             <h2><i class="fas fa-cog"></i> Admin Dashboard</h2>
@@ -505,6 +689,7 @@
         </div>
     </div>
 
+    <!-- ==================== BUY MODAL ==================== -->
     <div class="modal-overlay" id="buyModal">
         <div class="modal">
             <div class="modal-header">
@@ -554,6 +739,7 @@
         </div>
     </div>
 
+    <!-- ==================== ADMIN LOGIN MODAL ==================== -->
     <div class="modal-overlay" id="adminLoginModal">
         <div class="modal">
             <div class="modal-header">
@@ -574,6 +760,7 @@
         </div>
     </div>
 
+    <!-- ==================== ADD STOCK MODAL ==================== -->
     <div class="modal-overlay" id="addStockModal">
         <div class="modal">
             <div class="modal-header">
@@ -697,7 +884,8 @@
                 tabSignUp.classList.remove("active");
                 authDivider.style.display = "flex";
                 googleBtn.style.display = "flex";
-                authFooter.innerHTML = 'Don't have an account? <a onclick="switchAuthTab('signup')">Sign Up</a>';
+                authFooter.innerHTML = "Don't have an account? <a onclick=\"switchAuthTab(\'signup\')\">Sign Up</a>";
+                authFooter.style.display = "block";
             } else if (tab === "signup") {
                 signInForm.classList.add("hidden");
                 signUpForm.classList.remove("hidden");
@@ -706,7 +894,8 @@
                 tabSignUp.classList.add("active");
                 authDivider.style.display = "flex";
                 googleBtn.style.display = "flex";
-                authFooter.innerHTML = 'Already have an account? <a onclick="switchAuthTab('signin')">Sign In</a>';
+                authFooter.innerHTML = "Already have an account? <a onclick=\"switchAuthTab(\'signin\')\">Sign In</a>";
+                authFooter.style.display = "block";
             }
         }
 
@@ -802,7 +991,6 @@
             auth.createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     currentUser = userCredential.user;
-                    // Save user name to database
                     return db.ref("users/" + currentUser.uid).set({
                         name: name,
                         email: email,
@@ -863,7 +1051,6 @@
             auth.signInWithPopup(provider)
                 .then((result) => {
                     currentUser = result.user;
-                    // Save user to database if new
                     db.ref("users/" + currentUser.uid).once("value").then((snapshot) => {
                         if (!snapshot.exists()) {
                             db.ref("users/" + currentUser.uid).set({
@@ -906,7 +1093,8 @@
             document.getElementById("authPage").classList.remove("hidden");
             document.getElementById("mainContent").classList.add("hidden");
             document.getElementById("adminPanel").classList.remove("active");
-            // Remove user menu from nav
+            document.getElementById("navbar").classList.add("nav-hidden");
+            document.getElementById("syncIndicator").style.display = "none";
             const existingMenu = document.getElementById("userMenuWrap");
             if (existingMenu) existingMenu.remove();
         }
@@ -915,7 +1103,8 @@
             document.getElementById("authPage").classList.add("hidden");
             document.getElementById("mainContent").classList.remove("hidden");
             document.getElementById("adminPanel").classList.remove("active");
-            // Add user menu to nav
+            document.getElementById("navbar").classList.remove("nav-hidden");
+            document.getElementById("syncIndicator").style.display = "flex";
             addUserMenuToNav();
             loadProductsFromFirebase();
             loadOrdersFromFirebase();
@@ -955,7 +1144,6 @@
             document.getElementById("userDropdown").classList.toggle("show");
         }
 
-        // Close dropdown when clicking outside
         document.addEventListener("click", (e) => {
             const dropdown = document.getElementById("userDropdown");
             const avatar = document.getElementById("userAvatar");
@@ -1304,7 +1492,6 @@
                 saveKeysToFirebase();
                 saveOrderToFirebase(order);
 
-                // Save order to user's history
                 if (currentUser && firebaseInitialized) {
                     db.ref("userOrders/" + currentUser.uid + "/" + order.id).set(order);
                 }
@@ -1373,6 +1560,7 @@
 
         function logoutAdmin() {
             document.getElementById("adminPanel").classList.remove("active");
+            document.getElementById("syncIndicator").style.display = "none";
             if (currentUser) {
                 showMainContent();
             } else {
@@ -1634,7 +1822,7 @@
         // INITIALIZATION
         // ========================
 
-        // Show auth page by default, Firebase auth state will handle redirect
+        document.getElementById("syncIndicator").style.display = "none";
         showAuthPage();
         setupRealtimeListeners();
 
