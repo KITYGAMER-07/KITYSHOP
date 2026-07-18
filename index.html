@@ -271,13 +271,14 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
 
     <nav id="navbar" class="nav-hidden">
         <div class="logo" onclick="smoothScrollTo('hero')">
-            <img src="logo.jpg" alt="KITY SHOP" style="height: 40px; width: auto; border-radius: 8px; object-fit: contain;">
+            <img src="logo.jpg" alt="KITY SHOP" style="height: 40px; width: auto; border-radius: 8px; object-fit: contain;" onerror="this.style.display='none'">
         </div>
         <div class="nav-center-title">KITY SHOP</div>
         <div class="nav-links" id="navLinks">
@@ -461,7 +462,7 @@
         </section>
         <footer>
             <div class="logo" onclick="smoothScrollTo('hero')">
-                <img src="logo.jpg" alt="KITY SHOP" style="height: 40px; width: auto; border-radius: 8px; object-fit: contain;">
+                <img src="logo.jpg" alt="KITY SHOP" style="height: 40px; width: auto; border-radius: 8px; object-fit: contain;" onerror="this.style.display='none'">
                 KITY SHOP
             </div>
             <p>2026 KITY SHOP. All rights reserved. | Secure Key Distribution Platform</p>
@@ -664,13 +665,13 @@
         const RAZORPAY_KEY_ID = "rzp_live_TD3L7tVFGUPTiA";
 
         const defaultProducts = [
-            { id: "5hours", name: "5 Hours Access", duration: "5 Hours", price: 49, stock: 15, icon: "fa-clock" },
-            { id: "1day", name: "1 Day Access", duration: "1 Day", price: 99, stock: 25, icon: "fa-calendar-day" },
-            { id: "3days", name: "3 Days Access", duration: "3 Days", price: 199, stock: 20, icon: "fa-calendar-day" },
-            { id: "7days", name: "7 Days Access", duration: "7 Days", price: 399, stock: 18, icon: "fa-calendar-week" },
-            { id: "14days", name: "14 Days Access", duration: "14 Days", price: 699, stock: 12, icon: "fa-calendar-alt" },
-            { id: "30days", name: "30 Days Access", duration: "30 Days", price: 1299, stock: 8, icon: "fa-calendar" },
-            { id: "60days", name: "60 Days Access", duration: "60 Days", price: 2299, stock: 5, icon: "fa-calendar" }
+            { id: "5hours", name: "5 Hours Access", duration: "5 Hours", price: 49, stock: 15 },
+            { id: "1day", name: "1 Day Access", duration: "1 Day", price: 99, stock: 25 },
+            { id: "3days", name: "3 Days Access", duration: "3 Days", price: 199, stock: 20 },
+            { id: "7days", name: "7 Days Access", duration: "7 Days", price: 399, stock: 18 },
+            { id: "14days", name: "14 Days Access", duration: "14 Days", price: 699, stock: 12 },
+            { id: "30days", name: "30 Days Access", duration: "30 Days", price: 1299, stock: 8 },
+            { id: "60days", name: "60 Days Access", duration: "60 Days", price: 2299, stock: 5 }
         ];
 
         let products = JSON.parse(JSON.stringify(defaultProducts));
@@ -1527,9 +1528,9 @@
                 const btnText = product.stock > 0 ? "Buy Now" : "Out of Stock";
                 return `
                     <div class="product-card">
-                        <div class="product-icon"><i class="fas ${product.icon}"></i></div>
+                        
                         <h3>${product.name}</h3>
-                        <div class="duration"><i class="fas fa-hourglass-half"></i> ${product.duration}</div>
+                        <div class="duration">${product.duration}</div>
                         <div class="price">Rs.${product.price}</div>
                         <div class="stock-status ${stockStatus}">
                             <i class="fas fa-circle" style="font-size: 0.5rem;"></i>
