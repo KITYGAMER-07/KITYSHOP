@@ -13,144 +13,154 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --blue: #274DF5;
-            --blue-light: #5B7FFF;
-            --blue-dark: #1A3AD4;
-            --blue-darker: #0E2280;
-            --blue-deep: #08144A;
-            --cream: #f8f9ff;
-            --white: #ffffff;
-            --text: #0f172a;
-            --text-light: #1e3a8a;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --card-bg: #ffffff;
-            --card-shadow: rgba(39, 77, 245, 0.08);
-            --success: #16a34a;
-            --danger: #dc2626;
-            --warning: #d97706;
+            --cream: #faf6f1; --white: #ffffff; --brown-light: #c4a882; --brown: #8b6914;
+            --brown-dark: #5c3d1e; --brown-darker: #3d2817; --brown-deep: #2a1a0f;
+            --text: #2c1810; --text-light: #5c3d1e; --text-muted: #8b7355; --border: #e8ddd0;
+            --card-bg: #ffffff; --card-shadow: rgba(139, 105, 20, 0.08);
+            --success: #2d7d46; --danger: #b91c1c; --warning: #b45309;
         }
         html { scroll-behavior: smooth; }
         body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; min-height: 100vh; }
         .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: var(--cream); }
-        .bg-animation::before { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(39, 77, 245, 0.12) 0%, transparent 70%); top: -200px; right: -200px; animation: float 8s ease-in-out infinite; }
-        .bg-animation::after { content: ''; position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(91, 127, 255, 0.08) 0%, transparent 70%); bottom: -150px; left: -150px; animation: float 10s ease-in-out infinite reverse; }
+        .bg-animation::before { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(196, 168, 130, 0.2) 0%, transparent 70%); top: -200px; right: -200px; animation: float 8s ease-in-out infinite; }
+        .bg-animation::after { content: ''; position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(139, 105, 20, 0.1) 0%, transparent 70%); bottom: -150px; left: -150px; animation: float 10s ease-in-out infinite reverse; }
         @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(30px, -30px) scale(1.1); } }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--cream); }
-        ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--brown); border-radius: 4px; }
 
+        /* NAV - Hidden on auth page */
         nav { position: fixed; top: 0; width: 100%; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 1000; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); transition: transform 0.3s ease; }
         nav.nav-hidden { transform: translateY(-100%); pointer-events: none; }
         nav:not(.nav-hidden) { transform: translateY(0); pointer-events: auto; }
-        .logo { font-size: 1.5rem; font-weight: 800; color: var(--blue-darker); display: flex; align-items: center; gap: 0.5rem; cursor: pointer; user-select: none; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--brown-darker); display: flex; align-items: center; gap: 0.5rem; cursor: pointer; user-select: none; }
         .nav-links { display: flex; gap: 2rem; align-items: center; position: relative; }
         .nav-link { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: all 0.3s; cursor: pointer; position: relative; padding: 0.5rem 0; background: none; border: none; font-size: 1rem; font-family: 'Inter', sans-serif; }
-        .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, var(--blue), var(--blue-dark)); transition: width 0.3s; }
+        .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, var(--brown), var(--brown-dark)); transition: width 0.3s; }
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
-        .nav-link:hover, .nav-link.active { color: var(--blue-dark); }
-        .nav-center-title { position: absolute; left: 50%; transform: translateX(-50%); font-size: 1.5rem; font-weight: 800; color: var(--blue-darker); user-select: none; white-space: nowrap; }
+        .nav-link:hover, .nav-link.active { color: var(--brown-dark); }
+        .nav-center-title { position: absolute; left: 50%; transform: translateX(-50%); font-size: 1.5rem; font-weight: 800; color: var(--brown-darker); user-select: none; white-space: nowrap; }
         @media (max-width: 768px) { .nav-center-title { font-size: 1.2rem; } }
-        .admin-btn { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; padding: 0.5rem 1.5rem; border-radius: 50px; border: none; cursor: pointer; font-weight: 600; transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 1rem; }
-        .admin-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(39, 77, 245, 0.3); }
+        .admin-btn { background: linear-gradient(135deg, var(--brown), var(--brown-dark)); color: white; padding: 0.5rem 1.5rem; border-radius: 50px; border: none; cursor: pointer; font-weight: 600; transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 1rem; }
+        .admin-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(139, 105, 20, 0.3); }
 
         .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem; position: relative; }
-        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(39, 77, 245, 0.08); border: 1px solid rgba(39, 77, 245, 0.25); padding: 0.5rem 1.5rem; border-radius: 50px; font-size: 0.9rem; color: var(--blue); margin-bottom: 2rem; animation: fadeInUp 0.8s ease; }
-        .hero h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; animation: fadeInUp 0.8s ease 0.2s both; color: var(--blue-darker); }
-        .hero h1 span { background: linear-gradient(135deg, var(--blue), var(--blue-dark), var(--blue-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(196, 168, 130, 0.15); border: 1px solid rgba(196, 168, 130, 0.4); padding: 0.5rem 1.5rem; border-radius: 50px; font-size: 0.9rem; color: var(--brown); margin-bottom: 2rem; animation: fadeInUp 0.8s ease; }
+        .hero h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; animation: fadeInUp 0.8s ease 0.2s both; color: var(--brown-darker); }
+        .hero h1 span { background: linear-gradient(135deg, var(--brown), var(--brown-dark), var(--brown-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2rem; animation: fadeInUp 0.8s ease 0.4s both; }
         .hero-cta { display: flex; gap: 1rem; animation: fadeInUp 0.8s ease 0.6s both; }
-        .btn-primary { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; padding: 1rem 2.5rem; border-radius: 50px; border: none; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif; }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(39, 77, 245, 0.3); }
-        .btn-secondary { background: transparent; color: var(--blue-dark); padding: 1rem 2.5rem; border-radius: 50px; border: 2px solid var(--border); font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif; }
-        .btn-secondary:hover { border-color: var(--blue); background: rgba(39, 77, 245, 0.06); }
+        .btn-primary { background: linear-gradient(135deg, var(--brown), var(--brown-dark)); color: white; padding: 1rem 2.5rem; border-radius: 50px; border: none; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(139, 105, 20, 0.3); }
+        .btn-secondary { background: transparent; color: var(--brown-dark); padding: 1rem 2.5rem; border-radius: 50px; border: 2px solid var(--border); font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif; }
+        .btn-secondary:hover { border-color: var(--brown); background: rgba(196, 168, 130, 0.1); }
         .scroll-indicator { position: absolute; bottom: 2rem; animation: bounce 2s infinite; cursor: pointer; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .products-section { padding: 6rem 2rem; max-width: 1400px; margin: 0 auto; }
         .section-header { text-align: center; margin-bottom: 4rem; }
-        .section-header h2 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 1rem; color: var(--blue-darker); }
+        .section-header h2 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 1rem; color: var(--brown-darker); }
         .section-header p { color: var(--text-muted); font-size: 1.1rem; }
         .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
         .product-card { background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border); transition: all 0.4s; position: relative; overflow: hidden; opacity: 0; transform: translateY(30px); box-shadow: 0 4px 20px var(--card-shadow); }
         .product-card.visible { opacity: 1; transform: translateY(0); }
-        .product-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--blue-light), var(--blue)); transform: scaleX(0); transition: transform 0.4s; }
+        .product-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--brown-light), var(--brown)); transform: scaleX(0); transition: transform 0.4s; }
         .product-card:hover::before { transform: scaleX(1); }
-        .product-card:hover { transform: translateY(-10px); border-color: var(--blue-light); box-shadow: 0 20px 50px rgba(39, 77, 245, 0.12); }
-        .product-icon { width: 60px; height: 60px; background: linear-gradient(135deg, var(--blue-light), var(--blue)); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.5rem; color: white; }
-        .product-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--blue-darker); }
-        .product-card .duration { color: var(--blue); font-weight: 600; font-size: 0.95rem; margin-bottom: 1rem; }
-        .product-card .price { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--blue-dark), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        .product-card:hover { transform: translateY(-10px); border-color: var(--brown-light); box-shadow: 0 20px 50px rgba(139, 105, 20, 0.15); }
+        .product-icon { width: 60px; height: 60px; background: linear-gradient(135deg, var(--brown-light), var(--brown)); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.5rem; color: white; }
+        .product-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--brown-darker); }
+        .product-card .duration { color: var(--brown); font-weight: 600; font-size: 0.95rem; margin-bottom: 1rem; }
+        .product-card .price { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--brown-dark), var(--brown)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
         .stock-status { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem; }
-        .stock-status.in-stock { background: rgba(22, 163, 74, 0.1); color: var(--success); border: 1px solid rgba(22, 163, 74, 0.3); }
-        .stock-status.out-stock { background: rgba(220, 38, 38, 0.1); color: var(--danger); border: 1px solid rgba(220, 38, 38, 0.3); }
-        .stock-status.low-stock { background: rgba(217, 119, 6, 0.1); color: var(--warning); border: 1px solid rgba(217, 119, 6, 0.3); }
+        .stock-status.in-stock { background: rgba(45, 125, 70, 0.1); color: var(--success); border: 1px solid rgba(45, 125, 70, 0.3); }
+        .stock-status.out-stock { background: rgba(185, 28, 28, 0.1); color: var(--danger); border: 1px solid rgba(185, 28, 28, 0.3); }
+        .stock-status.low-stock { background: rgba(180, 83, 9, 0.1); color: var(--warning); border: 1px solid rgba(180, 83, 9, 0.3); }
         .buy-btn { width: 100%; padding: 1rem; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 1rem; }
-        .buy-btn.available { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; }
-        .buy-btn.available:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(39, 77, 245, 0.3); }
-        .buy-btn.unavailable { background: #eef2ff; color: var(--text-muted); cursor: not-allowed; }
+        .buy-btn.available { background: linear-gradient(135deg, var(--brown), var(--brown-dark)); color: white; }
+        .buy-btn.available:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(139, 105, 20, 0.3); }
+        .buy-btn.unavailable { background: #f0ebe5; color: var(--text-muted); cursor: not-allowed; }
         .features-section { padding: 6rem 2rem; background: linear-gradient(180deg, var(--white) 0%, var(--cream) 100%); }
         .features-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; }
         .feature-item { text-align: center; padding: 2rem; opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
         .feature-item.visible { opacity: 1; transform: translateY(0); }
-        .feature-icon { width: 80px; height: 80px; background: linear-gradient(135deg, rgba(39, 77, 245, 0.1), rgba(91, 127, 255, 0.06)); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem; border: 1px solid var(--border); color: var(--blue); }
-        .feature-item h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--blue-darker); }
+        .feature-icon { width: 80px; height: 80px; background: linear-gradient(135deg, rgba(196, 168, 130, 0.2), rgba(139, 105, 20, 0.1)); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem; border: 1px solid var(--border); color: var(--brown); }
+        .feature-item h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--brown-darker); }
         .feature-item p { color: var(--text-muted); font-size: 0.95rem; }
-        .telegram-section { padding: 4rem 2rem; text-align: center; background: linear-gradient(135deg, rgba(39, 77, 245, 0.03), rgba(91, 127, 255, 0.03)); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .telegram-section { padding: 4rem 2rem; text-align: center; background: linear-gradient(135deg, rgba(196, 168, 130, 0.05), rgba(139, 105, 20, 0.05)); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
         .telegram-box { max-width: 600px; margin: 0 auto; background: var(--white); padding: 2rem; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 4px 20px var(--card-shadow); }
-        .telegram-box i { font-size: 3rem; color: var(--blue); margin-bottom: 1rem; }
-        .telegram-box h3 { color: var(--blue-darker); }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 20, 74, 0.7); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 1rem; }
+        .telegram-box i { font-size: 3rem; color: var(--brown); margin-bottom: 1rem; }
+        .telegram-box h3 { color: var(--brown-darker); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(42, 26, 15, 0.7); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 1rem; }
         .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .modal { background: var(--white); border-radius: 20px; padding: 1.5rem; max-width: 420px; width: 92%; border: 1px solid var(--border); animation: slideUp 0.4s ease; box-shadow: 0 20px 60px rgba(8, 20, 74, 0.15); max-height: calc(100vh - 2rem); overflow-y: auto; }
+        .modal { background: var(--white); border-radius: 20px; padding: 1.5rem; max-width: 420px; width: 92%; border: 1px solid var(--border); animation: slideUp 0.4s ease; box-shadow: 0 20px 60px rgba(42, 26, 15, 0.2); max-height: calc(100vh - 2rem); overflow-y: auto; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
-        .modal::-webkit-scrollbar, #myKeysModal .modal::-webkit-scrollbar, #myOrdersModal .modal::-webkit-scrollbar { display: none; }
-        .modal, #myKeysModal .modal, #myOrdersModal .modal { -ms-overflow-style: none; scrollbar-width: none; }
-        #myKeysContent::-webkit-scrollbar, #myOrdersContent::-webkit-scrollbar { display: none; }
-        #myKeysContent, #myOrdersContent { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Hide scrollbar in My Keys / My Orders modals but keep scrolling */
+        .modal::-webkit-scrollbar,
+        #myKeysModal .modal::-webkit-scrollbar,
+        #myOrdersModal .modal::-webkit-scrollbar {
+            display: none;
+        }
+        .modal,
+        #myKeysModal .modal,
+        #myOrdersModal .modal {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Also hide scrollbar in the key cards container */
+        #myKeysContent::-webkit-scrollbar,
+        #myOrdersContent::-webkit-scrollbar {
+            display: none;
+        }
+        #myKeysContent,
+        #myOrdersContent {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
-        .modal-header h2 { font-size: 1.5rem; color: var(--blue-darker); }
+        .modal-header h2 { font-size: 1.5rem; color: var(--brown-darker); }
         .close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; transition: color 0.3s; }
-        .close-btn:hover { color: var(--blue-dark); }
+        .close-btn:hover { color: var(--brown-dark); }
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-light); }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; background: var(--cream); border: 2px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.95rem; transition: all 0.3s; font-family: 'Inter', sans-serif; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--blue-light); box-shadow: 0 0 0 3px rgba(39, 77, 245, 0.1); }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--brown-light); }
         .form-group input::placeholder { color: var(--text-muted); }
         .modal .btn-primary { width: 100%; justify-content: center; }
         .admin-panel { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; padding-top: 6rem; }
         .admin-panel.active { display: block; }
         .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .admin-header h2 { color: var(--blue-darker); }
+        .admin-header h2 { color: var(--brown-darker); }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
         .stat-card { background: var(--white); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 4px 20px var(--card-shadow); }
         .stat-card h4 { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem; }
-        .stat-card .value { font-size: 2rem; font-weight: 800; color: var(--blue); }
+        .stat-card .value { font-size: 2rem; font-weight: 800; color: var(--brown); }
         .admin-table { width: 100%; background: var(--white); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 4px 20px var(--card-shadow); }
         .admin-table table { width: 100%; border-collapse: collapse; }
         .admin-table th, .admin-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); }
-        .admin-table th { background: rgba(39, 77, 245, 0.06); font-weight: 600; color: var(--blue); }
-        .admin-table tr:hover { background: rgba(39, 77, 245, 0.03); }
+        .admin-table th { background: rgba(196, 168, 130, 0.1); font-weight: 600; color: var(--brown); }
+        .admin-table tr:hover { background: rgba(196, 168, 130, 0.05); }
         .action-btn { padding: 0.4rem 1rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; font-size: 0.85rem; transition: all 0.3s; }
-        .action-btn.edit { background: rgba(39, 77, 245, 0.1); color: var(--blue); }
-        .action-btn.delete { background: rgba(220, 38, 38, 0.08); color: var(--danger); }
+        .action-btn.edit { background: rgba(196, 168, 130, 0.2); color: var(--brown); }
+        .action-btn.delete { background: rgba(185, 28, 28, 0.1); color: var(--danger); }
         .action-btn:hover { transform: scale(1.05); }
-        .add-stock-btn { background: linear-gradient(135deg, var(--success), #15803d); color: white; padding: 0.8rem 1.5rem; border-radius: 12px; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 1rem; }
-        .add-stock-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(22, 163, 74, 0.3); }
+        .add-stock-btn { background: linear-gradient(135deg, var(--success), #1e5c32); color: white; padding: 0.8rem 1.5rem; border-radius: 12px; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 1rem; }
+        .add-stock-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(45, 125, 70, 0.3); }
         .toast-container { position: fixed; top: 100px; right: 2rem; z-index: 3000; display: flex; flex-direction: column; gap: 1rem; }
-        .toast { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 10px 40px rgba(8, 20, 74, 0.12); animation: slideInRight 0.4s ease; min-width: 300px; }
+        .toast { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 10px 40px rgba(42, 26, 15, 0.15); animation: slideInRight 0.4s ease; min-width: 300px; }
         @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .toast.success { border-left: 4px solid var(--success); }
         .toast.error { border-left: 4px solid var(--danger); }
-        .toast.info { border-left: 4px solid var(--blue); }
+        .toast.info { border-left: 4px solid var(--brown); }
         footer { padding: 3rem 2rem; text-align: center; border-top: 1px solid var(--border); color: var(--text-muted); background: var(--white); }
         footer .logo { justify-content: center; margin-bottom: 1rem; }
         @media (max-width: 768px) {
-            .nav-links { position: fixed; top: 70px; left: 0; right: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(20px); flex-direction: column; padding: 1.5rem; gap: 0.5rem; border-bottom: 1px solid var(--border); box-shadow: 0 10px 30px rgba(8, 20, 74, 0.08); transform: translateY(-150%); transition: transform 0.4s ease; z-index: 999; }
+            .nav-links { position: fixed; top: 70px; left: 0; right: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(20px); flex-direction: column; padding: 1.5rem; gap: 0.5rem; border-bottom: 1px solid var(--border); box-shadow: 0 10px 30px rgba(42, 26, 15, 0.1); transform: translateY(-150%); transition: transform 0.4s ease; z-index: 999; }
             .nav-links.active { transform: translateY(0); }
             .nav-links .nav-link { width: 100%; text-align: center; padding: 0.8rem; border-radius: 12px; }
-            .nav-links .nav-link:hover { background: rgba(39, 77, 245, 0.06); }
+            .nav-links .nav-link:hover { background: rgba(196, 168, 130, 0.1); }
             .nav-links .admin-btn { width: 100%; justify-content: center; margin-top: 0.5rem; }
             .nav-links #userMenuWrap { width: 100%; }
             .menu-toggle { display: flex !important; }
@@ -169,101 +179,269 @@
             .auth-page { padding: 0.5rem !important; }
             .auth-card { padding: 1.2rem !important; max-width: 340px !important; width: 92% !important; }
         }
-        .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(39, 77, 245, 0.2); border-radius: 50%; border-top-color: var(--blue); animation: spin 1s ease-in-out infinite; }
+        .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(139, 105, 20, 0.3); border-radius: 50%; border-top-color: var(--brown); animation: spin 1s ease-in-out infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .success-check { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--success), #15803d); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem; animation: scaleIn 0.5s ease; color: white; }
+        .success-check { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--success), #1e5c32); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem; animation: scaleIn 0.5s ease; color: white; }
         @keyframes scaleIn { from { transform: scale(0); } to { transform: scale(1); } }
-        .menu-toggle { display: none; background: none; border: none; font-size: 1.5rem; color: var(--blue-dark); cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: all 0.3s; }
-        .menu-toggle:hover { background: rgba(39, 77, 245, 0.08); }
-        .menu-toggle.active { color: var(--blue); }
+        .menu-toggle { display: none; background: none; border: none; font-size: 1.5rem; color: var(--brown-dark); cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: all 0.3s; }
+        .menu-toggle:hover { background: rgba(196, 168, 130, 0.2); }
+        .menu-toggle.active { color: var(--brown); }
         .hidden { display: none !important; }
         .main-content { display: block; }
         .main-content.hidden { display: none; }
-        .sync-indicator { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--white); padding: 0.6rem 1rem; border-radius: 12px; border: 1px solid var(--border); font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
+        .sync-indicator { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--white); padding: 0.6rem 1rem; border-radius: 12px; border: 1px solid var(--border); font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
         .sync-indicator .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         .sync-indicator.syncing .dot { background: var(--warning); animation: spin 1s linear infinite; border-radius: 0; width: 10px; height: 10px; border: 2px solid var(--warning); border-top-color: transparent; }
 
-        .auth-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 0.5rem; z-index: 500; overflow: hidden; }
-        .auth-card { background: var(--white); border-radius: 20px; padding: 1.2rem 1.5rem; width: 100%; max-width: 360px; border: 1px solid var(--border); box-shadow: 0 20px 60px rgba(8, 20, 74, 0.1); animation: slideUp 0.5s ease; max-height: 95vh; overflow-y: auto; scrollbar-width: thin; }
+        /* ===== AUTH PAGE - COMPACT, NO SCROLL, FITS SCREEN ===== */
+        .auth-page {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            z-index: 500;
+            overflow: hidden;
+        }
+        .auth-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 1.2rem 1.5rem;
+            width: 100%;
+            max-width: 360px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 60px rgba(42, 26, 15, 0.12);
+            animation: slideUp 0.5s ease;
+            max-height: 95vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
         .auth-card::-webkit-scrollbar { display: none; }
         .auth-card { -ms-overflow-style: none; scrollbar-width: none; }
         .auth-card .auth-logo { text-align: center; margin-bottom: 0.5rem; }
         .auth-card .auth-logo img { height: 36px; width: auto; border-radius: 10px; object-fit: contain; margin-bottom: 0.2rem; }
-        .auth-card .auth-logo h2 { font-size: 1.25rem; color: var(--blue-darker); font-weight: 800; }
+        .auth-card .auth-logo h2 { font-size: 1.25rem; color: var(--brown-darker); font-weight: 800; }
         .auth-card .auth-logo p { color: var(--text-muted); font-size: 0.75rem; margin-top: 0.15rem; }
-        .auth-tabs { display: flex; gap: 0.4rem; background: var(--cream); border-radius: 12px; padding: 0.25rem; margin-bottom: 0.5rem; }
-        .auth-tab { flex: 1; padding: 0.45rem; border: none; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; color: var(--text-muted); background: transparent; }
-        .auth-tab.active { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; box-shadow: 0 4px 15px rgba(39, 77, 245, 0.25); }
-        .auth-tab:hover:not(.active) { color: var(--blue-dark); }
+        .auth-tabs {
+            display: flex;
+            gap: 0.4rem;
+            background: var(--cream);
+            border-radius: 12px;
+            padding: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .auth-tab {
+            flex: 1;
+            padding: 0.45rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-muted);
+            background: transparent;
+        }
+        .auth-tab.active {
+            background: linear-gradient(135deg, var(--brown), var(--brown-dark));
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 105, 20, 0.25);
+        }
+        .auth-tab:hover:not(.active) { color: var(--brown-dark); }
         .auth-form .form-group { margin-bottom: 0.4rem; }
-        .auth-form .form-group label { font-size: 0.75rem; font-weight: 600; color: var(--blue-darker); margin-bottom: 0.15rem; display: flex; align-items: center; gap: 0.3rem; }
-        .auth-form .form-group input { padding: 0.5rem 0.75rem; font-size: 0.85rem; background: var(--cream); border: 2px solid var(--border); border-radius: 10px; width: 100%; transition: all 0.3s; font-family: 'Inter', sans-serif; color: var(--text); }
-        .auth-form .form-group input:focus { outline: none; border-color: var(--blue-light); box-shadow: 0 0 0 3px rgba(39, 77, 245, 0.1); }
+        .auth-form .form-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--brown-darker);
+            margin-bottom: 0.15rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .auth-form .form-group input {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.85rem;
+            background: var(--cream);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            width: 100%;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+        }
+        .auth-form .form-group input:focus {
+            outline: none;
+            border-color: var(--brown-light);
+            box-shadow: 0 0 0 3px rgba(196, 168, 130, 0.15);
+        }
         .auth-form .form-group .input-wrap { position: relative; }
         .auth-form .form-group .input-wrap i { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; }
         .auth-form .form-group .input-wrap input { padding-left: 2.2rem; }
-        .auth-form .form-group .input-wrap .toggle-pass { position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); cursor: pointer; font-size: 0.8rem; background: none; border: none; padding: 0.2rem; }
-        .auth-form .btn-primary { width: 100%; padding: 0.55rem; border-radius: 10px; font-size: 0.85rem; margin-top: 0.15rem; justify-content: center; }
+        .auth-form .form-group .input-wrap .toggle-pass {
+            position: absolute;
+            right: 0.7rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.8rem;
+            background: none;
+            border: none;
+            padding: 0.2rem;
+        }
+        .auth-form .btn-primary {
+            width: 100%;
+            padding: 0.55rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-top: 0.15rem;
+            justify-content: center;
+        }
         .auth-form .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
-        .auth-divider { display: flex; align-items: center; gap: 0.8rem; margin: 0.5rem 0; color: var(--text-muted); font-size: 0.75rem; }
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 0.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
         .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-        .google-btn { width: 100%; padding: 0.55rem; border-radius: 10px; border: 2px solid var(--border); background: var(--white); color: var(--text); font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-family: 'Inter', sans-serif; }
-        .google-btn:hover { border-color: var(--blue-light); background: rgba(39, 77, 245, 0.04); }
+        .google-btn {
+            width: 100%;
+            padding: 0.55rem;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            background: var(--white);
+            color: var(--text);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+        .google-btn:hover { border-color: var(--brown-light); background: rgba(196, 168, 130, 0.05); }
         .google-btn img { width: 18px; height: 18px; }
         .auth-footer { text-align: center; margin-top: 0.5rem; font-size: 0.78rem; color: var(--text-muted); }
-        .auth-footer a { color: var(--blue); font-weight: 600; text-decoration: none; cursor: pointer; }
+        .auth-footer a { color: var(--brown); font-weight: 600; text-decoration: none; cursor: pointer; }
         .auth-footer a:hover { text-decoration: underline; }
-        .auth-error { background: rgba(220, 38, 38, 0.06); border: 1px solid rgba(220, 38, 38, 0.25); color: var(--danger); padding: 0.45rem 0.7rem; border-radius: 8px; font-size: 0.78rem; margin-bottom: 0.5rem; display: none; align-items: center; gap: 0.4rem; }
-        .auth-error.show { display: flex; }
-        .nav-user-email { color: var(--blue); font-weight: 600; font-size: 0.85rem; padding: 0.5rem 0.8rem; background: rgba(39, 77, 245, 0.08); border-radius: 50px; border: 1px solid rgba(39, 77, 245, 0.2); display: flex; align-items: center; gap: 0.4rem; white-space: nowrap; }
-        .nav-user-email i { font-size: 0.8rem; color: var(--blue); }
-        .nav-logout-btn { background: transparent; color: var(--danger); border: 2px solid rgba(220, 38, 38, 0.15); padding: 0.5rem 1.2rem; border-radius: 50px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: 0.4rem; }
-        .nav-logout-btn:hover { background: rgba(220, 38, 38, 0.06); border-color: var(--danger); transform: translateY(-1px); }
-        @media (max-width: 768px) {
-            .nav-user-email { width: 100%; justify-content: center; margin: 0.3rem 0; }
-            .nav-logout-btn { width: 100%; justify-content: center; margin-top: 0.3rem; }
+        .auth-error {
+            background: rgba(185, 28, 28, 0.08);
+            border: 1px solid rgba(185, 28, 28, 0.3);
+            color: var(--danger);
+            padding: 0.45rem 0.7rem;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            margin-bottom: 0.5rem;
+            display: none;
+            align-items: center;
+            gap: 0.4rem;
         }
-        .forgot-link { font-size: 0.75rem; color: var(--blue); text-decoration: none; font-weight: 500; float: right; margin-top: -0.2rem; cursor: pointer; }
+        .auth-error.show { display: flex; }
+        /* ===== USER NAV LINKS - FLAT MENU ===== */
+        .nav-user-email {
+            color: var(--brown);
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.5rem 0.8rem;
+            background: rgba(196, 168, 130, 0.12);
+            border-radius: 50px;
+            border: 1px solid rgba(196, 168, 130, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+        }
+
+        .nav-user-email i {
+            font-size: 0.8rem;
+            color: var(--brown);
+        }
+
+        .nav-logout-btn {
+            background: transparent;
+            color: var(--danger);
+            border: 2px solid rgba(185, 28, 28, 0.2);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .nav-logout-btn:hover {
+            background: rgba(185, 28, 28, 0.08);
+            border-color: var(--danger);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .nav-user-email {
+                width: 100%;
+                justify-content: center;
+                margin: 0.3rem 0;
+            }
+
+            .nav-logout-btn {
+                width: 100%;
+                justify-content: center;
+                margin-top: 0.3rem;
+            }
+        }
+        .forgot-link { font-size: 0.75rem; color: var(--brown); text-decoration: none; font-weight: 500; float: right; margin-top: -0.2rem; cursor: pointer; }
         .forgot-link:hover { text-decoration: underline; }
         .reset-sent { text-align: center; padding: 0.8rem; display: none; }
         .reset-sent.show { display: block; }
         .reset-sent i { font-size: 2.5rem; color: var(--success); margin-bottom: 0.3rem; }
-        .reset-sent h3 { font-size: 1rem; color: var(--blue-darker); margin-bottom: 0.2rem; }
+        .reset-sent h3 { font-size: 1rem; color: var(--brown-darker); margin-bottom: 0.2rem; }
         .reset-sent p { font-size: 0.8rem; color: var(--text-muted); }
-        .admin-login-btn { width: 100%; padding: 0.5rem; border-radius: 10px; border: 2px solid var(--border); background: transparent; color: var(--text-muted); font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.4rem; font-family: 'Inter', sans-serif; margin-top: 0.3rem; }
-        .admin-login-btn:hover { border-color: var(--blue); color: var(--blue); background: rgba(39, 77, 245, 0.04); }
-    
-        .coupon-section { background: linear-gradient(135deg, rgba(39, 77, 245, 0.06), rgba(91, 127, 255, 0.04)); padding: 1rem; border-radius: 12px; border: 1px dashed var(--blue-light); margin: 1rem 0; }
-        .coupon-input-wrap { display: flex; gap: 0.5rem; }
-        .coupon-input-wrap input { flex: 1; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
-        .coupon-btn { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; padding: 0.6rem 1.2rem; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 0.85rem; white-space: nowrap; }
-        .coupon-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(39, 77, 245, 0.3); }
-        .coupon-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
-        .coupon-status { margin-top: 0.5rem; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem; min-height: 20px; }
-        .coupon-status.valid { color: var(--success); }
-        .coupon-status.invalid { color: var(--danger); }
-        .coupon-status.pending { color: var(--blue); }
-        .price-breakdown { background: var(--cream); padding: 0.8rem; border-radius: 10px; margin-top: 0.8rem; border: 1px solid var(--border); }
-        .price-breakdown .row { display: flex; justify-content: space-between; padding: 0.3rem 0; font-size: 0.85rem; color: var(--text-muted); }
-        .price-breakdown .row.total { border-top: 2px solid var(--border); padding-top: 0.5rem; margin-top: 0.3rem; font-size: 1rem; font-weight: 700; color: var(--blue-darker); }
-        .price-breakdown .row .discount { color: var(--success); }
-        .coupon-badge { display: inline-flex; align-items: center; gap: 0.3rem; background: linear-gradient(135deg, rgba(39,77,245,0.1), rgba(91,127,255,0.08)); color: var(--blue); padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(39,77,245,0.2); }
-        .coupon-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s; }
-        .coupon-card:hover { border-color: var(--blue-light); box-shadow: 0 4px 15px rgba(39,77,245,0.08); }
-        .coupon-card .code { font-family: 'Courier New', monospace; font-weight: 800; color: var(--blue-darker); font-size: 1rem; letter-spacing: 1px; }
-        .coupon-card .info { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; }
-        .coupon-card .discount-badge { background: linear-gradient(135deg, var(--success), #15803d); color: white; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; }
-        .coupon-card .actions { display: flex; gap: 0.4rem; }
-        .coupon-add-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; margin-bottom: 1rem; }
 
+        /* Admin login button in auth */
+        .admin-login-btn {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            font-family: 'Inter', sans-serif;
+            margin-top: 0.3rem;
+        }
+        .admin-login-btn:hover { border-color: var(--brown); color: var(--brown); background: rgba(196, 168, 130, 0.05); }
     </style>
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
 <base target="_blank">
 <base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
 
+    <!-- NAVBAR - Hidden on auth page, shown after login -->
     <nav id="navbar" class="nav-hidden">
         <div class="logo" onclick="smoothScrollTo('hero')">
             <img src="logo.jpg" alt="KITY SHOP" style="height: 40px; width: auto; border-radius: 8px; object-fit: contain;">
@@ -281,6 +459,7 @@
 
     <div class="toast-container" id="toastContainer"></div>
 
+    <!-- ==================== AUTH PAGE ==================== -->
     <div class="auth-page" id="authPage">
         <div class="auth-card">
             <div class="auth-logo">
@@ -288,20 +467,23 @@
                 <h2>KITY SHOP</h2>
                 <p>Sign in to access your keys and orders</p>
             </div>
+
             <div class="auth-tabs">
                 <button class="auth-tab active" id="tabSignIn" onclick="switchAuthTab('signin')">Sign In</button>
                 <button class="auth-tab" id="tabSignUp" onclick="switchAuthTab('signup')">Sign Up</button>
             </div>
+
+            <!-- Sign In Form -->
             <form class="auth-form" id="signInForm" onsubmit="handleSignIn(event)">
                 <div class="auth-error" id="signInError"><i class="fas fa-exclamation-circle"></i> <span></span></div>
                 <div class="form-group">
-                    <label><i class="fas fa-envelope" style="color: var(--blue);"></i> Email</label>
+                    <label><i class="fas fa-envelope" style="color: var(--brown);"></i> Email</label>
                     <input type="email" id="signInEmail" placeholder="your@email.com" required>
                 </div>
                 <div class="form-group">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                        <label style="margin-bottom: 0;"><i class="fas fa-lock" style="color: var(--blue);"></i> Password</label>
-                        <a onclick="showForgotPassword()" style="font-size: 0.75rem; color: var(--blue); text-decoration: none; font-weight: 500; cursor: pointer;">Forgot?</a>
+                        <label style="margin-bottom: 0;"><i class="fas fa-lock" style="color: var(--brown);"></i> Password</label>
+                        <a onclick="showForgotPassword()" style="font-size: 0.75rem; color: var(--brown); text-decoration: none; font-weight: 500; cursor: pointer;">Forgot?</a>
                     </div>
                     <div style="position: relative;">
                         <input type="password" id="signInPassword" placeholder="Enter password" required style="padding-right: 2.2rem;">
@@ -317,18 +499,20 @@
                     <i class="fas fa-lock"></i> Admin Login
                 </button>
             </form>
+
+            <!-- Sign Up Form -->
             <form class="auth-form hidden" id="signUpForm" onsubmit="handleSignUp(event)">
                 <div class="auth-error" id="signUpError"><i class="fas fa-exclamation-circle"></i> <span></span></div>
                 <div class="form-group">
-                    <label><i class="fas fa-user" style="color: var(--blue);"></i> Full Name</label>
+                    <label><i class="fas fa-user" style="color: var(--brown);"></i> Full Name</label>
                     <input type="text" id="signUpName" placeholder="John Doe" required>
                 </div>
                 <div class="form-group">
-                    <label><i class="fas fa-envelope" style="color: var(--blue);"></i> Email</label>
+                    <label><i class="fas fa-envelope" style="color: var(--brown);"></i> Email</label>
                     <input type="email" id="signUpEmail" placeholder="your@email.com" required>
                 </div>
                 <div class="form-group">
-                    <label><i class="fas fa-lock" style="color: var(--blue);"></i> Password</label>
+                    <label><i class="fas fa-lock" style="color: var(--brown);"></i> Password</label>
                     <div style="position: relative;">
                         <input type="password" id="signUpPassword" placeholder="Min 6 characters" required minlength="6" style="padding-right: 2.2rem;">
                         <button type="button" onclick="togglePassword('signUpPassword', this)" style="position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; padding: 0.2rem;">
@@ -337,7 +521,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label><i class="fas fa-lock" style="color: var(--blue);"></i> Confirm Password</label>
+                    <label><i class="fas fa-lock" style="color: var(--brown);"></i> Confirm Password</label>
                     <div style="position: relative;">
                         <input type="password" id="signUpConfirm" placeholder="Confirm password" required style="padding-right: 2.2rem;">
                         <button type="button" onclick="togglePassword('signUpConfirm', this)" style="position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; padding: 0.2rem;">
@@ -349,6 +533,8 @@
                     <i class="fas fa-user-plus"></i> Create Account
                 </button>
             </form>
+
+            <!-- Forgot Password Form -->
             <form class="auth-form hidden" id="forgotForm" onsubmit="handleForgotPassword(event)">
                 <div class="auth-error" id="forgotError"><i class="fas fa-exclamation-circle"></i> <span></span></div>
                 <div class="reset-sent" id="resetSent">
@@ -361,7 +547,7 @@
                 </div>
                 <div id="forgotFields">
                     <div class="form-group">
-                        <label><i class="fas fa-envelope" style="color: var(--blue);"></i> Email</label>
+                        <label><i class="fas fa-envelope" style="color: var(--brown);"></i> Email</label>
                         <input type="email" id="forgotEmail" placeholder="your@email.com" required>
                     </div>
                     <button type="submit" class="btn-primary" id="forgotBtn">
@@ -371,32 +557,52 @@
                         <i class="fas fa-lock"></i> Admin Login
                     </button>
                     <div class="auth-footer" style="margin-top: 0.8rem;">
-                        <a onclick="switchAuthTab('signin')" style="color: var(--blue); font-weight: 600; text-decoration: none; cursor: pointer;">Back to Sign In</a>
+                        <a onclick="switchAuthTab('signin')" style="color: var(--brown); font-weight: 600; text-decoration: none; cursor: pointer;">Back to Sign In</a>
                     </div>
                 </div>
             </form>
+
             <div class="auth-divider" id="authDivider">or</div>
             <button class="google-btn" id="googleBtn" onclick="signInWithGoogle()">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
                 Continue with Google
             </button>
+
             <div class="auth-footer" id="authFooter">
                 Don't have an account? <a onclick="switchAuthTab('signup')">Sign Up</a>
             </div>
         </div>
     </div>
 
+    <!-- ==================== MAIN CONTENT (after login) ==================== -->
     <div class="main-content hidden" id="mainContent">
         <section class="hero" id="hero">
-            <div class="hero-badge"><i class="fas fa-bolt"></i> Instant Key Delivery</div>
-            <h1>Premium Access<br><span>Keys & Licenses</span></h1>
-            <p>Secure, instant, and reliable access keys delivered directly on screen after payment. Choose your duration and get started in seconds.</p>
-            <div class="hero-cta">
-                <button class="btn-primary" onclick="smoothScrollTo('products')"><i class="fas fa-shopping-cart"></i> Buy Now</button>
-                <button class="btn-secondary" onclick="smoothScrollTo('features')">Learn More</button>
+            <div class="hero-badge">
+                <i class="fas fa-bolt"></i>
+                Instant Key Delivery
             </div>
-            <div class="scroll-indicator" onclick="smoothScrollTo('products')"><i class="fas fa-chevron-down" style="color: var(--text-muted); font-size: 1.5rem;"></i></div>
+            <h1>
+                Premium Access<br>
+                <span>Keys & Licenses</span>
+            </h1>
+            <p>
+                Secure, instant, and reliable access keys delivered directly on screen after payment.
+                Choose your duration and get started in seconds.
+            </p>
+            <div class="hero-cta">
+                <button class="btn-primary" onclick="smoothScrollTo('products')">
+                    <i class="fas fa-shopping-cart"></i>
+                    Buy Now
+                </button>
+                <button class="btn-secondary" onclick="smoothScrollTo('features')">
+                    Learn More
+                </button>
+            </div>
+            <div class="scroll-indicator" onclick="smoothScrollTo('products')">
+                <i class="fas fa-chevron-down" style="color: var(--text-muted); font-size: 1.5rem;"></i>
+            </div>
         </section>
+
         <section class="products-section" id="products">
             <div class="section-header">
                 <h2>Choose Your Plan</h2>
@@ -409,6 +615,7 @@
                 </div>
             </div>
         </section>
+
         <section class="features-section" id="features">
             <div class="section-header">
                 <h2>Why Choose Us?</h2>
@@ -437,17 +644,21 @@
                 </div>
             </div>
         </section>
+
         <section class="telegram-section" id="telegram">
             <div class="telegram-box">
-                <i class="fas fa-headset" style="color: var(--blue); font-size: 3rem; margin-bottom: 1rem;"></i>
+                <i class="fas fa-headset" style="color: var(--brown); font-size: 3rem; margin-bottom: 1rem;"></i>
                 <h3>Need Help?</h3>
                 <p style="color: var(--text-muted); margin-top: 0.5rem;">
                     After payment, your key will be displayed on screen.<br>
                     Make sure to copy it immediately — it won't be shown again!<br><br>
-                    <a href="https://t.me/KITYGAMER" target="_blank" style="color: var(--blue); font-weight: 600; text-decoration: none;">Contact Admin @KITYGAMER</a>
+                    <a href="https://t.me/KITYGAMER" target="_blank" style="color: var(--brown); font-weight: 600; text-decoration: none;">
+                        Contact Admin @KITYGAMER
+                    </a>
                 </p>
             </div>
         </section>
+
         <footer>
             <div class="logo" onclick="smoothScrollTo('hero')">
                 <img src="logo.jpg" alt="KITY SHOP" style="height: 40px; width: auto; border-radius: 8px; object-fit: contain;">
@@ -457,96 +668,74 @@
         </footer>
     </div>
 
+    <!-- ==================== ADMIN PANEL ==================== -->
     <div class="admin-panel" id="adminPanel">
         <div class="admin-header">
             <h2><i class="fas fa-cog"></i> Admin Dashboard</h2>
             <div style="display: flex; gap: 1rem;">
-                <button class="add-stock-btn" onclick="showAddStockModal()"><i class="fas fa-plus"></i> Add Stock</button>
-                <button class="btn-secondary" onclick="logoutAdmin()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                <button class="add-stock-btn" onclick="showAddStockModal()">
+                    <i class="fas fa-plus"></i> Add Stock
+                </button>
+                <button class="btn-secondary" onclick="logoutAdmin()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
         </div>
+
         <div class="stats-grid">
-            <div class="stat-card"><h4>Total Keys</h4><div class="value" id="totalKeys">0</div></div>
-            <div class="stat-card"><h4>Available</h4><div class="value" id="availableKeys">0</div></div>
-            <div class="stat-card"><h4>Sold Today</h4><div class="value" id="soldToday">0</div></div>
-            <div class="stat-card"><h4>Revenue</h4><div class="value" id="revenue">Rs.0</div></div>
+            <div class="stat-card">
+                <h4>Total Keys</h4>
+                <div class="value" id="totalKeys">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>Available</h4>
+                <div class="value" id="availableKeys">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>Sold Today</h4>
+                <div class="value" id="soldToday">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>Revenue</h4>
+                <div class="value" id="revenue">Rs.0</div>
+            </div>
         </div>
+
         <div class="admin-table">
             <table>
-                <thead><tr><th>Duration</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead>
+                <thead>
+                    <tr><th>Duration</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr>
+                </thead>
                 <tbody id="adminTableBody"></tbody>
             </table>
         </div>
+
         <h3 style="margin: 2rem 0 1rem;"><i class="fas fa-history"></i> Recent Orders</h3>
         <div class="admin-table">
             <table>
-                <thead><tr><th>Order ID</th><th>Product</th><th>Email</th><th>Amount</th><th>Coupon</th><th>Status</th><th>Time</th></tr></thead>
+                <thead>
+                    <tr><th>Order ID</th><th>Product</th><th>Email</th><th>Amount</th><th>Status</th><th>Time</th></tr>
+                </thead>
                 <tbody id="ordersTableBody"></tbody>
             </table>
         </div>
-
-        <!-- COUPON MANAGEMENT SECTION -->
-        <h3 style="margin: 2rem 0 1rem;"><i class="fas fa-ticket-alt"></i> Coupon Management</h3>
-        <div style="background: var(--white); border-radius: 16px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 20px var(--card-shadow);">
-            <div class="coupon-add-form">
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label style="font-size: 0.8rem;">Coupon Code</label>
-                    <input type="text" id="newCouponCode" placeholder="WELCOME20" style="text-transform: uppercase;">
-                </div>
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label style="font-size: 0.8rem;">Discount %</label>
-                    <input type="number" id="newCouponDiscount" placeholder="20" min="1" max="100">
-                </div>
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label style="font-size: 0.8rem;">Max Uses</label>
-                    <input type="number" id="newCouponMaxUses" placeholder="100" min="1">
-                </div>
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label style="font-size: 0.8rem;">Min Order (Rs.)</label>
-                    <input type="number" id="newCouponMinOrder" placeholder="0" min="0">
-                </div>
-            </div>
-            <button class="add-stock-btn" onclick="addNewCoupon()" style="margin-top: 0.5rem;">
-                <i class="fas fa-plus"></i> Add Coupon
-            </button>
-        </div>
-        <div id="couponsList" style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2rem;">
-            <div style="text-align: center; padding: 1rem; color: var(--text-muted);">Loading coupons...</div>
-        </div>
     </div>
 
+    <!-- ==================== BUY MODAL ==================== -->
     <div class="modal-overlay" id="buyModal">
         <div class="modal">
             <div class="modal-header">
                 <h2><i class="fas fa-shopping-cart"></i> Complete Purchase</h2>
-                <button class="close-btn" onclick="closeModal('buyModal'); resetBuyModal();">&times;</button>
             </div>
             <div id="buyModalContent">
                 <div class="form-group">
                     <label style="font-size: 0.9rem;"><i class="fas fa-box"></i> Selected Plan</label>
-                    <input type="text" id="selectedPlan" readonly style="background: rgba(39, 77, 245, 0.06); border-color: var(--blue-light);">
+                    <input type="text" id="selectedPlan" readonly style="background: rgba(196, 168, 130, 0.1); border-color: var(--brown-light);">
                 </div>
-
-                <!-- COUPON SECTION -->
-                <div class="coupon-section">
-                    <label style="font-size: 0.85rem; font-weight: 600; color: var(--blue-darker); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
-                        <i class="fas fa-ticket-alt" style="color: var(--blue);"></i> Have a Coupon?
-                    </label>
-                    <div class="coupon-input-wrap">
-                        <input type="text" id="couponCode" placeholder="Enter coupon code" style="text-transform: uppercase;">
-                        <button class="coupon-btn" id="applyCouponBtn" onclick="applyCoupon()">
-                            <i class="fas fa-check"></i> Apply
-                        </button>
-                    </div>
-                    <div class="coupon-status" id="couponStatus"></div>
+                <div class="form-group">
+                    <label style="font-size: 0.9rem;"><i class="fas fa-tag"></i> Price</label>
+                    <input type="text" id="selectedPrice" readonly>
                 </div>
-
-                <div class="price-breakdown" id="priceBreakdown" style="display: none;">
-                    <div class="row"><span>Original Price</span><span id="originalPriceDisplay">Rs.0</span></div>
-                    <div class="row" id="discountRow"><span>Discount</span><span class="discount" id="discountDisplay">-Rs.0</span></div>
-                    <div class="row total"><span>Final Amount</span><span id="finalPriceDisplay">Rs.0</span></div>
-                </div>
-
                 <div class="form-group">
                     <label style="font-size: 0.9rem;"><i class="fas fa-envelope"></i> Email (optional)</label>
                     <input type="email" id="email" placeholder="your@email.com">
@@ -562,15 +751,17 @@
                 </div>
                 <div class="success-check"><i class="fas fa-check"></i></div>
                 <h3 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Payment Successful!</h3>
-                <p style="color: var(--text-muted); margin: 0.3rem 0; font-size: 0.85rem;">Your access key is ready! Copy it below.</p>
-                <div style="background: linear-gradient(135deg, var(--cream), #fff); padding: 0.8rem; border-radius: 12px; margin: 0.6rem 0; border: 2px dashed var(--blue); position: relative;" id="keyBox">
-                    <div style="font-size: 0.8rem; color: var(--blue); margin-bottom: 0.4rem; font-weight: 600;"><i class="fas fa-key"></i> YOUR ACCESS KEY</div>
-                    <div style="font-family: 'Courier New', monospace; font-size: 1.1rem; font-weight: 800; color: var(--blue-darker); letter-spacing: 1px; word-break: break-all; padding: 0.5rem; background: white; border-radius: 8px; border: 1px solid var(--border);" id="sentKeyDisplay">KEY-XXXX-XXXX-XXXX</div>
-                    <button onclick="copyKeyToClipboard()" style="margin-top: 0.6rem; background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(39,77,245,0.3);">
+                <p style="color: var(--text-muted); margin: 0.3rem 0; font-size: 0.85rem;">
+                    Your access key is ready! Copy it below.
+                </p>
+                <div style="background: linear-gradient(135deg, var(--cream), #fff); padding: 0.8rem; border-radius: 12px; margin: 0.6rem 0; border: 2px dashed var(--brown); position: relative;" id="keyBox">
+                    <div style="font-size: 0.8rem; color: var(--brown); margin-bottom: 0.4rem; font-weight: 600;"><i class="fas fa-key"></i> YOUR ACCESS KEY</div>
+                    <div style="font-family: 'Courier New', monospace; font-size: 1.1rem; font-weight: 800; color: var(--brown-darker); letter-spacing: 1px; word-break: break-all; padding: 0.5rem; background: white; border-radius: 8px; border: 1px solid var(--border);" id="sentKeyDisplay">KEY-XXXX-XXXX-XXXX</div>
+                    <button onclick="copyKeyToClipboard()" style="margin-top: 0.6rem; background: linear-gradient(135deg, var(--brown), var(--brown-dark)); color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(139,105,20,0.3);">
                         <i class="fas fa-copy"></i> Copy Key
                     </button>
                 </div>
-                <div style="background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.3); border-radius: 10px; padding: 0.5rem; margin: 0.5rem 0; color: var(--success); font-size: 0.8rem;">
+                <div style="background: rgba(45,125,70,0.08); border: 1px solid rgba(45,125,70,0.3); border-radius: 10px; padding: 0.5rem; margin: 0.5rem 0; color: var(--success); font-size: 0.8rem;">
                     <i class="fas fa-shield-alt"></i> <b>Keep this key safe!</b>
                 </div>
                 <button class="btn-primary" onclick="closeModal('buyModal'); resetBuyModal();" style="margin-top: 0.3rem; padding: 0.7rem 1.5rem; font-size: 0.9rem;">
@@ -580,18 +771,28 @@
         </div>
     </div>
 
+    <!-- ==================== ADMIN LOGIN MODAL ==================== -->
     <div class="modal-overlay" id="adminLoginModal">
         <div class="modal">
             <div class="modal-header">
                 <h2><i class="fas fa-lock"></i> Admin Login</h2>
                 <button class="close-btn" onclick="closeModal('adminLoginModal')">&times;</button>
             </div>
-            <div class="form-group"><label>Username</label><input type="text" id="adminUsername" placeholder="admin"></div>
-            <div class="form-group"><label>Password</label><input type="password" id="adminPassword" placeholder="password"></div>
-            <button class="btn-primary" onclick="loginAdmin()"><i class="fas fa-sign-in-alt"></i> Login</button>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="adminUsername" placeholder="admin">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="adminPassword" placeholder="password">
+            </div>
+            <button class="btn-primary" onclick="loginAdmin()">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
         </div>
     </div>
 
+    <!-- ==================== ADD STOCK MODAL ==================== -->
     <div class="modal-overlay" id="addStockModal">
         <div class="modal">
             <div class="modal-header">
@@ -610,10 +811,21 @@
                     <option value="60days">60 Days</option>
                 </select>
             </div>
-            <div class="form-group"><label>Price (Rs.)</label><input type="number" id="stockPrice" placeholder="199"></div>
-            <div class="form-group"><label>Quantity to Add</label><input type="number" id="stockQuantity" placeholder="10"></div>
-            <div class="form-group"><label>Keys (one per line, optional)</label><textarea id="stockKeys" rows="5" placeholder="KEY-ABC-123-XYZ"></textarea></div>
-            <button class="btn-primary" onclick="addStock()"><i class="fas fa-plus"></i> Add Stock</button>
+            <div class="form-group">
+                <label>Price (Rs.)</label>
+                <input type="number" id="stockPrice" placeholder="199">
+            </div>
+            <div class="form-group">
+                <label>Quantity to Add</label>
+                <input type="number" id="stockQuantity" placeholder="10">
+            </div>
+            <div class="form-group">
+                <label>Keys (one per line, optional)</label>
+                <textarea id="stockKeys" rows="5" placeholder="KEY-ABC-123-XYZ"></textarea>
+            </div>
+            <button class="btn-primary" onclick="addStock()">
+                <i class="fas fa-plus"></i> Add Stock
+            </button>
         </div>
     </div>
 
@@ -623,6 +835,9 @@
     </div>
 
     <script>
+        // ========================
+        // FIREBASE CONFIGURATION
+        // ========================
         const firebaseConfig = {
             apiKey: "AIzaSyB2URaYC1ZY38bOT7IxFSaJ7NxN6W5qt2o",
             authDomain: "kityshop-c228f.firebaseapp.com",
@@ -648,6 +863,9 @@
             showToast("Firebase config missing! Using local data.", "error");
         }
 
+        // ========================
+        // APP CONFIGURATION
+        // ========================
         const RAZORPAY_KEY_ID = "rzp_live_TD3L7tVFGUPTiA";
 
         const defaultProducts = [
@@ -665,236 +883,16 @@
         let orders = [];
         let currentProduct = null;
 
-        // ========== COUPON SYSTEM ==========
-        let coupons = {};
-        let appliedCoupon = null;
-        let discountedPrice = 0;
-
-        // Default coupons
-        const defaultCoupons = {
-            "WELCOME20": { code: "WELCOME20", discount: 20, maxUses: 100, usedCount: 0, minOrder: 0, active: true },
-            "KITY10": { code: "KITY10", discount: 10, maxUses: 50, usedCount: 0, minOrder: 100, active: true },
-            "MEGA50": { code: "MEGA50", discount: 50, maxUses: 20, usedCount: 0, minOrder: 500, active: true },
-            "FLASH30": { code: "FLASH30", discount: 30, maxUses: 30, usedCount: 0, minOrder: 200, active: true }
-        };
-
-        function loadCouponsFromFirebase() {
-            if (!firebaseInitialized) {
-                coupons = JSON.parse(JSON.stringify(defaultCoupons));
-                return;
-            }
-            db.ref("coupons").once("value", (snapshot) => {
-                const data = snapshot.val();
-                if (data && Object.keys(data).length > 0) {
-                    coupons = data;
-                } else {
-                    coupons = JSON.parse(JSON.stringify(defaultCoupons));
-                    saveCouponsToFirebase();
-                }
-                if (document.getElementById("adminPanel").classList.contains("active")) {
-                    renderCouponsList();
-                }
-            });
-        }
-
-        function saveCouponsToFirebase() {
-            if (!firebaseInitialized) return;
-            db.ref("coupons").set(coupons);
-        }
-
-        function applyCoupon() {
-            const codeInput = document.getElementById("couponCode");
-            const statusEl = document.getElementById("couponStatus");
-            const code = codeInput.value.trim().toUpperCase();
-
-            if (!code) {
-                statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter a coupon code';
-                statusEl.className = "coupon-status invalid";
-                return;
-            }
-
-            const coupon = coupons[code];
-            if (!coupon) {
-                statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Invalid coupon code';
-                statusEl.className = "coupon-status invalid";
-                appliedCoupon = null;
-                updatePriceDisplay();
-                return;
-            }
-
-            if (!coupon.active) {
-                statusEl.innerHTML = '<i class="fas fa-times-circle"></i> This coupon is inactive';
-                statusEl.className = "coupon-status invalid";
-                appliedCoupon = null;
-                updatePriceDisplay();
-                return;
-            }
-
-            if (coupon.usedCount >= coupon.maxUses) {
-                statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Coupon usage limit reached';
-                statusEl.className = "coupon-status invalid";
-                appliedCoupon = null;
-                updatePriceDisplay();
-                return;
-            }
-
-            if (currentProduct && currentProduct.price < coupon.minOrder) {
-                statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Min order Rs.' + coupon.minOrder + ' required';
-                statusEl.className = "coupon-status invalid";
-                appliedCoupon = null;
-                updatePriceDisplay();
-                return;
-            }
-
-            appliedCoupon = coupon;
-            const discountAmount = Math.round((currentProduct.price * coupon.discount) / 100);
-            discountedPrice = currentProduct.price - discountAmount;
-
-            statusEl.innerHTML = '<i class="fas fa-check-circle"></i> "' + code + '" applied! ' + coupon.discount + '% off';
-            statusEl.className = "coupon-status valid";
-
-            updatePriceDisplay();
-            showToast('Coupon "' + code + '" applied! ' + coupon.discount + '% discount', 'success');
-        }
-
-        function updatePriceDisplay() {
-            const breakdown = document.getElementById("priceBreakdown");
-            const originalDisplay = document.getElementById("originalPriceDisplay");
-            const discountRow = document.getElementById("discountRow");
-            const discountDisplay = document.getElementById("discountDisplay");
-            const finalDisplay = document.getElementById("finalPriceDisplay");
-
-            if (!currentProduct) return;
-
-            if (appliedCoupon) {
-                const discountAmount = Math.round((currentProduct.price * appliedCoupon.discount) / 100);
-                discountedPrice = currentProduct.price - discountAmount;
-
-                breakdown.style.display = "block";
-                originalDisplay.textContent = "Rs." + currentProduct.price;
-                discountRow.style.display = "flex";
-                discountDisplay.textContent = "-Rs." + discountAmount + " (" + appliedCoupon.discount + "%)";
-                finalDisplay.textContent = "Rs." + discountedPrice;
-            } else {
-                breakdown.style.display = "none";
-                discountedPrice = currentProduct.price;
-            }
-        }
-
-        function resetCoupon() {
-            appliedCoupon = null;
-            discountedPrice = 0;
-            document.getElementById("couponCode").value = "";
-            document.getElementById("couponStatus").innerHTML = "";
-            document.getElementById("couponStatus").className = "coupon-status";
-            document.getElementById("priceBreakdown").style.display = "none";
-        }
-
-        function addNewCoupon() {
-            const code = document.getElementById("newCouponCode").value.trim().toUpperCase();
-            const discount = parseInt(document.getElementById("newCouponDiscount").value);
-            const maxUses = parseInt(document.getElementById("newCouponMaxUses").value) || 100;
-            const minOrder = parseInt(document.getElementById("newCouponMinOrder").value) || 0;
-
-            if (!code || isNaN(discount) || discount < 1 || discount > 100) {
-                showToast("Please enter valid coupon code and discount (1-100)%", "error");
-                return;
-            }
-
-            coupons[code] = {
-                code: code,
-                discount: discount,
-                maxUses: maxUses,
-                usedCount: 0,
-                minOrder: minOrder,
-                active: true
-            };
-
-            saveCouponsToFirebase();
-            renderCouponsList();
-
-            document.getElementById("newCouponCode").value = "";
-            document.getElementById("newCouponDiscount").value = "";
-            document.getElementById("newCouponMaxUses").value = "";
-            document.getElementById("newCouponMinOrder").value = "";
-
-            showToast('Coupon "' + code + '" created successfully!', 'success');
-        }
-
-        function deleteCoupon(code) {
-            if (confirm('Delete coupon "' + code + '"?')) {
-                delete coupons[code];
-                saveCouponsToFirebase();
-                renderCouponsList();
-                showToast('Coupon deleted', 'info');
-            }
-        }
-
-        function toggleCouponStatus(code) {
-            if (coupons[code]) {
-                coupons[code].active = !coupons[code].active;
-                saveCouponsToFirebase();
-                renderCouponsList();
-                showToast('Coupon "' + code + '" ' + (coupons[code].active ? 'activated' : 'deactivated'), 'info');
-            }
-        }
-
-        function renderCouponsList() {
-            const container = document.getElementById("couponsList");
-            if (!container) return;
-
-            const couponList = Object.values(coupons);
-            if (couponList.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 1rem; color: var(--text-muted);">No coupons available</div>';
-                return;
-            }
-
-            container.innerHTML = couponList.map(c => {
-                const usagePercent = Math.round((c.usedCount / c.maxUses) * 100);
-                const isActive = c.active && c.usedCount < c.maxUses;
-                return `
-                    <div class="coupon-card">
-                        <div>
-                            <div class="code">${c.code}</div>
-                            <div class="info">
-                                ${c.discount}% off | Min: Rs.${c.minOrder} | Used: ${c.usedCount}/${c.maxUses}
-                                <span style="color: ${isActive ? 'var(--success)' : 'var(--danger)'}; font-weight: 600;">
-                                    ${isActive ? '● Active' : '● Inactive'}
-                                </span>
-                            </div>
-                            <div style="margin-top: 0.4rem; background: var(--cream); border-radius: 4px; height: 6px; overflow: hidden;">
-                                <div style="width: ${usagePercent}%; height: 100%; background: linear-gradient(90deg, var(--blue), var(--blue-light)); border-radius: 4px; transition: width 0.3s;"></div>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <button class="action-btn edit" onclick="toggleCouponStatus('${c.code}')" title="${c.active ? 'Deactivate' : 'Activate'}">
-                                <i class="fas fa-${c.active ? 'pause' : 'play'}"></i>
-                            </button>
-                            <button class="action-btn delete" onclick="deleteCoupon('${c.code}')" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function incrementCouponUsage(code) {
-            if (coupons[code]) {
-                coupons[code].usedCount = (coupons[code].usedCount || 0) + 1;
-                saveCouponsToFirebase();
-            }
-        }
-
-        // ========== COUPON SYSTEM END ==========
-
-
         products.forEach(p => {
             keys[p.id] = [];
             for (let i = 0; i < p.stock; i++) {
                 keys[p.id].push(generateKey(p.id));
             }
         });
+
+        // ========================
+        // AUTH FUNCTIONS
+        // ========================
 
         function switchAuthTab(tab) {
             const signInForm = document.getElementById("signInForm");
@@ -905,9 +903,11 @@
             const authDivider = document.getElementById("authDivider");
             const googleBtn = document.getElementById("googleBtn");
             const authFooter = document.getElementById("authFooter");
+
             document.getElementById("signInError").classList.remove("show");
             document.getElementById("signUpError").classList.remove("show");
             document.getElementById("forgotError").classList.remove("show");
+
             if (tab === "signin") {
                 signInForm.classList.remove("hidden");
                 signUpForm.classList.add("hidden");
@@ -916,7 +916,7 @@
                 tabSignUp.classList.remove("active");
                 authDivider.style.display = "flex";
                 googleBtn.style.display = "flex";
-                authFooter.innerHTML = "Don't have an account? <a onclick=\"switchAuthTab('signup')\">Sign Up</a>";
+                authFooter.innerHTML = "Don't have an account? <a onclick=\"switchAuthTab(\'signup\')\">Sign Up</a>";
                 authFooter.style.display = "block";
             } else if (tab === "signup") {
                 signInForm.classList.add("hidden");
@@ -926,7 +926,7 @@
                 tabSignUp.classList.add("active");
                 authDivider.style.display = "flex";
                 googleBtn.style.display = "flex";
-                authFooter.innerHTML = "Already have an account? <a onclick=\"switchAuthTab('signin')\">Sign In</a>";
+                authFooter.innerHTML = "Already have an account? <a onclick=\"switchAuthTab(\'signin\')\">Sign In</a>";
                 authFooter.style.display = "block";
             }
         }
@@ -966,14 +966,22 @@
 
         function handleSignIn(e) {
             e.preventDefault();
-            if (!firebaseInitialized) { showAuthError("signInError", "Firebase not connected!"); return; }
+            if (!firebaseInitialized) {
+                showAuthError("signInError", "Firebase not connected!");
+                return;
+            }
             const email = document.getElementById("signInEmail").value.trim();
             const password = document.getElementById("signInPassword").value;
             const btn = document.getElementById("signInBtn");
+
             btn.disabled = true;
             btn.innerHTML = '<div class="loading"></div> Signing in...';
+
             auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => { currentUser = userCredential.user; showToast("Welcome back!", "success"); })
+                .then((userCredential) => {
+                    currentUser = userCredential.user;
+                    showToast("Welcome back!", "success");
+                })
                 .catch((error) => {
                     let msg = error.message;
                     if (error.code === "auth/user-not-found") msg = "No account found with this email.";
@@ -985,21 +993,36 @@
                     else msg = "Invalid password. Please check your credentials and try again.";
                     showAuthError("signInError", msg);
                 })
-                .finally(() => { btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In'; });
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+                });
         }
 
         function handleSignUp(e) {
             e.preventDefault();
-            if (!firebaseInitialized) { showAuthError("signUpError", "Firebase not connected!"); return; }
+            if (!firebaseInitialized) {
+                showAuthError("signUpError", "Firebase not connected!");
+                return;
+            }
             const name = document.getElementById("signUpName").value.trim();
             const email = document.getElementById("signUpEmail").value.trim();
             const password = document.getElementById("signUpPassword").value;
             const confirm = document.getElementById("signUpConfirm").value;
             const btn = document.getElementById("signUpBtn");
-            if (password !== confirm) { showAuthError("signUpError", "Passwords do not match!"); return; }
-            if (password.length < 6) { showAuthError("signUpError", "Password must be at least 6 characters."); return; }
+
+            if (password !== confirm) {
+                showAuthError("signUpError", "Passwords do not match!");
+                return;
+            }
+            if (password.length < 6) {
+                showAuthError("signUpError", "Password must be at least 6 characters.");
+                return;
+            }
+
             btn.disabled = true;
             btn.innerHTML = '<div class="loading"></div> Creating account...';
+
             auth.createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     currentUser = userCredential.user;
@@ -1009,7 +1032,9 @@
                         createdAt: new Date().toISOString()
                     });
                 })
-                .then(() => { showToast("Account created! Welcome to KITY SHOP.", "success"); })
+                .then(() => {
+                    showToast("Account created! Welcome to KITY SHOP.", "success");
+                })
                 .catch((error) => {
                     let msg = error.message;
                     if (error.code === "auth/email-already-in-use") msg = "Email already registered.";
@@ -1017,16 +1042,24 @@
                     else if (error.code === "auth/weak-password") msg = "Password is too weak.";
                     showAuthError("signUpError", msg);
                 })
-                .finally(() => { btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account'; });
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+                });
         }
 
         function handleForgotPassword(e) {
             e.preventDefault();
-            if (!firebaseInitialized) { showAuthError("forgotError", "Firebase not connected!"); return; }
+            if (!firebaseInitialized) {
+                showAuthError("forgotError", "Firebase not connected!");
+                return;
+            }
             const email = document.getElementById("forgotEmail").value.trim();
             const btn = document.getElementById("forgotBtn");
+
             btn.disabled = true;
             btn.innerHTML = '<div class="loading"></div> Sending...';
+
             auth.sendPasswordResetEmail(email)
                 .then(() => {
                     document.getElementById("forgotFields").style.display = "none";
@@ -1038,7 +1071,10 @@
                     if (error.code === "auth/user-not-found") msg = "No account with this email.";
                     showAuthError("forgotError", msg);
                 })
-                .finally(() => { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Reset Link'; });
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Reset Link';
+                });
         }
 
         function signInWithGoogle() {
@@ -1085,6 +1121,7 @@
             });
         }
 
+        // Auth state listener
         if (firebaseInitialized) {
             auth.onAuthStateChanged((user) => {
                 if (user) {
@@ -1105,6 +1142,7 @@
             document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("navbar").classList.add("nav-hidden");
             document.getElementById("syncIndicator").style.display = "none";
+            // Remove all user nav items AND hide main nav items
             const navLinks = document.getElementById("navLinks");
             if (navLinks) {
                 const existingUserItems = navLinks.querySelectorAll('.user-nav-item');
@@ -1112,8 +1150,10 @@
                 const mainItems = navLinks.querySelectorAll('.main-nav-item');
                 mainItems.forEach(el => el.style.display = 'none');
             }
-            closeMobileMenu();
-        }
+        
+    // Close mobile menu if open
+    closeMobileMenu();
+}
 
         function showMainContent() {
             document.getElementById("authPage").classList.add("hidden");
@@ -1121,12 +1161,19 @@
             document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("navbar").classList.remove("nav-hidden");
             document.getElementById("syncIndicator").style.display = "none";
+
+            // Show main nav links
             const navLinks = document.getElementById("navLinks");
             if (navLinks) {
                 const mainItems = navLinks.querySelectorAll('.main-nav-item');
                 mainItems.forEach(el => el.style.display = '');
             }
-            setTimeout(() => { addUserMenuToNav(); }, 100);
+
+            // Small delay to ensure navbar is rendered before adding user menu
+            setTimeout(() => {
+                addUserMenuToNav();
+            }, 100);
+
             loadProductsFromFirebase();
             loadOrdersFromFirebase();
         }
@@ -1134,27 +1181,34 @@
         function addUserMenuToNav() {
             const navLinks = document.getElementById("navLinks");
             if (!navLinks) return;
+
+            // Remove ALL existing user-related elements (by class)
             const existingUserItems = navLinks.querySelectorAll('.user-nav-item');
             existingUserItems.forEach(el => el.remove());
+
             const userEmail = currentUser ? currentUser.email : "User";
 
+            // Create My Orders link
             const myOrdersLink = document.createElement("button");
             myOrdersLink.className = "nav-link user-nav-item";
             myOrdersLink.innerHTML = 'My Orders';
             myOrdersLink.onclick = function() { showMyOrders(); closeMobileMenu(); };
             navLinks.appendChild(myOrdersLink);
 
+            // Create My Keys link
             const myKeysLink = document.createElement("button");
             myKeysLink.className = "nav-link user-nav-item";
             myKeysLink.innerHTML = 'My Keys';
             myKeysLink.onclick = function() { showMyKeys(); closeMobileMenu(); };
             navLinks.appendChild(myKeysLink);
 
+            // Create Email display
             const emailDisplay = document.createElement("span");
             emailDisplay.className = "nav-user-email user-nav-item";
             emailDisplay.innerHTML = '<i class="fas fa-envelope"></i> ' + userEmail;
             navLinks.appendChild(emailDisplay);
 
+            // Create Logout button
             const logoutBtn = document.createElement("button");
             logoutBtn.className = "nav-logout-btn user-nav-item";
             logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
@@ -1162,15 +1216,25 @@
             navLinks.appendChild(logoutBtn);
         }
 
+        function toggleUserDropdown() {
+            // No longer needed - menu is flat now
+        }
+
+        document.addEventListener("click", (e) => {
+            // Dropdown removed - menu is flat now
+        });
+
         function showMyOrders() {
+            toggleUserDropdown();
             if (!currentUser || !firebaseInitialized) {
                 showToast("Please sign in to view orders!", "error");
                 return;
             }
+
             const modal = document.createElement("div");
             modal.className = "modal-overlay active";
             modal.id = "myOrdersModal";
-            modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 20, 74, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
+            modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(42, 26, 15, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
             modal.innerHTML = `
                 <div class="modal" style="max-width: 700px; width: 92%; max-height: 80vh; overflow-y: auto;">
                     <div class="modal-header">
@@ -1186,6 +1250,7 @@
                 </div>
             `;
             document.body.appendChild(modal);
+
             db.ref("userOrders/" + currentUser.uid).once("value")
                 .then((snapshot) => {
                     const data = snapshot.val();
@@ -1199,26 +1264,27 @@
                         `;
                         return;
                     }
+
                     const userOrders = Object.values(data).reverse();
                     content.innerHTML = `
                         <div class="admin-table" style="overflow-x: auto;">
                             <table style="width: 100%; border-collapse: collapse;">
                                 <thead>
                                     <tr>
-                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(39, 77, 245, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Order ID</th>
-                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(39, 77, 245, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Product</th>
-                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(39, 77, 245, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Amount</th>
-                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(39, 77, 245, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Key</th>
-                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(39, 77, 245, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Date</th>
+                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(196, 168, 130, 0.1); font-weight: 600; color: var(--brown); font-size: 0.85rem;">Order ID</th>
+                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(196, 168, 130, 0.1); font-weight: 600; color: var(--brown); font-size: 0.85rem;">Product</th>
+                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(196, 168, 130, 0.1); font-weight: 600; color: var(--brown); font-size: 0.85rem;">Amount</th>
+                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(196, 168, 130, 0.1); font-weight: 600; color: var(--brown); font-size: 0.85rem;">Key</th>
+                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(196, 168, 130, 0.1); font-weight: 600; color: var(--brown); font-size: 0.85rem;">Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     ${userOrders.map(o => `
                                         <tr style="border-bottom: 1px solid var(--border);">
                                             <td style="padding: 0.8rem; font-size: 0.8rem; color: var(--text-muted);">${o.id}</td>
-                                            <td style="padding: 0.8rem; font-size: 0.85rem; font-weight: 600; color: var(--blue-darker);">${o.product}</td>
-                                            <td style="padding: 0.8rem; font-size: 0.85rem; color: var(--blue); font-weight: 600;">Rs.${o.amount}</td>
-                                            <td style="padding: 0.8rem; font-size: 0.8rem; font-family: monospace; color: var(--blue-dark); background: rgba(39,77,245,0.06); border-radius: 6px;">${o.key}</td>
+                                            <td style="padding: 0.8rem; font-size: 0.85rem; font-weight: 600; color: var(--brown-darker);">${o.product}</td>
+                                            <td style="padding: 0.8rem; font-size: 0.85rem; color: var(--brown); font-weight: 600;">Rs.${o.amount}</td>
+                                            <td style="padding: 0.8rem; font-size: 0.8rem; font-family: monospace; color: var(--brown-dark); background: rgba(196,168,130,0.1); border-radius: 6px;">${o.key}</td>
                                             <td style="padding: 0.8rem; font-size: 0.75rem; color: var(--text-muted);">${o.time}</td>
                                         </tr>
                                     `).join("")}
@@ -1238,14 +1304,16 @@
         }
 
         function showMyKeys() {
+            toggleUserDropdown();
             if (!currentUser || !firebaseInitialized) {
                 showToast("Please sign in to view keys!", "error");
                 return;
             }
+
             const modal = document.createElement("div");
             modal.className = "modal-overlay active";
             modal.id = "myKeysModal";
-            modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 20, 74, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
+            modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(42, 26, 15, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
             modal.innerHTML = `
                 <div class="modal" style="max-width: 700px; width: 92%; max-height: 80vh; overflow-y: auto;">
                     <div class="modal-header">
@@ -1261,6 +1329,7 @@
                 </div>
             `;
             document.body.appendChild(modal);
+
             db.ref("userOrders/" + currentUser.uid).once("value")
                 .then((snapshot) => {
                     const data = snapshot.val();
@@ -1274,28 +1343,28 @@
                         `;
                         return;
                     }
+
                     const userOrders = Object.values(data).reverse();
                     content.innerHTML = `
                         <div style="display: flex; flex-direction: column; gap: 1rem;">
                             ${userOrders.map(o => `
                                 <div style="background: linear-gradient(135deg, var(--cream), #fff); padding: 1.2rem; border-radius: 16px; border: 2px solid var(--border); position: relative; overflow: hidden;">
-                                    <div style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(180deg, var(--blue), var(--blue-dark));"></div>
+                                    <div style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(180deg, var(--brown), var(--brown-dark));"></div>
                                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
                                         <div>
                                             <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.2rem;">${o.product}</div>
                                             <div style="font-size: 0.85rem; color: var(--text-muted);">Order: ${o.id}</div>
-                                            ${o.couponCode ? '<div style="font-size: 0.75rem; color: var(--blue); font-weight: 600; margin-top: 0.2rem;"><i class="fas fa-ticket-alt"></i> ' + o.couponCode + ' (-' + o.discountPercent + '%)</div>' : ''}
                                         </div>
-                                        <div style="background: rgba(22, 163, 74, 0.1); color: var(--success); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;">
+                                        <div style="background: rgba(45, 125, 70, 0.1); color: var(--success); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;">
                                             <i class="fas fa-check-circle"></i> Active
                                         </div>
                                     </div>
                                     <div style="background: white; padding: 0.8rem; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 0.8rem;">
-                                        <div style="font-size: 0.7rem; color: var(--blue); margin-bottom: 0.3rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;"><i class="fas fa-key"></i> Access Key</div>
-                                        <div style="font-family: 'Courier New', monospace; font-size: 1.1rem; font-weight: 800; color: var(--blue-darker); letter-spacing: 1px; word-break: break-all;" id="key-${o.id}">${o.key}</div>
+                                        <div style="font-size: 0.7rem; color: var(--brown); margin-bottom: 0.3rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;"><i class="fas fa-key"></i> Access Key</div>
+                                        <div style="font-family: 'Courier New', monospace; font-size: 1.1rem; font-weight: 800; color: var(--brown-darker); letter-spacing: 1px; word-break: break-all;" id="key-${o.id}">${o.key}</div>
                                     </div>
                                     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                                        <button onclick="copyMyKey('${o.id}')" style="flex: 1; min-width: 120px; background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s;">
+                                        <button onclick="copyMyKey('${o.id}')" style="flex: 1; min-width: 120px; background: linear-gradient(135deg, var(--brown), var(--brown-dark)); color: white; border: none; padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s;">
                                             <i class="fas fa-copy"></i> Copy Key
                                         </button>
                                         <button onclick="toggleKeyVisibility('${o.id}')" style="background: var(--cream); color: var(--text-muted); border: 1px solid var(--border); padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s;">
@@ -1340,9 +1409,12 @@
         function toggleKeyVisibility(orderId) {
             const keyEl = document.getElementById("key-" + orderId);
             if (!keyEl) return;
+
+            // Find the button container (the div with flex display containing the buttons)
             const keyContainer = keyEl.closest("div").parentElement;
             const buttons = keyContainer.querySelectorAll("button");
-            const toggleBtn = buttons[buttons.length - 1];
+            const toggleBtn = buttons[buttons.length - 1]; // Last button is the hide/show button
+
             if (keyEl.style.filter === "blur(4px)") {
                 keyEl.style.filter = "none";
                 toggleBtn.innerHTML = '<i class="fas fa-eye"></i> Hide';
@@ -1351,6 +1423,10 @@
                 toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Show';
             }
         }
+
+        // ========================
+        // FIREBASE FUNCTIONS
+        // ========================
 
         function setSyncing(isSyncing) {
             const indicator = document.getElementById("syncIndicator");
@@ -1482,16 +1558,11 @@
                     renderAdminTables();
                 }
             });
-            db.ref("coupons").on("value", (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    coupons = data;
-                    if (document.getElementById("adminPanel").classList.contains("active")) {
-                        renderCouponsList();
-                    }
-                }
-            });
         }
+
+        // ========================
+        // UTILITY FUNCTIONS
+        // ========================
 
         function generateKey(productId) {
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -1504,6 +1575,10 @@
             }
             return key;
         }
+
+        // ========================
+        // UI FUNCTIONS
+        // ========================
 
         function renderProducts() {
             const grid = document.getElementById("productsGrid");
@@ -1569,7 +1644,6 @@
             document.getElementById("buyModal").classList.add("active");
             document.getElementById("buyModalContent").classList.remove("hidden");
             document.getElementById("paymentSuccess").classList.add("hidden");
-            resetCoupon();
         }
 
         function closeModal(modalId) {
@@ -1580,7 +1654,6 @@
             document.getElementById("email").value = "";
             document.getElementById("buyModalContent").classList.remove("hidden");
             document.getElementById("paymentSuccess").classList.add("hidden");
-            resetCoupon();
         }
 
         function processPayment() {
@@ -1589,28 +1662,20 @@
             payBtn.innerHTML = '<div class="loading"></div> Loading...';
             payBtn.disabled = true;
 
-            // Use discounted price if coupon applied, otherwise original price
-            const finalAmount = (appliedCoupon && discountedPrice > 0) ? discountedPrice : currentProduct.price;
-
             const options = {
                 key: RAZORPAY_KEY_ID,
-                amount: finalAmount * 100,
+                amount: currentProduct.price * 100,
                 currency: "INR",
                 name: "KITY SHOP",
-                description: currentProduct.name + (appliedCoupon ? " (" + appliedCoupon.discount + "% OFF)" : ""),
+                description: currentProduct.name,
                 image: "https://cdn-icons-png.flaticon.com/512/2885/2885417.png",
                 handler: function (response) {
                     const buyerEmail = document.getElementById("email").value.trim();
                     handlePaymentSuccess(response, buyerEmail);
                 },
                 prefill: { name: currentUser ? (currentUser.displayName || "") : "", email: document.getElementById("email").value || "", contact: "" },
-                notes: { 
-                    product: currentProduct.name,
-                    coupon: appliedCoupon ? appliedCoupon.code : "none",
-                    originalPrice: currentProduct.price,
-                    discount: appliedCoupon ? appliedCoupon.discount + "%" : "0%"
-                },
-                theme: { color: "#274DF5" },
+                notes: { product: currentProduct.name },
+                theme: { color: "#8b6914" },
                 modal: {
                     ondismiss: function() {
                         showToast("Payment cancelled", "info");
@@ -1621,6 +1686,7 @@
                     backdropclose: false
                 }
             };
+
             try {
                 const rzp = new Razorpay(options);
                 rzp.on("payment.failed", function (response) {
@@ -1666,41 +1732,32 @@
                     key = generateKey(currentProduct.id);
                 }
 
-                // Calculate final amount with coupon
-                const finalAmount = (appliedCoupon && discountedPrice > 0) ? discountedPrice : currentProduct.price;
-                const discountAmount = appliedCoupon ? (currentProduct.price - discountedPrice) : 0;
-
                 const order = {
                     id: "ORD-" + Date.now(),
                     product: currentProduct.name,
                     productId: currentProduct.id,
                     email: email || (currentUser ? currentUser.email : ""),
                     userId: currentUser ? currentUser.uid : "",
-                    amount: finalAmount,
-                    originalAmount: currentProduct.price,
-                    discountAmount: discountAmount,
-                    couponCode: appliedCoupon ? appliedCoupon.code : null,
-                    discountPercent: appliedCoupon ? appliedCoupon.discount : 0,
+                    amount: currentProduct.price,
                     key: key,
                     paymentId: response.razorpay_payment_id,
                     status: "Delivered",
                     time: new Date().toLocaleString()
                 };
-
-                // Increment coupon usage if applied
-                if (appliedCoupon) {
-                    incrementCouponUsage(appliedCoupon.code);
-                }
                 orders.unshift(order);
+
                 document.getElementById("buyModalContent").classList.add("hidden");
                 document.getElementById("paymentSuccess").classList.remove("hidden");
                 document.getElementById("sentKeyDisplay").textContent = key;
+
                 saveProductsToFirebase();
                 saveKeysToFirebase();
                 saveOrderToFirebase(order);
+
                 if (currentUser && firebaseInitialized) {
                     db.ref("userOrders/" + currentUser.uid + "/" + order.id).set(order);
                 }
+
                 renderProducts();
                 updateAdminStats();
                 renderAdminTables();
@@ -1725,12 +1782,14 @@
             const originalText = loginBtn.innerHTML;
             loginBtn.innerHTML = '<div class="loading"></div> Verifying...';
             loginBtn.disabled = true;
+
             if (!firebaseInitialized) {
                 showToast("Firebase not connected! Cannot verify login.", "error");
                 loginBtn.innerHTML = originalText;
                 loginBtn.disabled = false;
                 return;
             }
+
             db.ref("keys").once("value")
                 .then((snapshot) => {
                     const data = snapshot.val();
@@ -1743,8 +1802,6 @@
                         document.getElementById("adminPassword").value = "";
                         updateAdminStats();
                         renderAdminTables();
-                        loadCouponsFromFirebase();
-                        renderCouponsList();
                         showToast("Welcome to Admin Panel!", "success");
                     } else {
                         if (!data) {
@@ -1817,18 +1874,18 @@
                     </tr>
                 `;
             }).join("");
+
             const ordersBody = document.getElementById("ordersTableBody");
             ordersBody.innerHTML = orders.slice(0, 10).map(o => `
                 <tr>
                     <td>${o.id}</td>
                     <td>${o.product}</td>
                     <td>${o.email || "-"}</td>
-                    <td>Rs.${o.amount}${o.discountAmount > 0 ? ' <span style="color: var(--success); font-size: 0.75rem;">(-' + o.discountAmount + ')</span>' : ''}</td>
-                    <td>${o.couponCode ? '<span style="color: var(--blue); font-weight: 600;">' + o.couponCode + '</span>' : '-'}</td>
+                    <td>Rs.${o.amount}</td>
                     <td><span style="color: var(--success);"><i class="fas fa-check"></i> ${o.status}</span></td>
                     <td>${o.time}</td>
                 </tr>
-            `).join("") || '<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">No orders yet</td></tr>';
+            `).join("") || '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No orders yet</td></tr>';
         }
 
         function showAddStockModal() {
@@ -2028,10 +2085,13 @@
             }
         });
 
+        // ========================
+        // INITIALIZATION
+        // ========================
+
         document.getElementById("syncIndicator").style.display = "none";
         showAuthPage();
         setupRealtimeListeners();
-        loadCouponsFromFirebase();
 
         console.log("KITY SHOP with Firebase Auth loaded!");
     </script>
