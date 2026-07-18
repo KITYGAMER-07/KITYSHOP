@@ -271,6 +271,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -693,14 +694,16 @@
 
         function loadCouponsFromFirebase() {
             if (!firebaseInitialized) {
-                coupons = JSON.parse(JSON.stringify(defaultCoupons));
+                coupons = {};
                 return;
             }
             db.ref("coupons").once("value", (snapshot) => {
                 const data = snapshot.val();
-                if (data && Object.keys(data).length > 0) {
-                    coupons = data;
+                if (data !== null && data !== undefined) {
+                    // Firebase has data (even if empty object {}), use it
+                    coupons = data || {};
                 } else {
+                    // First time ever - initialize with defaults and save to Firebase
                     coupons = JSON.parse(JSON.stringify(defaultCoupons));
                     saveCouponsToFirebase();
                 }
