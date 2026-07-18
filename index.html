@@ -472,8 +472,9 @@
     <div class="admin-panel" id="adminPanel">
         <div class="admin-header">
             <h2><i class="fas fa-cog"></i> Admin Dashboard</h2>
-            <div style="display: flex; gap: 1rem;">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                 <button class="add-stock-btn" onclick="showAddStockModal()"><i class="fas fa-plus"></i> Add Stock</button>
+                <button class="add-stock-btn" onclick="showDeleteStockModal()" style="background: linear-gradient(135deg, var(--danger), #b91c1c);"><i class="fas fa-minus"></i> Delete Stock</button>
                 <button class="btn-secondary" onclick="logoutAdmin()"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </div>
@@ -628,6 +629,37 @@
             <div class="form-group"><label>Quantity to Add</label><input type="number" id="stockQuantity" placeholder="10"></div>
             <div class="form-group"><label>Keys (one per line, optional)</label><textarea id="stockKeys" rows="5" placeholder="KEY-ABC-123-XYZ"></textarea></div>
             <button class="btn-primary" onclick="addStock()"><i class="fas fa-plus"></i> Add Stock</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="deleteStockModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-minus"></i> Delete Stock</h2>
+                <button class="close-btn" onclick="closeModal('deleteStockModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>Duration</label>
+                <select id="deleteStockDuration">
+                    <option value="5hours">5 Hours</option>
+                    <option value="1day">1 Day</option>
+                    <option value="3days">3 Days</option>
+                    <option value="7days">7 Days</option>
+                    <option value="14days">14 Days</option>
+                    <option value="30days">30 Days</option>
+                    <option value="60days">60 Days</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Quantity to Delete</label>
+                <input type="number" id="deleteStockQuantity" placeholder="5" min="1">
+            </div>
+            <div style="background: rgba(220,38,38,0.06); border: 1px solid rgba(220,38,38,0.2); border-radius: 10px; padding: 0.8rem; margin-bottom: 1rem; font-size: 0.85rem; color: var(--danger);">
+                <i class="fas fa-exclamation-triangle"></i> This will permanently remove keys from stock.
+            </div>
+            <button class="btn-primary" onclick="deleteStock()" style="background: linear-gradient(135deg, var(--danger), #b91c1c);">
+                <i class="fas fa-trash"></i> Delete Stock
+            </button>
         </div>
     </div>
 
@@ -2046,6 +2078,54 @@
                     showToast("Stock cleared!", "info");
                 }
             }
+        }
+
+        function showDeleteStockModal() {
+            document.getElementById("deleteStockModal").classList.add("active");
+        }
+
+        function deleteStock() {
+            const duration = document.getElementById("deleteStockDuration").value;
+            const quantity = parseInt(document.getElementById("deleteStockQuantity").value);
+
+            if (!quantity || quantity < 1) {
+                showToast("Please enter a valid quantity to delete!", "error");
+                return;
+            }
+
+            const product = products.find(p => p.id === duration);
+            if (!product) {
+                showToast("Product not found!", "error");
+                return;
+            }
+
+            if (product.stock === 0) {
+                showToast("This product is already out of stock!", "error");
+                return;
+            }
+
+            if (quantity > product.stock) {
+                showToast("Cannot delete more than available stock (" + product.stock + ")!", "error");
+                return;
+            }
+
+            const actualDelete = Math.min(quantity, product.stock);
+            product.stock -= actualDelete;
+
+            // Remove keys from the array
+            if (keys[duration] && keys[duration].length > 0) {
+                keys[duration].splice(0, actualDelete);
+            }
+
+            saveProductsToFirebase();
+            saveKeysToFirebase();
+            renderProducts();
+            updateAdminStats();
+            renderAdminTables();
+            closeModal("deleteStockModal");
+
+            document.getElementById("deleteStockQuantity").value = "";
+            showToast("Deleted " + actualDelete + " key(s) from " + product.name + "!", "success");
         }
 
         function showToast(message, type) {
