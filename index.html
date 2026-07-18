@@ -571,9 +571,6 @@
                 </button>
             </div>
             <div id="paymentSuccess" class="hidden" style="text-align: center;">
-                <div style="display: flex; justify-content: flex-end;">
-                    <button class="close-btn" onclick="closeModal('buyModal'); resetBuyModal();" style="font-size: 1.3rem; cursor: pointer; background: none; border: none; color: var(--text-muted);">&times;</button>
-                </div>
                 <div class="success-check"><i class="fas fa-check"></i></div>
                 <h3 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Payment Successful!</h3>
                 <p style="color: var(--text-muted); margin: 0.3rem 0; font-size: 0.85rem;">Your access key is ready! Copy it below.</p>
@@ -589,6 +586,9 @@
                 </div>
                 <button class="btn-primary" onclick="closeModal('buyModal'); resetBuyModal();" style="margin-top: 0.3rem; padding: 0.7rem 1.5rem; font-size: 0.9rem;">
                     <i class="fas fa-check-circle"></i> Done
+                </button>
+                <button class="btn-secondary" onclick="skipBackToForm()" style="width: 100%; margin-top: 0.6rem; padding: 0.7rem 1.5rem; font-size: 0.9rem; justify-content: center; border: 2px solid var(--border); color: var(--text-muted);">
+                    <i class="fas fa-arrow-left"></i> Skip
                 </button>
             </div>
         </div>
@@ -1715,6 +1715,11 @@
             document.getElementById("buyModalContent").classList.remove("hidden");
             document.getElementById("paymentSuccess").classList.add("hidden");
             resetCoupon();
+        }
+
+        function skipBackToForm() {
+            document.getElementById("paymentSuccess").classList.add("hidden");
+            document.getElementById("buyModalContent").classList.remove("hidden");
         }
 
         function processPayment() {
