@@ -322,195 +322,59 @@
             gap: 0.4rem;
         }
         .auth-error.show { display: flex; }
-        /* ===== USER MENU - CLEAN & PROPER ===== */
-        .user-menu-wrap {
-            position: relative;
-            margin-left: 1.5rem;
-            padding-left: 1.5rem;
-            border-left: 1px solid var(--border);
-        }
-
-        .user-menu-trigger {
+        /* ===== USER NAV LINKS - FLAT MENU ===== */
+        .nav-user-email {
+            color: var(--brown);
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.5rem 0.8rem;
+            background: rgba(196, 168, 130, 0.12);
+            border-radius: 50px;
+            border: 1px solid rgba(196, 168, 130, 0.3);
             display: flex;
             align-items: center;
-            gap: 0.6rem;
-            cursor: pointer;
-            padding: 0.4rem 0.8rem;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            background: rgba(196, 168, 130, 0.08);
-            border: 1px solid transparent;
-        }
-
-        .user-menu-trigger:hover {
-            background: rgba(196, 168, 130, 0.15);
-            border-color: var(--border);
-        }
-
-        .user-menu-trigger.active {
-            background: rgba(196, 168, 130, 0.2);
-            border-color: var(--brown-light);
-        }
-
-        .user-menu-info {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.3;
-        }
-
-        .user-menu-name {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--brown-darker);
-        }
-
-        .user-menu-email {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 400;
-            /* NO text-overflow - show full email */
+            gap: 0.4rem;
             white-space: nowrap;
         }
 
-        .user-menu-chevron {
-            color: var(--text-muted);
-            font-size: 0.7rem;
-            transition: transform 0.3s ease;
-        }
-
-        .user-menu-trigger.active .user-menu-chevron {
-            transform: rotate(180deg);
-        }
-
-        .user-dropdown {
-            position: absolute;
-            top: calc(100% + 8px);
-            right: 0;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 0.5rem;
-            box-shadow: 0 15px 50px rgba(42, 26, 15, 0.2);
-            min-width: 260px;
-            display: none;
-            flex-direction: column;
-            gap: 0.15rem;
-            z-index: 1001;
-            animation: slideUp 0.3s ease;
-        }
-
-        .user-dropdown.show {
-            display: flex !important;
-        }
-
-        .user-dropdown-header {
-            padding: 0.9rem 1rem;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 0.4rem;
-            background: linear-gradient(135deg, rgba(196, 168, 130, 0.08), rgba(139, 105, 20, 0.04));
-            border-radius: 12px 12px 8px 8px;
-        }
-
-        .user-dropdown-name {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--brown-darker);
-            margin-bottom: 0.2rem;
-        }
-
-        .user-dropdown-email {
+        .nav-user-email i {
             font-size: 0.8rem;
-            color: var(--text-muted);
-            word-break: break-all;
-            line-height: 1.4;
+            color: var(--brown);
         }
 
-        .user-dropdown-item {
-            padding: 0.8rem 1rem;
-            border-radius: 10px;
+        .nav-logout-btn {
+            background: transparent;
+            color: var(--danger);
+            border: 2px solid rgba(185, 28, 28, 0.2);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
             font-size: 0.9rem;
-            color: var(--text);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            border: none;
-            background: none;
-            font-family: 'Inter', sans-serif;
-            width: 100%;
-            text-align: left;
-            font-weight: 500;
+            gap: 0.4rem;
         }
 
-        .user-dropdown-item:hover {
-            background: rgba(196, 168, 130, 0.12);
-        }
-
-        .user-dropdown-item i {
-            width: 20px;
-            text-align: center;
-            color: var(--brown);
-            font-size: 0.95rem;
-        }
-
-        .user-dropdown-item.danger {
-            color: var(--danger);
-        }
-
-        .user-dropdown-item.danger i {
-            color: var(--danger);
-        }
-
-        .user-dropdown-item.danger:hover {
+        .nav-logout-btn:hover {
             background: rgba(185, 28, 28, 0.08);
-        }
-
-        .user-dropdown-divider {
-            height: 1px;
-            background: var(--border);
-            margin: 0.3rem 0;
+            border-color: var(--danger);
+            transform: translateY(-1px);
         }
 
         @media (max-width: 768px) {
-            .user-menu-wrap {
-                margin-left: 0;
-                padding-left: 0;
-                border-left: none;
+            .nav-user-email {
                 width: 100%;
-                padding: 0.6rem 0;
-                border-top: 1px solid var(--border);
+                justify-content: center;
+                margin: 0.3rem 0;
+            }
+
+            .nav-logout-btn {
+                width: 100%;
+                justify-content: center;
                 margin-top: 0.3rem;
-            }
-
-            .user-menu-trigger {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .user-menu-info {
-                flex-direction: row;
-                align-items: center;
-                gap: 0.5rem;
-            }
-
-            .user-menu-name::after {
-                content: "•";
-                color: var(--text-muted);
-                margin-left: 0.5rem;
-            }
-
-            .user-dropdown {
-                position: fixed;
-                top: auto;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                border-radius: 20px 20px 0 0;
-                max-height: 70vh;
-                overflow-y: auto;
-                animation: slideUp 0.4s ease;
-                min-width: unset;
             }
         }
         .forgot-link { font-size: 0.75rem; color: var(--brown); text-decoration: none; font-weight: 500; float: right; margin-top: -0.2rem; cursor: pointer; }
@@ -1263,60 +1127,41 @@
 
             const navLinks = document.getElementById("navLinks");
             const userEmail = currentUser ? currentUser.email : "User";
-            const userName = currentUser ? (currentUser.displayName || userEmail.split("@")[0]) : "User";
 
-            const menuWrap = document.createElement("div");
-            menuWrap.className = "user-menu-wrap";
-            menuWrap.id = "userMenuWrap";
-            menuWrap.innerHTML = `
-                <div class="user-menu-trigger" id="userMenuTrigger" onclick="toggleUserDropdown()">
-                    <div class="user-menu-info">
-                        <span class="user-menu-name">${userName}</span>
-                        <span class="user-menu-email">${userEmail}</span>
-                    </div>
-                    <div class="user-menu-chevron">
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                </div>
-                <div class="user-dropdown" id="userDropdown">
-                    <div class="user-dropdown-header">
-                        <div class="user-dropdown-name">${userName}</div>
-                        <div class="user-dropdown-email">${userEmail}</div>
-                    </div>
-                    <button class="user-dropdown-item" onclick="showMyOrders()">
-                        <i class="fas fa-shopping-bag"></i> My Orders
-                    </button>
-                    <button class="user-dropdown-item" onclick="showMyKeys()">
-                        <i class="fas fa-key"></i> My Keys
-                    </button>
-                    <div class="user-dropdown-divider"></div>
-                    <button class="user-dropdown-item danger" onclick="logoutUser()">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </div>
-            `;
-            navLinks.appendChild(menuWrap);
+            // Create My Orders link
+            const myOrdersLink = document.createElement("button");
+            myOrdersLink.className = "nav-link";
+            myOrdersLink.innerHTML = '<i class="fas fa-shopping-bag"></i> My Orders';
+            myOrdersLink.onclick = function() { showMyOrders(); closeMobileMenu(); };
+            navLinks.appendChild(myOrdersLink);
+
+            // Create My Keys link
+            const myKeysLink = document.createElement("button");
+            myKeysLink.className = "nav-link";
+            myKeysLink.innerHTML = '<i class="fas fa-key"></i> My Keys';
+            myKeysLink.onclick = function() { showMyKeys(); closeMobileMenu(); };
+            navLinks.appendChild(myKeysLink);
+
+            // Create Email display (non-clickable, styled)
+            const emailDisplay = document.createElement("span");
+            emailDisplay.className = "nav-user-email";
+            emailDisplay.innerHTML = '<i class="fas fa-envelope"></i> ' + userEmail;
+            navLinks.appendChild(emailDisplay);
+
+            // Create Logout button
+            const logoutBtn = document.createElement("button");
+            logoutBtn.className = "nav-logout-btn";
+            logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+            logoutBtn.onclick = function() { logoutUser(); };
+            navLinks.appendChild(logoutBtn);
         }
 
         function toggleUserDropdown() {
-            const dropdown = document.getElementById("userDropdown");
-            const trigger = document.getElementById("userMenuTrigger");
-            if (dropdown) {
-                dropdown.classList.toggle("show");
-                if (trigger) {
-                    trigger.classList.toggle("active");
-                }
-            }
+            // No longer needed - menu is flat now
         }
 
         document.addEventListener("click", (e) => {
-            const dropdown = document.getElementById("userDropdown");
-            const trigger = document.getElementById("userMenuTrigger");
-            const menuWrap = document.getElementById("userMenuWrap");
-            if (dropdown && trigger && !dropdown.contains(e.target) && !trigger.contains(e.target)) {
-                dropdown.classList.remove("show");
-                trigger.classList.remove("active");
-            }
+            // Dropdown removed - menu is flat now
         });
 
         function showMyOrders() {
