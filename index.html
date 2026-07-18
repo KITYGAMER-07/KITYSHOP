@@ -697,19 +697,24 @@
                 coupons = {};
                 return;
             }
-            db.ref("coupons").once("value", (snapshot) => {
-                const data = snapshot.val();
-                if (data !== null && data !== undefined) {
-                    // Firebase has data (even if empty object {}), use it
-                    coupons = data || {};
-                } else {
-                    // First time ever - initialize with defaults and save to Firebase
-                    coupons = JSON.parse(JSON.stringify(defaultCoupons));
-                    saveCouponsToFirebase();
-                }
-                if (document.getElementById("adminPanel").classList.contains("active")) {
-                    renderCouponsList();
-                }
+            // Check if coupons were ever initialized using a separate flag
+            db.ref("couponsMeta/initialized").once("value", (initSnap) => {
+                const initialized = initSnap.val();
+                db.ref("coupons").once("value", (snapshot) => {
+                    const data = snapshot.val();
+                    if (initialized === true) {
+                        // Already initialized before, use whatever is in Firebase (even null/empty)
+                        coupons = data || {};
+                    } else {
+                        // First time ever - initialize with defaults
+                        coupons = JSON.parse(JSON.stringify(defaultCoupons));
+                        saveCouponsToFirebase();
+                        db.ref("couponsMeta/initialized").set(true);
+                    }
+                    if (document.getElementById("adminPanel").classList.contains("active")) {
+                        renderCouponsList();
+                    }
+                });
             });
         }
 
@@ -1500,7 +1505,8 @@
             });
             db.ref("coupons").on("value", (snapshot) => {
                 const data = snapshot.val();
-                if (data) {
+                // Only update if data exists (not null) - don't override local state with defaults
+                if (data !== null && data !== undefined) {
                     coupons = data;
                     if (document.getElementById("adminPanel").classList.contains("active")) {
                         renderCouponsList();
