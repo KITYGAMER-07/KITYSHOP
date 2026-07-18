@@ -409,6 +409,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -1109,7 +1110,10 @@
                 const mainItems = navLinks.querySelectorAll('.main-nav-item');
                 mainItems.forEach(el => el.style.display = 'none');
             }
-        }
+        
+    // Close mobile menu if open
+    closeMobileMenu();
+}
 
         function showMainContent() {
             document.getElementById("authPage").classList.add("hidden");
@@ -1761,10 +1765,15 @@
                         renderAdminTables();
                         showToast("Welcome to Admin Panel!", "success");
                     } else {
-                        if (!data) showToast("No login data found in Firebase!", "error");
-                        else if (data.username !== username) showToast("Invalid username!", "error");
-                        else if (data.password !== password) showToast("Invalid password!", "error");
-                        else showToast("Invalid username or password!", "error");
+                        if (!data) {
+                            showToast("No login data found in Firebase!", "error");
+                        } else if (data.username !== username) {
+                            showToast("Invalid username!", "error");
+                        } else if (data.password !== password) {
+                            showToast("Invalid password!", "error");
+                        } else {
+                            showToast("Invalid username or password!", "error");
+                        }
                     }
                 })
                 .catch((error) => {
