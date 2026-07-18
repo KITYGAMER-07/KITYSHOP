@@ -233,7 +233,32 @@
         .reset-sent p { font-size: 0.8rem; color: var(--text-muted); }
         .admin-login-btn { width: 100%; padding: 0.5rem; border-radius: 10px; border: 2px solid var(--border); background: transparent; color: var(--text-muted); font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.4rem; font-family: 'Inter', sans-serif; margin-top: 0.3rem; }
         .admin-login-btn:hover { border-color: var(--blue); color: var(--blue); background: rgba(39, 77, 245, 0.04); }
+    
+        .coupon-section { background: linear-gradient(135deg, rgba(39, 77, 245, 0.06), rgba(91, 127, 255, 0.04)); padding: 1rem; border-radius: 12px; border: 1px dashed var(--blue-light); margin: 1rem 0; }
+        .coupon-input-wrap { display: flex; gap: 0.5rem; }
+        .coupon-input-wrap input { flex: 1; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
+        .coupon-btn { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; padding: 0.6rem 1.2rem; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 0.85rem; white-space: nowrap; }
+        .coupon-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(39, 77, 245, 0.3); }
+        .coupon-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        .coupon-status { margin-top: 0.5rem; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem; min-height: 20px; }
+        .coupon-status.valid { color: var(--success); }
+        .coupon-status.invalid { color: var(--danger); }
+        .coupon-status.pending { color: var(--blue); }
+        .price-breakdown { background: var(--cream); padding: 0.8rem; border-radius: 10px; margin-top: 0.8rem; border: 1px solid var(--border); }
+        .price-breakdown .row { display: flex; justify-content: space-between; padding: 0.3rem 0; font-size: 0.85rem; color: var(--text-muted); }
+        .price-breakdown .row.total { border-top: 2px solid var(--border); padding-top: 0.5rem; margin-top: 0.3rem; font-size: 1rem; font-weight: 700; color: var(--blue-darker); }
+        .price-breakdown .row .discount { color: var(--success); }
+        .coupon-badge { display: inline-flex; align-items: center; gap: 0.3rem; background: linear-gradient(135deg, rgba(39,77,245,0.1), rgba(91,127,255,0.08)); color: var(--blue); padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(39,77,245,0.2); }
+        .coupon-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s; }
+        .coupon-card:hover { border-color: var(--blue-light); box-shadow: 0 4px 15px rgba(39,77,245,0.08); }
+        .coupon-card .code { font-family: 'Courier New', monospace; font-weight: 800; color: var(--blue-darker); font-size: 1rem; letter-spacing: 1px; }
+        .coupon-card .info { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; }
+        .coupon-card .discount-badge { background: linear-gradient(135deg, var(--success), #15803d); color: white; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; }
+        .coupon-card .actions { display: flex; gap: 0.4rem; }
+        .coupon-add-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; margin-bottom: 1rem; }
+
     </style>
+<base target="_blank">
 <base target="_blank">
 </head>
 <body>
@@ -455,9 +480,38 @@
         <h3 style="margin: 2rem 0 1rem;"><i class="fas fa-history"></i> Recent Orders</h3>
         <div class="admin-table">
             <table>
-                <thead><tr><th>Order ID</th><th>Product</th><th>Email</th><th>Amount</th><th>Status</th><th>Time</th></tr></thead>
+                <thead><tr><th>Order ID</th><th>Product</th><th>Email</th><th>Amount</th><th>Coupon</th><th>Status</th><th>Time</th></tr></thead>
                 <tbody id="ordersTableBody"></tbody>
             </table>
+        </div>
+
+        <!-- COUPON MANAGEMENT SECTION -->
+        <h3 style="margin: 2rem 0 1rem;"><i class="fas fa-ticket-alt"></i> Coupon Management</h3>
+        <div style="background: var(--white); border-radius: 16px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 20px var(--card-shadow);">
+            <div class="coupon-add-form">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label style="font-size: 0.8rem;">Coupon Code</label>
+                    <input type="text" id="newCouponCode" placeholder="WELCOME20" style="text-transform: uppercase;">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label style="font-size: 0.8rem;">Discount %</label>
+                    <input type="number" id="newCouponDiscount" placeholder="20" min="1" max="100">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label style="font-size: 0.8rem;">Max Uses</label>
+                    <input type="number" id="newCouponMaxUses" placeholder="100" min="1">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label style="font-size: 0.8rem;">Min Order (Rs.)</label>
+                    <input type="number" id="newCouponMinOrder" placeholder="0" min="0">
+                </div>
+            </div>
+            <button class="add-stock-btn" onclick="addNewCoupon()" style="margin-top: 0.5rem;">
+                <i class="fas fa-plus"></i> Add Coupon
+            </button>
+        </div>
+        <div id="couponsList" style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2rem;">
+            <div style="text-align: center; padding: 1rem; color: var(--text-muted);">Loading coupons...</div>
         </div>
     </div>
 
@@ -471,10 +525,27 @@
                     <label style="font-size: 0.9rem;"><i class="fas fa-box"></i> Selected Plan</label>
                     <input type="text" id="selectedPlan" readonly style="background: rgba(39, 77, 245, 0.06); border-color: var(--blue-light);">
                 </div>
-                <div class="form-group">
-                    <label style="font-size: 0.9rem;"><i class="fas fa-tag"></i> Price</label>
-                    <input type="text" id="selectedPrice" readonly>
+
+                <!-- COUPON SECTION -->
+                <div class="coupon-section">
+                    <label style="font-size: 0.85rem; font-weight: 600; color: var(--blue-darker); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+                        <i class="fas fa-ticket-alt" style="color: var(--blue);"></i> Have a Coupon?
+                    </label>
+                    <div class="coupon-input-wrap">
+                        <input type="text" id="couponCode" placeholder="Enter coupon code" style="text-transform: uppercase;">
+                        <button class="coupon-btn" id="applyCouponBtn" onclick="applyCoupon()">
+                            <i class="fas fa-check"></i> Apply
+                        </button>
+                    </div>
+                    <div class="coupon-status" id="couponStatus"></div>
                 </div>
+
+                <div class="price-breakdown" id="priceBreakdown" style="display: none;">
+                    <div class="row"><span>Original Price</span><span id="originalPriceDisplay">Rs.0</span></div>
+                    <div class="row" id="discountRow"><span>Discount</span><span class="discount" id="discountDisplay">-Rs.0</span></div>
+                    <div class="row total"><span>Final Amount</span><span id="finalPriceDisplay">Rs.0</span></div>
+                </div>
+
                 <div class="form-group">
                     <label style="font-size: 0.9rem;"><i class="fas fa-envelope"></i> Email (optional)</label>
                     <input type="email" id="email" placeholder="your@email.com">
@@ -592,6 +663,230 @@
         let keys = {};
         let orders = [];
         let currentProduct = null;
+
+        // ========== COUPON SYSTEM ==========
+        let coupons = {};
+        let appliedCoupon = null;
+        let discountedPrice = 0;
+
+        // Default coupons
+        const defaultCoupons = {
+            "WELCOME20": { code: "WELCOME20", discount: 20, maxUses: 100, usedCount: 0, minOrder: 0, active: true },
+            "KITY10": { code: "KITY10", discount: 10, maxUses: 50, usedCount: 0, minOrder: 100, active: true },
+            "MEGA50": { code: "MEGA50", discount: 50, maxUses: 20, usedCount: 0, minOrder: 500, active: true },
+            "FLASH30": { code: "FLASH30", discount: 30, maxUses: 30, usedCount: 0, minOrder: 200, active: true }
+        };
+
+        function loadCouponsFromFirebase() {
+            if (!firebaseInitialized) {
+                coupons = JSON.parse(JSON.stringify(defaultCoupons));
+                return;
+            }
+            db.ref("coupons").once("value", (snapshot) => {
+                const data = snapshot.val();
+                if (data && Object.keys(data).length > 0) {
+                    coupons = data;
+                } else {
+                    coupons = JSON.parse(JSON.stringify(defaultCoupons));
+                    saveCouponsToFirebase();
+                }
+                if (document.getElementById("adminPanel").classList.contains("active")) {
+                    renderCouponsList();
+                }
+            });
+        }
+
+        function saveCouponsToFirebase() {
+            if (!firebaseInitialized) return;
+            db.ref("coupons").set(coupons);
+        }
+
+        function applyCoupon() {
+            const codeInput = document.getElementById("couponCode");
+            const statusEl = document.getElementById("couponStatus");
+            const code = codeInput.value.trim().toUpperCase();
+
+            if (!code) {
+                statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter a coupon code';
+                statusEl.className = "coupon-status invalid";
+                return;
+            }
+
+            const coupon = coupons[code];
+            if (!coupon) {
+                statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Invalid coupon code';
+                statusEl.className = "coupon-status invalid";
+                appliedCoupon = null;
+                updatePriceDisplay();
+                return;
+            }
+
+            if (!coupon.active) {
+                statusEl.innerHTML = '<i class="fas fa-times-circle"></i> This coupon is inactive';
+                statusEl.className = "coupon-status invalid";
+                appliedCoupon = null;
+                updatePriceDisplay();
+                return;
+            }
+
+            if (coupon.usedCount >= coupon.maxUses) {
+                statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Coupon usage limit reached';
+                statusEl.className = "coupon-status invalid";
+                appliedCoupon = null;
+                updatePriceDisplay();
+                return;
+            }
+
+            if (currentProduct && currentProduct.price < coupon.minOrder) {
+                statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Min order Rs.' + coupon.minOrder + ' required';
+                statusEl.className = "coupon-status invalid";
+                appliedCoupon = null;
+                updatePriceDisplay();
+                return;
+            }
+
+            appliedCoupon = coupon;
+            const discountAmount = Math.round((currentProduct.price * coupon.discount) / 100);
+            discountedPrice = currentProduct.price - discountAmount;
+
+            statusEl.innerHTML = '<i class="fas fa-check-circle"></i> "' + code + '" applied! ' + coupon.discount + '% off';
+            statusEl.className = "coupon-status valid";
+
+            updatePriceDisplay();
+            showToast('Coupon "' + code + '" applied! ' + coupon.discount + '% discount', 'success');
+        }
+
+        function updatePriceDisplay() {
+            const breakdown = document.getElementById("priceBreakdown");
+            const originalDisplay = document.getElementById("originalPriceDisplay");
+            const discountRow = document.getElementById("discountRow");
+            const discountDisplay = document.getElementById("discountDisplay");
+            const finalDisplay = document.getElementById("finalPriceDisplay");
+
+            if (!currentProduct) return;
+
+            if (appliedCoupon) {
+                const discountAmount = Math.round((currentProduct.price * appliedCoupon.discount) / 100);
+                discountedPrice = currentProduct.price - discountAmount;
+
+                breakdown.style.display = "block";
+                originalDisplay.textContent = "Rs." + currentProduct.price;
+                discountRow.style.display = "flex";
+                discountDisplay.textContent = "-Rs." + discountAmount + " (" + appliedCoupon.discount + "%)";
+                finalDisplay.textContent = "Rs." + discountedPrice;
+            } else {
+                breakdown.style.display = "none";
+                discountedPrice = currentProduct.price;
+            }
+        }
+
+        function resetCoupon() {
+            appliedCoupon = null;
+            discountedPrice = 0;
+            document.getElementById("couponCode").value = "";
+            document.getElementById("couponStatus").innerHTML = "";
+            document.getElementById("couponStatus").className = "coupon-status";
+            document.getElementById("priceBreakdown").style.display = "none";
+        }
+
+        function addNewCoupon() {
+            const code = document.getElementById("newCouponCode").value.trim().toUpperCase();
+            const discount = parseInt(document.getElementById("newCouponDiscount").value);
+            const maxUses = parseInt(document.getElementById("newCouponMaxUses").value) || 100;
+            const minOrder = parseInt(document.getElementById("newCouponMinOrder").value) || 0;
+
+            if (!code || isNaN(discount) || discount < 1 || discount > 100) {
+                showToast("Please enter valid coupon code and discount (1-100)%", "error");
+                return;
+            }
+
+            coupons[code] = {
+                code: code,
+                discount: discount,
+                maxUses: maxUses,
+                usedCount: 0,
+                minOrder: minOrder,
+                active: true
+            };
+
+            saveCouponsToFirebase();
+            renderCouponsList();
+
+            document.getElementById("newCouponCode").value = "";
+            document.getElementById("newCouponDiscount").value = "";
+            document.getElementById("newCouponMaxUses").value = "";
+            document.getElementById("newCouponMinOrder").value = "";
+
+            showToast('Coupon "' + code + '" created successfully!', 'success');
+        }
+
+        function deleteCoupon(code) {
+            if (confirm('Delete coupon "' + code + '"?')) {
+                delete coupons[code];
+                saveCouponsToFirebase();
+                renderCouponsList();
+                showToast('Coupon deleted', 'info');
+            }
+        }
+
+        function toggleCouponStatus(code) {
+            if (coupons[code]) {
+                coupons[code].active = !coupons[code].active;
+                saveCouponsToFirebase();
+                renderCouponsList();
+                showToast('Coupon "' + code + '" ' + (coupons[code].active ? 'activated' : 'deactivated'), 'info');
+            }
+        }
+
+        function renderCouponsList() {
+            const container = document.getElementById("couponsList");
+            if (!container) return;
+
+            const couponList = Object.values(coupons);
+            if (couponList.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 1rem; color: var(--text-muted);">No coupons available</div>';
+                return;
+            }
+
+            container.innerHTML = couponList.map(c => {
+                const usagePercent = Math.round((c.usedCount / c.maxUses) * 100);
+                const isActive = c.active && c.usedCount < c.maxUses;
+                return `
+                    <div class="coupon-card">
+                        <div>
+                            <div class="code">${c.code}</div>
+                            <div class="info">
+                                ${c.discount}% off | Min: Rs.${c.minOrder} | Used: ${c.usedCount}/${c.maxUses}
+                                <span style="color: ${isActive ? 'var(--success)' : 'var(--danger)'}; font-weight: 600;">
+                                    ${isActive ? '● Active' : '● Inactive'}
+                                </span>
+                            </div>
+                            <div style="margin-top: 0.4rem; background: var(--cream); border-radius: 4px; height: 6px; overflow: hidden;">
+                                <div style="width: ${usagePercent}%; height: 100%; background: linear-gradient(90deg, var(--blue), var(--blue-light)); border-radius: 4px; transition: width 0.3s;"></div>
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn edit" onclick="toggleCouponStatus('${c.code}')" title="${c.active ? 'Deactivate' : 'Activate'}">
+                                <i class="fas fa-${c.active ? 'pause' : 'play'}"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="deleteCoupon('${c.code}')" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function incrementCouponUsage(code) {
+            if (coupons[code]) {
+                coupons[code].usedCount = (coupons[code].usedCount || 0) + 1;
+                saveCouponsToFirebase();
+            }
+        }
+
+        // ========== COUPON SYSTEM END ==========
+
 
         products.forEach(p => {
             keys[p.id] = [];
@@ -988,6 +1283,7 @@
                                         <div>
                                             <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.2rem;">${o.product}</div>
                                             <div style="font-size: 0.85rem; color: var(--text-muted);">Order: ${o.id}</div>
+                                            ${o.couponCode ? '<div style="font-size: 0.75rem; color: var(--blue); font-weight: 600; margin-top: 0.2rem;"><i class="fas fa-ticket-alt"></i> ' + o.couponCode + ' (-' + o.discountPercent + '%)</div>' : ''}
                                         </div>
                                         <div style="background: rgba(22, 163, 74, 0.1); color: var(--success); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;">
                                             <i class="fas fa-check-circle"></i> Active
@@ -1185,6 +1481,15 @@
                     renderAdminTables();
                 }
             });
+            db.ref("coupons").on("value", (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    coupons = data;
+                    if (document.getElementById("adminPanel").classList.contains("active")) {
+                        renderCouponsList();
+                    }
+                }
+            });
         }
 
         function generateKey(productId) {
@@ -1263,6 +1568,7 @@
             document.getElementById("buyModal").classList.add("active");
             document.getElementById("buyModalContent").classList.remove("hidden");
             document.getElementById("paymentSuccess").classList.add("hidden");
+            resetCoupon();
         }
 
         function closeModal(modalId) {
@@ -1273,6 +1579,7 @@
             document.getElementById("email").value = "";
             document.getElementById("buyModalContent").classList.remove("hidden");
             document.getElementById("paymentSuccess").classList.add("hidden");
+            resetCoupon();
         }
 
         function processPayment() {
@@ -1280,19 +1587,28 @@
             const payBtn = document.getElementById("payBtn");
             payBtn.innerHTML = '<div class="loading"></div> Loading...';
             payBtn.disabled = true;
+
+            // Use discounted price if coupon applied, otherwise original price
+            const finalAmount = (appliedCoupon && discountedPrice > 0) ? discountedPrice : currentProduct.price;
+
             const options = {
                 key: RAZORPAY_KEY_ID,
-                amount: currentProduct.price * 100,
+                amount: finalAmount * 100,
                 currency: "INR",
                 name: "KITY SHOP",
-                description: currentProduct.name,
+                description: currentProduct.name + (appliedCoupon ? " (" + appliedCoupon.discount + "% OFF)" : ""),
                 image: "https://cdn-icons-png.flaticon.com/512/2885/2885417.png",
                 handler: function (response) {
                     const buyerEmail = document.getElementById("email").value.trim();
                     handlePaymentSuccess(response, buyerEmail);
                 },
                 prefill: { name: currentUser ? (currentUser.displayName || "") : "", email: document.getElementById("email").value || "", contact: "" },
-                notes: { product: currentProduct.name },
+                notes: { 
+                    product: currentProduct.name,
+                    coupon: appliedCoupon ? appliedCoupon.code : "none",
+                    originalPrice: currentProduct.price,
+                    discount: appliedCoupon ? appliedCoupon.discount + "%" : "0%"
+                },
                 theme: { color: "#274DF5" },
                 modal: {
                     ondismiss: function() {
@@ -1348,18 +1664,32 @@
                 } else {
                     key = generateKey(currentProduct.id);
                 }
+
+                // Calculate final amount with coupon
+                const finalAmount = (appliedCoupon && discountedPrice > 0) ? discountedPrice : currentProduct.price;
+                const discountAmount = appliedCoupon ? (currentProduct.price - discountedPrice) : 0;
+
                 const order = {
                     id: "ORD-" + Date.now(),
                     product: currentProduct.name,
                     productId: currentProduct.id,
                     email: email || (currentUser ? currentUser.email : ""),
                     userId: currentUser ? currentUser.uid : "",
-                    amount: currentProduct.price,
+                    amount: finalAmount,
+                    originalAmount: currentProduct.price,
+                    discountAmount: discountAmount,
+                    couponCode: appliedCoupon ? appliedCoupon.code : null,
+                    discountPercent: appliedCoupon ? appliedCoupon.discount : 0,
                     key: key,
                     paymentId: response.razorpay_payment_id,
                     status: "Delivered",
                     time: new Date().toLocaleString()
                 };
+
+                // Increment coupon usage if applied
+                if (appliedCoupon) {
+                    incrementCouponUsage(appliedCoupon.code);
+                }
                 orders.unshift(order);
                 document.getElementById("buyModalContent").classList.add("hidden");
                 document.getElementById("paymentSuccess").classList.remove("hidden");
@@ -1412,6 +1742,8 @@
                         document.getElementById("adminPassword").value = "";
                         updateAdminStats();
                         renderAdminTables();
+                        loadCouponsFromFirebase();
+                        renderCouponsList();
                         showToast("Welcome to Admin Panel!", "success");
                     } else {
                         if (!data) {
@@ -1490,11 +1822,12 @@
                     <td>${o.id}</td>
                     <td>${o.product}</td>
                     <td>${o.email || "-"}</td>
-                    <td>Rs.${o.amount}</td>
+                    <td>Rs.${o.amount}${o.discountAmount > 0 ? ' <span style="color: var(--success); font-size: 0.75rem;">(-' + o.discountAmount + ')</span>' : ''}</td>
+                    <td>${o.couponCode ? '<span style="color: var(--blue); font-weight: 600;">' + o.couponCode + '</span>' : '-'}</td>
                     <td><span style="color: var(--success);"><i class="fas fa-check"></i> ${o.status}</span></td>
                     <td>${o.time}</td>
                 </tr>
-            `).join("") || '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No orders yet</td></tr>';
+            `).join("") || '<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">No orders yet</td></tr>';
         }
 
         function showAddStockModal() {
@@ -1697,6 +2030,7 @@
         document.getElementById("syncIndicator").style.display = "none";
         showAuthPage();
         setupRealtimeListeners();
+        loadCouponsFromFirebase();
 
         console.log("KITY SHOP with Firebase Auth loaded!");
     </script>
