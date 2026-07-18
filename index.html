@@ -138,7 +138,7 @@
             .nav-links .nav-link { width: 100%; text-align: center; padding: 0.8rem; border-radius: 12px; }
             .nav-links .nav-link:hover { background: rgba(196, 168, 130, 0.1); }
             .nav-links .admin-btn { width: 100%; justify-content: center; margin-top: 0.5rem; }
-            .nav-links #userMenuWrap { width: 100%; justify-content: center; }
+            .nav-links #userMenuWrap { width: 100%; }
             .menu-toggle { display: flex !important; }
             .hero h1 { font-size: 2.5rem; }
             .hero-cta { flex-direction: column; width: 100%; }
@@ -322,41 +322,111 @@
             gap: 0.4rem;
         }
         .auth-error.show { display: flex; }
-        .user-avatar {
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--brown), var(--brown-dark));
-            color: white;
+        /* ===== USER MENU - CLEAN & PROPER ===== */
+        .user-menu-wrap {
+            position: relative;
+            margin-left: 1.5rem;
+            padding-left: 1.5rem;
+            border-left: 1px solid var(--border);
+        }
+
+        .user-menu-trigger {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.9rem;
+            gap: 0.6rem;
             cursor: pointer;
-            border: 2px solid var(--border);
-            transition: all 0.3s;
-            flex-shrink: 0;
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: rgba(196, 168, 130, 0.08);
+            border: 1px solid transparent;
         }
-        .user-avatar:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(139, 105, 20, 0.3); }
+
+        .user-menu-trigger:hover {
+            background: rgba(196, 168, 130, 0.15);
+            border-color: var(--border);
+        }
+
+        .user-menu-trigger.active {
+            background: rgba(196, 168, 130, 0.2);
+            border-color: var(--brown-light);
+        }
+
+        .user-menu-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+
+        .user-menu-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--brown-darker);
+        }
+
+        .user-menu-email {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            /* NO text-overflow - show full email */
+            white-space: nowrap;
+        }
+
+        .user-menu-chevron {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+        }
+
+        .user-menu-trigger.active .user-menu-chevron {
+            transform: rotate(180deg);
+        }
+
         .user-dropdown {
             position: absolute;
-            top: 55px;
+            top: calc(100% + 8px);
             right: 0;
             background: var(--white);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 0.6rem;
+            padding: 0.5rem;
             box-shadow: 0 15px 50px rgba(42, 26, 15, 0.2);
-            min-width: 220px;
+            min-width: 260px;
             display: none;
             flex-direction: column;
             gap: 0.15rem;
             z-index: 1001;
             animation: slideUp 0.3s ease;
         }
-        .user-dropdown.show { display: flex; }
+
+        .user-dropdown.show {
+            display: flex !important;
+        }
+
+        .user-dropdown-header {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 0.4rem;
+            background: linear-gradient(135deg, rgba(196, 168, 130, 0.08), rgba(139, 105, 20, 0.04));
+            border-radius: 12px 12px 8px 8px;
+        }
+
+        .user-dropdown-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--brown-darker);
+            margin-bottom: 0.2rem;
+        }
+
+        .user-dropdown-email {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            word-break: break-all;
+            line-height: 1.4;
+        }
+
         .user-dropdown-item {
-            padding: 0.75rem 1rem;
+            padding: 0.8rem 1rem;
             border-radius: 10px;
             font-size: 0.9rem;
             color: var(--text);
@@ -364,7 +434,7 @@
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 0.7rem;
+            gap: 0.8rem;
             border: none;
             background: none;
             font-family: 'Inter', sans-serif;
@@ -372,24 +442,34 @@
             text-align: left;
             font-weight: 500;
         }
-        .user-dropdown-item:hover { background: rgba(196, 168, 130, 0.12); }
-        .user-dropdown-item.danger { color: var(--danger); }
-        .user-dropdown-item.danger:hover { background: rgba(185, 28, 28, 0.08); }
-        .user-dropdown-divider { height: 1px; background: var(--border); margin: 0.3rem 0; }
-        .user-menu-wrap { 
-            position: relative; 
-            display: flex; 
-            align-items: center; 
-            gap: 0.6rem;
-            margin-left: 1.5rem;
-            padding-left: 1.5rem;
-            border-left: 1px solid var(--border);
+
+        .user-dropdown-item:hover {
+            background: rgba(196, 168, 130, 0.12);
         }
-        .user-name-display { 
-            font-size: 0.85rem; 
-            color: var(--text-muted); 
-            font-weight: 500; 
-            margin-right: 0.5rem; 
+
+        .user-dropdown-item i {
+            width: 20px;
+            text-align: center;
+            color: var(--brown);
+            font-size: 0.95rem;
+        }
+
+        .user-dropdown-item.danger {
+            color: var(--danger);
+        }
+
+        .user-dropdown-item.danger i {
+            color: var(--danger);
+        }
+
+        .user-dropdown-item.danger:hover {
+            background: rgba(185, 28, 28, 0.08);
+        }
+
+        .user-dropdown-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0.3rem 0;
         }
 
         @media (max-width: 768px) {
@@ -398,11 +478,28 @@
                 padding-left: 0;
                 border-left: none;
                 width: 100%;
-                justify-content: center;
-                padding: 0.8rem;
+                padding: 0.6rem 0;
                 border-top: 1px solid var(--border);
-                margin-top: 0.5rem;
+                margin-top: 0.3rem;
             }
+
+            .user-menu-trigger {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .user-menu-info {
+                flex-direction: row;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .user-menu-name::after {
+                content: "•";
+                color: var(--text-muted);
+                margin-left: 0.5rem;
+            }
+
             .user-dropdown {
                 position: fixed;
                 top: auto;
@@ -413,6 +510,7 @@
                 max-height: 70vh;
                 overflow-y: auto;
                 animation: slideUp 0.4s ease;
+                min-width: unset;
             }
         }
         .forgot-link { font-size: 0.75rem; color: var(--brown); text-decoration: none; font-weight: 500; float: right; margin-top: -0.2rem; cursor: pointer; }
@@ -1166,22 +1264,24 @@
             const navLinks = document.getElementById("navLinks");
             const userEmail = currentUser ? currentUser.email : "User";
             const userName = currentUser ? (currentUser.displayName || userEmail.split("@")[0]) : "User";
-            const initial = userName.charAt(0).toUpperCase();
 
             const menuWrap = document.createElement("div");
             menuWrap.className = "user-menu-wrap";
             menuWrap.id = "userMenuWrap";
-            menuWrap.style.cssText = "position: relative; display: flex; align-items: center; gap: 0.5rem; margin-left: 1rem;";
             menuWrap.innerHTML = `
-                <div style="display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2;">
-                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--brown-darker);">${userName}</span>
-                    <span style="font-size: 0.7rem; color: var(--text-muted); max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${userEmail}</span>
+                <div class="user-menu-trigger" id="userMenuTrigger" onclick="toggleUserDropdown()">
+                    <div class="user-menu-info">
+                        <span class="user-menu-name">${userName}</span>
+                        <span class="user-menu-email">${userEmail}</span>
+                    </div>
+                    <div class="user-menu-chevron">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
                 </div>
-                <div class="user-avatar" id="userAvatar" onclick="toggleUserDropdown()" style="flex-shrink: 0;">${initial}</div>
-                <div class="user-dropdown" id="userDropdown" style="position: absolute; top: 50px; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 0.5rem; box-shadow: 0 10px 40px rgba(42, 26, 15, 0.15); min-width: 200px; display: none; flex-direction: column; gap: 0.2rem; z-index: 1001;">
-                    <div style="padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); margin-bottom: 0.3rem;">
-                        <div style="font-size: 0.8rem; font-weight: 600; color: var(--brown-darker);">${userName}</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted); word-break: break-all;">${userEmail}</div>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="user-dropdown-header">
+                        <div class="user-dropdown-name">${userName}</div>
+                        <div class="user-dropdown-email">${userEmail}</div>
                     </div>
                     <button class="user-dropdown-item" onclick="showMyOrders()">
                         <i class="fas fa-shopping-bag"></i> My Orders
@@ -1189,7 +1289,7 @@
                     <button class="user-dropdown-item" onclick="showMyKeys()">
                         <i class="fas fa-key"></i> My Keys
                     </button>
-                    <div class="user-dropdown-divider" style="height: 1px; background: var(--border); margin: 0.3rem 0;"></div>
+                    <div class="user-dropdown-divider"></div>
                     <button class="user-dropdown-item danger" onclick="logoutUser()">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
@@ -1200,17 +1300,22 @@
 
         function toggleUserDropdown() {
             const dropdown = document.getElementById("userDropdown");
+            const trigger = document.getElementById("userMenuTrigger");
             if (dropdown) {
                 dropdown.classList.toggle("show");
+                if (trigger) {
+                    trigger.classList.toggle("active");
+                }
             }
         }
 
         document.addEventListener("click", (e) => {
             const dropdown = document.getElementById("userDropdown");
-            const avatar = document.getElementById("userAvatar");
+            const trigger = document.getElementById("userMenuTrigger");
             const menuWrap = document.getElementById("userMenuWrap");
-            if (dropdown && !dropdown.contains(e.target) && avatar && !avatar.contains(e.target)) {
+            if (dropdown && trigger && !dropdown.contains(e.target) && !trigger.contains(e.target)) {
                 dropdown.classList.remove("show");
+                trigger.classList.remove("active");
             }
         });
 
