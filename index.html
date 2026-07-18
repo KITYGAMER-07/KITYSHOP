@@ -1101,8 +1101,12 @@
             document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("navbar").classList.add("nav-hidden");
             document.getElementById("syncIndicator").style.display = "none";
-            const existingMenu = document.getElementById("userMenuWrap");
-            if (existingMenu) existingMenu.remove();
+            // Remove all user nav items
+            const navLinks = document.getElementById("navLinks");
+            if (navLinks) {
+                const existingUserItems = navLinks.querySelectorAll('.user-nav-item');
+                existingUserItems.forEach(el => el.remove());
+            }
         }
 
         function showMainContent() {
@@ -1122,35 +1126,38 @@
         }
 
         function addUserMenuToNav() {
-            const existingMenu = document.getElementById("userMenuWrap");
-            if (existingMenu) existingMenu.remove();
-
             const navLinks = document.getElementById("navLinks");
+            if (!navLinks) return;
+
+            // Remove ALL existing user-related elements (by class)
+            const existingUserItems = navLinks.querySelectorAll('.user-nav-item');
+            existingUserItems.forEach(el => el.remove());
+
             const userEmail = currentUser ? currentUser.email : "User";
 
             // Create My Orders link
             const myOrdersLink = document.createElement("button");
-            myOrdersLink.className = "nav-link";
+            myOrdersLink.className = "nav-link user-nav-item";
             myOrdersLink.innerHTML = '<i class="fas fa-shopping-bag"></i> My Orders';
             myOrdersLink.onclick = function() { showMyOrders(); closeMobileMenu(); };
             navLinks.appendChild(myOrdersLink);
 
             // Create My Keys link
             const myKeysLink = document.createElement("button");
-            myKeysLink.className = "nav-link";
+            myKeysLink.className = "nav-link user-nav-item";
             myKeysLink.innerHTML = '<i class="fas fa-key"></i> My Keys';
             myKeysLink.onclick = function() { showMyKeys(); closeMobileMenu(); };
             navLinks.appendChild(myKeysLink);
 
-            // Create Email display (non-clickable, styled)
+            // Create Email display
             const emailDisplay = document.createElement("span");
-            emailDisplay.className = "nav-user-email";
+            emailDisplay.className = "nav-user-email user-nav-item";
             emailDisplay.innerHTML = '<i class="fas fa-envelope"></i> ' + userEmail;
             navLinks.appendChild(emailDisplay);
 
             // Create Logout button
             const logoutBtn = document.createElement("button");
-            logoutBtn.className = "nav-logout-btn";
+            logoutBtn.className = "nav-logout-btn user-nav-item";
             logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
             logoutBtn.onclick = function() { logoutUser(); };
             navLinks.appendChild(logoutBtn);
