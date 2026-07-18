@@ -95,6 +95,30 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .modal { background: var(--white); border-radius: 20px; padding: 1.5rem; max-width: 420px; width: 92%; border: 1px solid var(--border); animation: slideUp 0.4s ease; box-shadow: 0 20px 60px rgba(42, 26, 15, 0.2); max-height: calc(100vh - 2rem); overflow-y: auto; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Hide scrollbar in My Keys / My Orders modals but keep scrolling */
+        .modal::-webkit-scrollbar,
+        #myKeysModal .modal::-webkit-scrollbar,
+        #myOrdersModal .modal::-webkit-scrollbar {
+            display: none;
+        }
+        .modal,
+        #myKeysModal .modal,
+        #myOrdersModal .modal {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Also hide scrollbar in the key cards container */
+        #myKeysContent::-webkit-scrollbar,
+        #myOrdersContent::-webkit-scrollbar {
+            display: none;
+        }
+        #myKeysContent,
+        #myOrdersContent {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
         .modal-header h2 { font-size: 1.5rem; color: var(--brown-darker); }
         .close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; transition: color 0.3s; }
@@ -406,6 +430,7 @@
         }
         .admin-login-btn:hover { border-color: var(--brown); color: var(--brown); background: rgba(196, 168, 130, 0.05); }
     </style>
+<base target="_blank">
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
