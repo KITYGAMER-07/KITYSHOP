@@ -32,8 +32,9 @@
         /* NAV - Hidden on auth page */
         nav { position: fixed; top: 0; width: 100%; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 1000; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); transition: transform 0.3s ease; }
         nav.nav-hidden { transform: translateY(-100%); pointer-events: none; }
+        nav:not(.nav-hidden) { transform: translateY(0); pointer-events: auto; }
         .logo { font-size: 1.5rem; font-weight: 800; color: var(--brown-darker); display: flex; align-items: center; gap: 0.5rem; cursor: pointer; user-select: none; }
-        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links { display: flex; gap: 2rem; align-items: center; position: relative; }
         .nav-link { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: all 0.3s; cursor: pointer; position: relative; padding: 0.5rem 0; background: none; border: none; font-size: 1rem; font-family: 'Inter', sans-serif; }
         .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, var(--brown), var(--brown-dark)); transition: width 0.3s; }
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
@@ -137,6 +138,7 @@
             .nav-links .nav-link { width: 100%; text-align: center; padding: 0.8rem; border-radius: 12px; }
             .nav-links .nav-link:hover { background: rgba(196, 168, 130, 0.1); }
             .nav-links .admin-btn { width: 100%; justify-content: center; margin-top: 0.5rem; }
+            .nav-links #userMenuWrap { width: 100%; justify-content: center; }
             .menu-toggle { display: flex !important; }
             .hero h1 { font-size: 2.5rem; }
             .hero-cta { flex-direction: column; width: 100%; }
@@ -321,7 +323,7 @@
         }
         .auth-error.show { display: flex; }
         .user-avatar {
-            width: 36px; height: 36px;
+            width: 40px; height: 40px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--brown), var(--brown-dark));
             color: white;
@@ -329,29 +331,32 @@
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             cursor: pointer;
             border: 2px solid var(--border);
             transition: all 0.3s;
+            flex-shrink: 0;
         }
         .user-avatar:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(139, 105, 20, 0.3); }
         .user-dropdown {
             position: absolute;
-            top: 50px; right: 0;
+            top: 55px;
+            right: 0;
             background: var(--white);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 0.5rem;
-            box-shadow: 0 10px 40px rgba(42, 26, 15, 0.15);
-            min-width: 180px;
+            border-radius: 16px;
+            padding: 0.6rem;
+            box-shadow: 0 15px 50px rgba(42, 26, 15, 0.2);
+            min-width: 220px;
             display: none;
             flex-direction: column;
-            gap: 0.2rem;
+            gap: 0.15rem;
             z-index: 1001;
+            animation: slideUp 0.3s ease;
         }
         .user-dropdown.show { display: flex; }
         .user-dropdown-item {
-            padding: 0.7rem 1rem;
+            padding: 0.75rem 1rem;
             border-radius: 10px;
             font-size: 0.9rem;
             color: var(--text);
@@ -359,19 +364,57 @@
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.7rem;
             border: none;
             background: none;
             font-family: 'Inter', sans-serif;
             width: 100%;
             text-align: left;
+            font-weight: 500;
         }
-        .user-dropdown-item:hover { background: rgba(196, 168, 130, 0.1); }
+        .user-dropdown-item:hover { background: rgba(196, 168, 130, 0.12); }
         .user-dropdown-item.danger { color: var(--danger); }
         .user-dropdown-item.danger:hover { background: rgba(185, 28, 28, 0.08); }
         .user-dropdown-divider { height: 1px; background: var(--border); margin: 0.3rem 0; }
-        .user-menu-wrap { position: relative; }
-        .user-name-display { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; margin-right: 0.5rem; }
+        .user-menu-wrap { 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+            gap: 0.6rem;
+            margin-left: 1.5rem;
+            padding-left: 1.5rem;
+            border-left: 1px solid var(--border);
+        }
+        .user-name-display { 
+            font-size: 0.85rem; 
+            color: var(--text-muted); 
+            font-weight: 500; 
+            margin-right: 0.5rem; 
+        }
+
+        @media (max-width: 768px) {
+            .user-menu-wrap {
+                margin-left: 0;
+                padding-left: 0;
+                border-left: none;
+                width: 100%;
+                justify-content: center;
+                padding: 0.8rem;
+                border-top: 1px solid var(--border);
+                margin-top: 0.5rem;
+            }
+            .user-dropdown {
+                position: fixed;
+                top: auto;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                border-radius: 20px 20px 0 0;
+                max-height: 70vh;
+                overflow-y: auto;
+                animation: slideUp 0.4s ease;
+            }
+        }
         .forgot-link { font-size: 0.75rem; color: var(--brown); text-decoration: none; font-weight: 500; float: right; margin-top: -0.2rem; cursor: pointer; }
         .forgot-link:hover { text-decoration: underline; }
         .reset-sent { text-align: center; padding: 0.8rem; display: none; }
@@ -401,6 +444,7 @@
         }
         .admin-login-btn:hover { border-color: var(--brown); color: var(--brown); background: rgba(196, 168, 130, 0.05); }
     </style>
+<base target="_blank">
 <base target="_blank">
 <base target="_blank">
 </head>
@@ -1079,9 +1123,11 @@
             auth.onAuthStateChanged((user) => {
                 if (user) {
                     currentUser = user;
+                    console.log("User signed in:", user.email);
                     showMainContent();
                 } else {
                     currentUser = null;
+                    console.log("User signed out");
                     showAuthPage();
                 }
             });
@@ -1103,7 +1149,12 @@
             document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("navbar").classList.remove("nav-hidden");
             document.getElementById("syncIndicator").style.display = "flex";
-            addUserMenuToNav();
+
+            // Small delay to ensure navbar is rendered before adding user menu
+            setTimeout(() => {
+                addUserMenuToNav();
+            }, 100);
+
             loadProductsFromFirebase();
             loadOrdersFromFirebase();
         }
@@ -1113,23 +1164,32 @@
             if (existingMenu) existingMenu.remove();
 
             const navLinks = document.getElementById("navLinks");
-            const userName = currentUser ? (currentUser.displayName || currentUser.email.split("@")[0]) : "User";
+            const userEmail = currentUser ? currentUser.email : "User";
+            const userName = currentUser ? (currentUser.displayName || userEmail.split("@")[0]) : "User";
             const initial = userName.charAt(0).toUpperCase();
 
             const menuWrap = document.createElement("div");
             menuWrap.className = "user-menu-wrap";
             menuWrap.id = "userMenuWrap";
+            menuWrap.style.cssText = "position: relative; display: flex; align-items: center; gap: 0.5rem; margin-left: 1rem;";
             menuWrap.innerHTML = `
-                <span class="user-name-display">${userName}</span>
-                <div class="user-avatar" id="userAvatar" onclick="toggleUserDropdown()">${initial}</div>
-                <div class="user-dropdown" id="userDropdown">
+                <div style="display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2;">
+                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--brown-darker);">${userName}</span>
+                    <span style="font-size: 0.7rem; color: var(--text-muted); max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${userEmail}</span>
+                </div>
+                <div class="user-avatar" id="userAvatar" onclick="toggleUserDropdown()" style="flex-shrink: 0;">${initial}</div>
+                <div class="user-dropdown" id="userDropdown" style="position: absolute; top: 50px; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 0.5rem; box-shadow: 0 10px 40px rgba(42, 26, 15, 0.15); min-width: 200px; display: none; flex-direction: column; gap: 0.2rem; z-index: 1001;">
+                    <div style="padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); margin-bottom: 0.3rem;">
+                        <div style="font-size: 0.8rem; font-weight: 600; color: var(--brown-darker);">${userName}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); word-break: break-all;">${userEmail}</div>
+                    </div>
                     <button class="user-dropdown-item" onclick="showMyOrders()">
                         <i class="fas fa-shopping-bag"></i> My Orders
                     </button>
                     <button class="user-dropdown-item" onclick="showMyKeys()">
                         <i class="fas fa-key"></i> My Keys
                     </button>
-                    <div class="user-dropdown-divider"></div>
+                    <div class="user-dropdown-divider" style="height: 1px; background: var(--border); margin: 0.3rem 0;"></div>
                     <button class="user-dropdown-item danger" onclick="logoutUser()">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
@@ -1139,25 +1199,220 @@
         }
 
         function toggleUserDropdown() {
-            document.getElementById("userDropdown").classList.toggle("show");
+            const dropdown = document.getElementById("userDropdown");
+            if (dropdown) {
+                dropdown.classList.toggle("show");
+            }
         }
 
         document.addEventListener("click", (e) => {
             const dropdown = document.getElementById("userDropdown");
             const avatar = document.getElementById("userAvatar");
-            if (dropdown && avatar && !dropdown.contains(e.target) && !avatar.contains(e.target)) {
+            const menuWrap = document.getElementById("userMenuWrap");
+            if (dropdown && !dropdown.contains(e.target) && avatar && !avatar.contains(e.target)) {
                 dropdown.classList.remove("show");
             }
         });
 
         function showMyOrders() {
             toggleUserDropdown();
-            showToast("My Orders feature coming soon!", "info");
+            if (!currentUser || !firebaseInitialized) {
+                showToast("Please sign in to view orders!", "error");
+                return;
+            }
+
+            const modal = document.createElement("div");
+            modal.className = "modal-overlay active";
+            modal.id = "myOrdersModal";
+            modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(42, 26, 15, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
+            modal.innerHTML = `
+                <div class="modal" style="max-width: 700px; width: 92%; max-height: 80vh; overflow-y: auto;">
+                    <div class="modal-header">
+                        <h2><i class="fas fa-shopping-bag"></i> My Orders</h2>
+                        <button class="close-btn" onclick="document.getElementById('myOrdersModal').remove()">&times;</button>
+                    </div>
+                    <div id="myOrdersContent">
+                        <div style="text-align: center; padding: 2rem;">
+                            <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
+                            <p>Loading your orders...</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            db.ref("userOrders/" + currentUser.uid).once("value")
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    const content = document.getElementById("myOrdersContent");
+                    if (!data || Object.keys(data).length === 0) {
+                        content.innerHTML = `
+                            <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                                <i class="fas fa-shopping-bag" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                                <p>No orders yet. Buy a key to get started!</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    const userOrders = Object.values(data).reverse();
+                    content.innerHTML = `
+                        <div class="admin-table" style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr>
+                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(196, 168, 130, 0.1); font-weight: 600; color: var(--brown); font-size: 0.85rem;">Order ID</th>
+                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(196, 168, 130, 0.1); font-weight: 600; color: var(--brown); font-size: 0.85rem;">Product</th>
+                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(196, 168, 130, 0.1); font-weight: 600; color: var(--brown); font-size: 0.85rem;">Amount</th>
+                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(196, 168, 130, 0.1); font-weight: 600; color: var(--brown); font-size: 0.85rem;">Key</th>
+                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(196, 168, 130, 0.1); font-weight: 600; color: var(--brown); font-size: 0.85rem;">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${userOrders.map(o => `
+                                        <tr style="border-bottom: 1px solid var(--border);">
+                                            <td style="padding: 0.8rem; font-size: 0.8rem; color: var(--text-muted);">${o.id}</td>
+                                            <td style="padding: 0.8rem; font-size: 0.85rem; font-weight: 600; color: var(--brown-darker);">${o.product}</td>
+                                            <td style="padding: 0.8rem; font-size: 0.85rem; color: var(--brown); font-weight: 600;">Rs.${o.amount}</td>
+                                            <td style="padding: 0.8rem; font-size: 0.8rem; font-family: monospace; color: var(--brown-dark); background: rgba(196,168,130,0.1); border-radius: 6px;">${o.key}</td>
+                                            <td style="padding: 0.8rem; font-size: 0.75rem; color: var(--text-muted);">${o.time}</td>
+                                        </tr>
+                                    `).join("")}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                })
+                .catch((err) => {
+                    document.getElementById("myOrdersContent").innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: var(--danger);">
+                            <i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                            <p>Failed to load orders: ${err.message}</p>
+                        </div>
+                    `;
+                });
         }
 
         function showMyKeys() {
             toggleUserDropdown();
-            showToast("My Keys feature coming soon!", "info");
+            if (!currentUser || !firebaseInitialized) {
+                showToast("Please sign in to view keys!", "error");
+                return;
+            }
+
+            const modal = document.createElement("div");
+            modal.className = "modal-overlay active";
+            modal.id = "myKeysModal";
+            modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(42, 26, 15, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
+            modal.innerHTML = `
+                <div class="modal" style="max-width: 700px; width: 92%; max-height: 80vh; overflow-y: auto;">
+                    <div class="modal-header">
+                        <h2><i class="fas fa-key"></i> My Keys</h2>
+                        <button class="close-btn" onclick="document.getElementById('myKeysModal').remove()">&times;</button>
+                    </div>
+                    <div id="myKeysContent">
+                        <div style="text-align: center; padding: 2rem;">
+                            <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
+                            <p>Loading your keys...</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            db.ref("userOrders/" + currentUser.uid).once("value")
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    const content = document.getElementById("myKeysContent");
+                    if (!data || Object.keys(data).length === 0) {
+                        content.innerHTML = `
+                            <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                                <i class="fas fa-key" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                                <p>No keys yet. Buy a key to get started!</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    const userOrders = Object.values(data).reverse();
+                    content.innerHTML = `
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            ${userOrders.map(o => `
+                                <div style="background: linear-gradient(135deg, var(--cream), #fff); padding: 1.2rem; border-radius: 16px; border: 2px solid var(--border); position: relative; overflow: hidden;">
+                                    <div style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(180deg, var(--brown), var(--brown-dark));"></div>
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
+                                        <div>
+                                            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.2rem;">${o.product}</div>
+                                            <div style="font-size: 0.85rem; color: var(--text-muted);">Order: ${o.id}</div>
+                                        </div>
+                                        <div style="background: rgba(45, 125, 70, 0.1); color: var(--success); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;">
+                                            <i class="fas fa-check-circle"></i> Active
+                                        </div>
+                                    </div>
+                                    <div style="background: white; padding: 0.8rem; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 0.8rem;">
+                                        <div style="font-size: 0.7rem; color: var(--brown); margin-bottom: 0.3rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;"><i class="fas fa-key"></i> Access Key</div>
+                                        <div style="font-family: 'Courier New', monospace; font-size: 1.1rem; font-weight: 800; color: var(--brown-darker); letter-spacing: 1px; word-break: break-all;" id="key-${o.id}">${o.key}</div>
+                                    </div>
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                        <button onclick="copyMyKey('${o.id}')" style="flex: 1; min-width: 120px; background: linear-gradient(135deg, var(--brown), var(--brown-dark)); color: white; border: none; padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s;">
+                                            <i class="fas fa-copy"></i> Copy Key
+                                        </button>
+                                        <button onclick="toggleKeyVisibility('${o.id}')" style="background: var(--cream); color: var(--text-muted); border: 1px solid var(--border); padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s;">
+                                            <i class="fas fa-eye"></i> Hide
+                                        </button>
+                                    </div>
+                                    <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">
+                                        <i class="fas fa-clock"></i> Purchased on ${o.time}
+                                    </div>
+                                </div>
+                            `).join("")}
+                        </div>
+                    `;
+                })
+                .catch((err) => {
+                    document.getElementById("myKeysContent").innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: var(--danger);">
+                            <i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                            <p>Failed to load keys: ${err.message}</p>
+                        </div>
+                    `;
+                });
+        }
+
+        function copyMyKey(orderId) {
+            const keyEl = document.getElementById("key-" + orderId);
+            if (!keyEl) return;
+            const keyText = keyEl.textContent;
+            navigator.clipboard.writeText(keyText).then(() => {
+                showToast("Key copied to clipboard!", "success");
+            }).catch(() => {
+                const textArea = document.createElement("textarea");
+                textArea.value = keyText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textArea);
+                showToast("Key copied to clipboard!", "success");
+            });
+        }
+
+        function toggleKeyVisibility(orderId) {
+            const keyEl = document.getElementById("key-" + orderId);
+            if (!keyEl) return;
+            const btn = keyEl.closest("div").parentElement.querySelector("button:last-child");
+            const icon = btn.querySelector("i");
+
+            if (keyEl.style.filter === "blur(4px)") {
+                keyEl.style.filter = "none";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+                btn.innerHTML = '<i class="fas fa-eye"></i> Hide';
+            } else {
+                keyEl.style.filter = "blur(4px)";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> Show';
+            }
         }
 
         // ========================
