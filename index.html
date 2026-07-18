@@ -260,6 +260,7 @@
     </style>
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -533,7 +534,7 @@
                         <i class="fas fa-ticket-alt" style="color: var(--blue);"></i> Have a Coupon?
                     </label>
                     <div class="coupon-input-wrap">
-                        <input type="text" id="couponCode" placeholder="Enter coupon code" style="text-transform: uppercase;">
+                        <input type="text" id="couponCode" placeholder="ENTER COUPON CODE" style="text-transform: uppercase; font-size: 0.9rem; padding: 0.75rem 1rem;">
                         <button class="coupon-btn" id="applyCouponBtn" onclick="applyCoupon()">
                             <i class="fas fa-check"></i> Apply
                         </button>
@@ -710,14 +711,6 @@
             if (!code) {
                 statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter a coupon code';
                 statusEl.className = "coupon-status invalid";
-                appliedCoupon = null;
-                updatePriceDisplay();
-                return;
-            }
-
-            if (!currentProduct) {
-                statusEl.innerHTML = '<i class="fas fa-times-circle"></i> No product selected';
-                statusEl.className = "coupon-status invalid";
                 return;
             }
 
@@ -746,7 +739,7 @@
                 return;
             }
 
-            if (currentProduct.price < coupon.minOrder) {
+            if (currentProduct && currentProduct.price < coupon.minOrder) {
                 statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Min order Rs.' + coupon.minOrder + ' required';
                 statusEl.className = "coupon-status invalid";
                 appliedCoupon = null;
@@ -792,15 +785,10 @@
         function resetCoupon() {
             appliedCoupon = null;
             discountedPrice = 0;
-            const codeInput = document.getElementById("couponCode");
-            const statusEl = document.getElementById("couponStatus");
-            const breakdown = document.getElementById("priceBreakdown");
-            if (codeInput) codeInput.value = "";
-            if (statusEl) {
-                statusEl.innerHTML = "";
-                statusEl.className = "coupon-status";
-            }
-            if (breakdown) breakdown.style.display = "none";
+            document.getElementById("couponCode").value = "";
+            document.getElementById("couponStatus").innerHTML = "";
+            document.getElementById("couponStatus").className = "coupon-status";
+            document.getElementById("priceBreakdown").style.display = "none";
         }
 
         function addNewCoupon() {
