@@ -410,6 +410,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -961,6 +962,9 @@
                     else if (error.code === "auth/wrong-password") msg = "Incorrect password.";
                     else if (error.code === "auth/invalid-email") msg = "Invalid email address.";
                     else if (error.code === "auth/too-many-requests") msg = "Too many attempts. Try later.";
+                    else if (error.code === "auth/invalid-credential") msg = "Invalid password. Please check your password and try again.";
+                    else if (error.code === "auth/invalid-login-credentials") msg = "Invalid password. Please check your password and try again.";
+                    else msg = "Invalid password. Please check your credentials and try again.";
                     showAuthError("signInError", msg);
                 })
                 .finally(() => {
@@ -1068,7 +1072,17 @@
                     showToast("Signed in with Google!", "success");
                 })
                 .catch((error) => {
-                    showToast("Google sign-in failed: " + error.message, "error");
+                    let msg = "Google sign-in failed. Please try again.";
+                    if (error.code === "auth/popup-closed-by-user" || error.code === "auth/cancelled-popup-request") {
+                        msg = "Sign-in cancelled. You closed the popup without signing in.";
+                    } else if (error.code === "auth/popup-blocked") {
+                        msg = "Popup blocked! Please allow popups for this site.";
+                    } else if (error.code === "auth/account-exists-with-different-credential") {
+                        msg = "An account already exists with this email using a different sign-in method.";
+                    } else if (error.code === "auth/network-request-failed") {
+                        msg = "Network error. Please check your internet connection.";
+                    }
+                    showToast(msg, "error");
                 });
         }
 
@@ -1120,7 +1134,7 @@
             document.getElementById("mainContent").classList.remove("hidden");
             document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("navbar").classList.remove("nav-hidden");
-            document.getElementById("syncIndicator").style.display = "flex";
+            document.getElementById("syncIndicator").style.display = "none";
 
             // Show main nav links
             const navLinks = document.getElementById("navLinks");
