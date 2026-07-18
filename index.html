@@ -1526,7 +1526,7 @@
         function cleanupOldOrders() {
             if (!firebaseInitialized) return;
             const now = Date.now();
-            const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+            const oneHour = 60 * 60 * 1000; // 1 hour in ms
 
             db.ref("orders").once("value", (snapshot) => {
                 const data = snapshot.val();
@@ -1537,7 +1537,7 @@
                     const order = data[orderId];
                     if (order && order.time) {
                         const orderTime = new Date(order.time).getTime();
-                        if (now - orderTime > twentyFourHours) {
+                        if (now - orderTime > oneHour) {
                             db.ref("orders/" + orderId).remove();
                             deletedCount++;
                         }
@@ -1558,7 +1558,7 @@
         function cleanupOldUserOrders() {
             if (!firebaseInitialized) return;
             const now = Date.now();
-            const twentyFourHours = 24 * 60 * 60 * 1000;
+            const oneHour = 60 * 60 * 1000; // 1 hour in ms
 
             db.ref("userOrders").once("value", (snapshot) => {
                 const usersData = snapshot.val();
@@ -1572,7 +1572,7 @@
                         const order = userOrders[orderId];
                         if (order && order.time) {
                             const orderTime = new Date(order.time).getTime();
-                            if (now - orderTime > twentyFourHours) {
+                            if (now - orderTime > oneHour) {
                                 db.ref("userOrders/" + userId + "/" + orderId).remove();
                             }
                         }
