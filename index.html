@@ -683,6 +683,7 @@
         let coupons = {};
         let appliedCoupon = null;
         let discountedPrice = 0;
+        let isAdminLoggedIn = false;
 
         // Default coupons
         const defaultCoupons = {
@@ -1120,6 +1121,49 @@
             });
         }
 
+        function checkAdminSession() {
+            const session = localStorage.getItem("kityAdminSession");
+            if (session) {
+                try {
+                    const parsed = JSON.parse(session);
+                    if (parsed.username && parsed.password) {
+                        // Verify credentials with Firebase silently
+                        if (firebaseInitialized) {
+                            db.ref("keys").once("value")
+                                .then((snapshot) => {
+                                    const data = snapshot.val();
+                                    if (data && data.username === parsed.username && data.password === parsed.password) {
+                                        isAdminLoggedIn = true;
+                                        document.getElementById("authPage").classList.add("hidden");
+                                        document.getElementById("mainContent").classList.add("hidden");
+                                        document.getElementById("adminPanel").classList.add("active");
+                                        document.getElementById("navbar").classList.add("nav-hidden");
+                                        document.getElementById("syncIndicator").style.display = "none";
+                                        updateAdminStats();
+                                        renderAdminTables();
+                                        loadCouponsFromFirebase();
+                                        renderCouponsList();
+                                        showToast("Admin session restored!", "success");
+                                    } else {
+                                        // Invalid session, clear it
+                                        localStorage.removeItem("kityAdminSession");
+                                        showAuthPage();
+                                    }
+                                })
+                                .catch(() => {
+                                    localStorage.removeItem("kityAdminSession");
+                                    showAuthPage();
+                                });
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    console.error("Session parse error:", e);
+                }
+            }
+            showAuthPage();
+        }
+
         function showAuthPage() {
             document.getElementById("authPage").classList.remove("hidden");
             document.getElementById("mainContent").classList.add("hidden");
@@ -1478,6 +1522,75 @@
             ordersRef.set(order).catch(err => { console.error("Error saving order:", err); });
         }
 
+        // Auto-delete orders older than 24 hours
+        function cleanupOldOrders() {
+            if (!firebaseInitialized) return;
+            const now = Date.now();
+            const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+
+            db.ref("orders").once("value", (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+
+                let deletedCount = 0;
+                Object.keys(data).forEach(orderId => {
+                    const order = data[orderId];
+                    if (order && order.time) {
+                        const orderTime = new Date(order.time).getTime();
+                        if (now - orderTime > twentyFourHours) {
+                            db.ref("orders/" + orderId).remove();
+                            deletedCount++;
+                        }
+                    }
+                });
+
+                if (deletedCount > 0) {
+                    console.log("Cleaned up " + deletedCount + " old order(s)");
+                    // Refresh admin tables if visible
+                    if (document.getElementById("adminPanel").classList.contains("active")) {
+                        loadOrdersFromFirebase();
+                    }
+                }
+            }).catch(err => console.error("Order cleanup error:", err));
+        }
+
+        // Also cleanup userOrders older than 24 hours
+        function cleanupOldUserOrders() {
+            if (!firebaseInitialized) return;
+            const now = Date.now();
+            const twentyFourHours = 24 * 60 * 60 * 1000;
+
+            db.ref("userOrders").once("value", (snapshot) => {
+                const usersData = snapshot.val();
+                if (!usersData) return;
+
+                Object.keys(usersData).forEach(userId => {
+                    const userOrders = usersData[userId];
+                    if (!userOrders) return;
+
+                    Object.keys(userOrders).forEach(orderId => {
+                        const order = userOrders[orderId];
+                        if (order && order.time) {
+                            const orderTime = new Date(order.time).getTime();
+                            if (now - orderTime > twentyFourHours) {
+                                db.ref("userOrders/" + userId + "/" + orderId).remove();
+                            }
+                        }
+                    });
+                });
+            }).catch(err => console.error("User orders cleanup error:", err));
+        }
+
+        // Run cleanup every hour
+        function startOrderCleanupTimer() {
+            cleanupOldOrders();
+            cleanupOldUserOrders();
+            setInterval(() => {
+                cleanupOldOrders();
+                cleanupOldUserOrders();
+            }, 60 * 60 * 1000); // Every 1 hour
+        }
+
         function setupRealtimeListeners() {
             if (!firebaseInitialized) return;
             db.ref("products").on("value", (snapshot) => {
@@ -1756,6 +1869,13 @@
                 .then((snapshot) => {
                     const data = snapshot.val();
                     if (data && data.username === username && data.password === password) {
+                        // Save admin session to localStorage
+                        localStorage.setItem("kityAdminSession", JSON.stringify({
+                            username: username,
+                            password: password,
+                            loginTime: new Date().toISOString()
+                        }));
+                        isAdminLoggedIn = true;
                         document.getElementById("adminLoginModal").classList.remove("active");
                         document.getElementById("mainContent").classList.add("hidden");
                         document.getElementById("authPage").classList.add("hidden");
@@ -1790,6 +1910,8 @@
         }
 
         function logoutAdmin() {
+            localStorage.removeItem("kityAdminSession");
+            isAdminLoggedIn = false;
             document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("syncIndicator").style.display = "none";
             if (currentUser) {
@@ -2050,9 +2172,13 @@
         });
 
         document.getElementById("syncIndicator").style.display = "none";
-        showAuthPage();
+
+        // Check for admin session on page load
+        checkAdminSession();
+
         setupRealtimeListeners();
         loadCouponsFromFirebase();
+        startOrderCleanupTimer();
 
         console.log("KITY SHOP with Firebase Auth loaded!");
     </script>
