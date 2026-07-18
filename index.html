@@ -710,6 +710,14 @@
             if (!code) {
                 statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter a coupon code';
                 statusEl.className = "coupon-status invalid";
+                appliedCoupon = null;
+                updatePriceDisplay();
+                return;
+            }
+
+            if (!currentProduct) {
+                statusEl.innerHTML = '<i class="fas fa-times-circle"></i> No product selected';
+                statusEl.className = "coupon-status invalid";
                 return;
             }
 
@@ -738,7 +746,7 @@
                 return;
             }
 
-            if (currentProduct && currentProduct.price < coupon.minOrder) {
+            if (currentProduct.price < coupon.minOrder) {
                 statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Min order Rs.' + coupon.minOrder + ' required';
                 statusEl.className = "coupon-status invalid";
                 appliedCoupon = null;
@@ -784,10 +792,15 @@
         function resetCoupon() {
             appliedCoupon = null;
             discountedPrice = 0;
-            document.getElementById("couponCode").value = "";
-            document.getElementById("couponStatus").innerHTML = "";
-            document.getElementById("couponStatus").className = "coupon-status";
-            document.getElementById("priceBreakdown").style.display = "none";
+            const codeInput = document.getElementById("couponCode");
+            const statusEl = document.getElementById("couponStatus");
+            const breakdown = document.getElementById("priceBreakdown");
+            if (codeInput) codeInput.value = "";
+            if (statusEl) {
+                statusEl.innerHTML = "";
+                statusEl.className = "coupon-status";
+            }
+            if (breakdown) breakdown.style.display = "none";
         }
 
         function addNewCoupon() {
