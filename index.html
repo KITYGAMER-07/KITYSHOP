@@ -13,19 +13,19 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --blue: #274DF5;
-            --blue-light: #5B7FFF;
-            --blue-dark: #1A3AD4;
-            --blue-darker: #0E2280;
-            --blue-deep: #08144A;
-            --cream: #f8f9ff;
+            --blue: #BD0EC9;
+            --blue-light: #D946E8;
+            --blue-dark: #8A0A94;
+            --blue-darker: #5E0766;
+            --blue-deep: #3A053F;
+            --cream: #FDF5FE;
             --white: #ffffff;
             --text: #0f172a;
-            --text-light: #1e3a8a;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
+            --text-light: #8A0A94;
+            --text-muted: #7A6B7D;
+            --border: #F0D4F2;
             --card-bg: #ffffff;
-            --card-shadow: rgba(39, 77, 245, 0.08);
+            --card-shadow: rgba(189, 14, 201, 0.08);
             --success: #16a34a;
             --danger: #dc2626;
             --warning: #d97706;
@@ -33,8 +33,8 @@
         html { scroll-behavior: smooth; }
         body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; min-height: 100vh; }
         .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: var(--cream); }
-        .bg-animation::before { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(39, 77, 245, 0.12) 0%, transparent 70%); top: -200px; right: -200px; animation: float 8s ease-in-out infinite; }
-        .bg-animation::after { content: ''; position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(91, 127, 255, 0.08) 0%, transparent 70%); bottom: -150px; left: -150px; animation: float 10s ease-in-out infinite reverse; }
+        .bg-animation::before { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(189, 14, 201, 0.12) 0%, transparent 70%); top: -200px; right: -200px; animation: float 8s ease-in-out infinite; }
+        .bg-animation::after { content: ''; position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(217, 70, 232, 0.08) 0%, transparent 70%); bottom: -150px; left: -150px; animation: float 10s ease-in-out infinite reverse; }
         @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(30px, -30px) scale(1.1); } }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--cream); }
@@ -52,18 +52,18 @@
         .nav-center-title { position: absolute; left: 50%; transform: translateX(-50%); font-size: 1.5rem; font-weight: 800; color: var(--blue-darker); user-select: none; white-space: nowrap; }
         @media (max-width: 768px) { .nav-center-title { font-size: 1.2rem; } }
         .admin-btn { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; padding: 0.5rem 1.5rem; border-radius: 50px; border: none; cursor: pointer; font-weight: 600; transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 1rem; }
-        .admin-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(39, 77, 245, 0.3); }
+        .admin-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(189, 14, 201, 0.3); }
 
         .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem; position: relative; }
-        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(39, 77, 245, 0.08); border: 1px solid rgba(39, 77, 245, 0.25); padding: 0.5rem 1.5rem; border-radius: 50px; font-size: 0.9rem; color: var(--blue); margin-bottom: 2rem; animation: fadeInUp 0.8s ease; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(189, 14, 201, 0.08); border: 1px solid rgba(189, 14, 201, 0.25); padding: 0.5rem 1.5rem; border-radius: 50px; font-size: 0.9rem; color: var(--blue); margin-bottom: 2rem; animation: fadeInUp 0.8s ease; }
         .hero h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; animation: fadeInUp 0.8s ease 0.2s both; color: var(--blue-darker); }
         .hero h1 span { background: linear-gradient(135deg, var(--blue), var(--blue-dark), var(--blue-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2rem; animation: fadeInUp 0.8s ease 0.4s both; }
         .hero-cta { display: flex; gap: 1rem; animation: fadeInUp 0.8s ease 0.6s both; }
         .btn-primary { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; padding: 1rem 2.5rem; border-radius: 50px; border: none; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif; }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(39, 77, 245, 0.3); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(189, 14, 201, 0.3); }
         .btn-secondary { background: transparent; color: var(--blue-dark); padding: 1rem 2.5rem; border-radius: 50px; border: 2px solid var(--border); font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif; }
-        .btn-secondary:hover { border-color: var(--blue); background: rgba(39, 77, 245, 0.06); }
+        .btn-secondary:hover { border-color: var(--blue); background: rgba(189, 14, 201, 0.06); }
         .scroll-indicator { position: absolute; bottom: 2rem; animation: bounce 2s infinite; cursor: pointer; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -76,7 +76,7 @@
         .product-card.visible { opacity: 1; transform: translateY(0); }
         .product-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--blue-light), var(--blue)); transform: scaleX(0); transition: transform 0.4s; }
         .product-card:hover::before { transform: scaleX(1); }
-        .product-card:hover { transform: translateY(-10px); border-color: var(--blue-light); box-shadow: 0 20px 50px rgba(39, 77, 245, 0.12); }
+        .product-card:hover { transform: translateY(-10px); border-color: var(--blue-light); box-shadow: 0 20px 50px rgba(189, 14, 201, 0.12); }
         .product-icon { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; overflow: hidden; }
         .product-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--blue-darker); }
         .product-card .duration { color: var(--blue); font-weight: 600; font-size: 0.95rem; margin-bottom: 1rem; }
@@ -87,16 +87,16 @@
         .stock-status.low-stock { background: rgba(217, 119, 6, 0.1); color: var(--warning); border: 1px solid rgba(217, 119, 6, 0.3); }
         .buy-btn { width: 100%; padding: 1rem; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 1rem; }
         .buy-btn.available { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; }
-        .buy-btn.available:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(39, 77, 245, 0.3); }
+        .buy-btn.available:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(189, 14, 201, 0.3); }
         .buy-btn.unavailable { background: #eef2ff; color: var(--text-muted); cursor: not-allowed; }
         .features-section { padding: 6rem 2rem; background: linear-gradient(180deg, var(--white) 0%, var(--cream) 100%); }
         .features-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; }
         .feature-item { text-align: center; padding: 2rem; opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
         .feature-item.visible { opacity: 1; transform: translateY(0); }
-        .feature-icon { width: 80px; height: 80px; background: linear-gradient(135deg, rgba(39, 77, 245, 0.1), rgba(91, 127, 255, 0.06)); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem; border: 1px solid var(--border); color: var(--blue); }
+        .feature-icon { width: 80px; height: 80px; background: linear-gradient(135deg, rgba(189, 14, 201, 0.1), rgba(217, 70, 232, 0.06)); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem; border: 1px solid var(--border); color: var(--blue); }
         .feature-item h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--blue-darker); }
         .feature-item p { color: var(--text-muted); font-size: 0.95rem; }
-        .telegram-section { padding: 4rem 2rem; text-align: center; background: linear-gradient(135deg, rgba(39, 77, 245, 0.03), rgba(91, 127, 255, 0.03)); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .telegram-section { padding: 4rem 2rem; text-align: center; background: linear-gradient(135deg, rgba(189, 14, 201, 0.03), rgba(217, 70, 232, 0.03)); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
         .telegram-box { max-width: 600px; margin: 0 auto; background: var(--white); padding: 2rem; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 4px 20px var(--card-shadow); }
         .telegram-box i { font-size: 3rem; color: var(--blue); margin-bottom: 1rem; }
         .telegram-box h3 { color: var(--blue-darker); }
@@ -117,7 +117,7 @@
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-light); }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; background: var(--cream); border: 2px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.95rem; transition: all 0.3s; font-family: 'Inter', sans-serif; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--blue-light); box-shadow: 0 0 0 3px rgba(39, 77, 245, 0.1); }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--blue-light); box-shadow: 0 0 0 3px rgba(189, 14, 201, 0.1); }
         .form-group input::placeholder { color: var(--text-muted); }
         .modal .btn-primary { width: 100%; justify-content: center; }
         .admin-panel { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; padding-top: 6rem; }
@@ -139,10 +139,10 @@
         .admin-table { width: 100%; background: var(--white); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 4px 20px var(--card-shadow); }
         .admin-table table { width: 100%; border-collapse: collapse; }
         .admin-table th, .admin-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); }
-        .admin-table th { background: rgba(39, 77, 245, 0.06); font-weight: 600; color: var(--blue); }
-        .admin-table tr:hover { background: rgba(39, 77, 245, 0.03); }
+        .admin-table th { background: rgba(189, 14, 201, 0.06); font-weight: 600; color: var(--blue); }
+        .admin-table tr:hover { background: rgba(189, 14, 201, 0.03); }
         .action-btn { padding: 0.4rem 1rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; font-size: 0.85rem; transition: all 0.3s; }
-        .action-btn.edit { background: rgba(39, 77, 245, 0.1); color: var(--blue); }
+        .action-btn.edit { background: rgba(189, 14, 201, 0.1); color: var(--blue); }
         .action-btn.delete { background: rgba(220, 38, 38, 0.08); color: var(--danger); }
         .action-btn:hover { transform: scale(1.05); }
         .add-stock-btn { background: linear-gradient(135deg, var(--success), #15803d); color: white; padding: 0.8rem 1.5rem; border-radius: 12px; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 1rem; }
@@ -159,7 +159,7 @@
             .nav-links { position: fixed; top: 70px; left: 0; right: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(20px); flex-direction: column; padding: 1.5rem; gap: 0.5rem; border-bottom: 1px solid var(--border); box-shadow: 0 10px 30px rgba(8, 20, 74, 0.08); transform: translateY(-150%); transition: transform 0.4s ease; z-index: 999; }
             .nav-links.active { transform: translateY(0); }
             .nav-links .nav-link { width: 100%; text-align: center; padding: 0.8rem; border-radius: 12px; }
-            .nav-links .nav-link:hover { background: rgba(39, 77, 245, 0.06); }
+            .nav-links .nav-link:hover { background: rgba(189, 14, 201, 0.06); }
             .nav-links .admin-btn { width: 100%; justify-content: center; margin-top: 0.5rem; }
             .nav-links #userMenuWrap { width: 100%; }
             .menu-toggle { display: flex !important; }
@@ -180,12 +180,12 @@
             .auth-page { padding: 0.5rem !important; }
             .auth-card { padding: 1.2rem !important; max-width: 340px !important; width: 92% !important; }
         }
-        .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(39, 77, 245, 0.2); border-radius: 50%; border-top-color: var(--blue); animation: spin 1s ease-in-out infinite; }
+        .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(189, 14, 201, 0.2); border-radius: 50%; border-top-color: var(--blue); animation: spin 1s ease-in-out infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .success-check { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--success), #15803d); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem; animation: scaleIn 0.5s ease; color: white; }
         @keyframes scaleIn { from { transform: scale(0); } to { transform: scale(1); } }
         .menu-toggle { display: none; background: none; border: none; font-size: 1.5rem; color: var(--blue-dark); cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: all 0.3s; }
-        .menu-toggle:hover { background: rgba(39, 77, 245, 0.08); }
+        .menu-toggle:hover { background: rgba(189, 14, 201, 0.08); }
         .menu-toggle.active { color: var(--blue); }
         .hidden { display: none !important; }
         .main-content { display: block; }
@@ -205,12 +205,12 @@
         .auth-card .auth-logo p { color: var(--text-muted); font-size: 0.75rem; margin-top: 0.15rem; }
         .auth-tabs { display: flex; gap: 0.4rem; background: var(--cream); border-radius: 12px; padding: 0.25rem; margin-bottom: 0.5rem; }
         .auth-tab { flex: 1; padding: 0.45rem; border: none; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; color: var(--text-muted); background: transparent; }
-        .auth-tab.active { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; box-shadow: 0 4px 15px rgba(39, 77, 245, 0.25); }
+        .auth-tab.active { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; box-shadow: 0 4px 15px rgba(189, 14, 201, 0.25); }
         .auth-tab:hover:not(.active) { color: var(--blue-dark); }
         .auth-form .form-group { margin-bottom: 0.4rem; }
         .auth-form .form-group label { font-size: 0.75rem; font-weight: 600; color: var(--blue-darker); margin-bottom: 0.15rem; display: flex; align-items: center; gap: 0.3rem; }
         .auth-form .form-group input { padding: 0.5rem 0.75rem; font-size: 0.85rem; background: var(--cream); border: 2px solid var(--border); border-radius: 10px; width: 100%; transition: all 0.3s; font-family: 'Inter', sans-serif; color: var(--text); }
-        .auth-form .form-group input:focus { outline: none; border-color: var(--blue-light); box-shadow: 0 0 0 3px rgba(39, 77, 245, 0.1); }
+        .auth-form .form-group input:focus { outline: none; border-color: var(--blue-light); box-shadow: 0 0 0 3px rgba(189, 14, 201, 0.1); }
         .auth-form .form-group .input-wrap { position: relative; }
         .auth-form .form-group .input-wrap i { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; }
         .auth-form .form-group .input-wrap input { padding-left: 2.2rem; }
@@ -220,14 +220,14 @@
         .auth-divider { display: flex; align-items: center; gap: 0.8rem; margin: 0.5rem 0; color: var(--text-muted); font-size: 0.75rem; }
         .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
         .google-btn { width: 100%; padding: 0.55rem; border-radius: 10px; border: 2px solid var(--border); background: var(--white); color: var(--text); font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-family: 'Inter', sans-serif; }
-        .google-btn:hover { border-color: var(--blue-light); background: rgba(39, 77, 245, 0.04); }
+        .google-btn:hover { border-color: var(--blue-light); background: rgba(189, 14, 201, 0.04); }
         .google-btn img { width: 18px; height: 18px; }
         .auth-footer { text-align: center; margin-top: 0.5rem; font-size: 0.78rem; color: var(--text-muted); }
         .auth-footer a { color: var(--blue); font-weight: 600; text-decoration: none; cursor: pointer; }
         .auth-footer a:hover { text-decoration: underline; }
         .auth-error { background: rgba(220, 38, 38, 0.06); border: 1px solid rgba(220, 38, 38, 0.25); color: var(--danger); padding: 0.45rem 0.7rem; border-radius: 8px; font-size: 0.78rem; margin-bottom: 0.5rem; display: none; align-items: center; gap: 0.4rem; }
         .auth-error.show { display: flex; }
-        .nav-user-email { color: var(--blue); font-weight: 600; font-size: 0.85rem; padding: 0.5rem 0.8rem; background: rgba(39, 77, 245, 0.08); border-radius: 50px; border: 1px solid rgba(39, 77, 245, 0.2); display: flex; align-items: center; gap: 0.4rem; white-space: nowrap; }
+        .nav-user-email { color: var(--blue); font-weight: 600; font-size: 0.85rem; padding: 0.5rem 0.8rem; background: rgba(189, 14, 201, 0.08); border-radius: 50px; border: 1px solid rgba(189, 14, 201, 0.2); display: flex; align-items: center; gap: 0.4rem; white-space: nowrap; }
         .nav-user-email i { font-size: 0.8rem; color: var(--blue); }
         .nav-logout-btn { background: transparent; color: var(--danger); border: 2px solid rgba(220, 38, 38, 0.15); padding: 0.5rem 1.2rem; border-radius: 50px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: 0.4rem; }
         .nav-logout-btn:hover { background: rgba(220, 38, 38, 0.06); border-color: var(--danger); transform: translateY(-1px); }
@@ -243,13 +243,13 @@
         .reset-sent h3 { font-size: 1rem; color: var(--blue-darker); margin-bottom: 0.2rem; }
         .reset-sent p { font-size: 0.8rem; color: var(--text-muted); }
         .admin-login-btn { width: 100%; padding: 0.5rem; border-radius: 10px; border: 2px solid var(--border); background: transparent; color: var(--text-muted); font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.4rem; font-family: 'Inter', sans-serif; margin-top: 0.3rem; }
-        .admin-login-btn:hover { border-color: var(--blue); color: var(--blue); background: rgba(39, 77, 245, 0.04); }
+        .admin-login-btn:hover { border-color: var(--blue); color: var(--blue); background: rgba(189, 14, 201, 0.04); }
     
-        .coupon-section { background: linear-gradient(135deg, rgba(39, 77, 245, 0.06), rgba(91, 127, 255, 0.04)); padding: 1rem; border-radius: 12px; border: 1px dashed var(--blue-light); margin: 1rem 0; }
+        .coupon-section { background: linear-gradient(135deg, rgba(189, 14, 201, 0.06), rgba(217, 70, 232, 0.04)); padding: 1rem; border-radius: 12px; border: 1px dashed var(--blue-light); margin: 1rem 0; }
         .coupon-input-wrap { display: flex; gap: 0.5rem; align-items: stretch; flex-wrap: nowrap; }
         .coupon-input-wrap input { flex: 1; min-width: 0; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
         .coupon-btn { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; padding: 0.6rem 1rem; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 0.85rem; white-space: nowrap; flex-shrink: 0; }
-        .coupon-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(39, 77, 245, 0.3); }
+        .coupon-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(189, 14, 201, 0.3); }
         .coupon-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
         .coupon-status { margin-top: 0.5rem; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem; min-height: 20px; }
         .coupon-status.valid { color: var(--success); }
@@ -259,9 +259,9 @@
         .price-breakdown .row { display: flex; justify-content: space-between; padding: 0.3rem 0; font-size: 0.85rem; color: var(--text-muted); }
         .price-breakdown .row.total { border-top: 2px solid var(--border); padding-top: 0.5rem; margin-top: 0.3rem; font-size: 1rem; font-weight: 700; color: var(--blue-darker); }
         .price-breakdown .row .discount { color: var(--success); }
-        .coupon-badge { display: inline-flex; align-items: center; gap: 0.3rem; background: linear-gradient(135deg, rgba(39,77,245,0.1), rgba(91,127,255,0.08)); color: var(--blue); padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(39,77,245,0.2); }
+        .coupon-badge { display: inline-flex; align-items: center; gap: 0.3rem; background: linear-gradient(135deg, rgba(189,14,201,0.1), rgba(217,70,232,0.08)); color: var(--blue); padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(189,14,201,0.2); }
         .coupon-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s; }
-        .coupon-card:hover { border-color: var(--blue-light); box-shadow: 0 4px 15px rgba(39,77,245,0.08); }
+        .coupon-card:hover { border-color: var(--blue-light); box-shadow: 0 4px 15px rgba(189,14,201,0.08); }
         .coupon-card .code { font-family: 'Courier New', monospace; font-weight: 800; color: var(--blue-darker); font-size: 1rem; letter-spacing: 1px; }
         .coupon-card .info { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; }
         .coupon-card .discount-badge { background: linear-gradient(135deg, var(--success), #15803d); color: white; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; }
@@ -273,11 +273,6 @@
             .coupon-btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; }
         }
 
-    
-        /* Ensure panels are properly hidden on load */
-        #mainContent { display: none; }
-        #adminPanel { display: none; }
-        #authPage { display: flex; }
     </style>
 <base target="_blank">
 <base target="_blank">
@@ -310,7 +305,7 @@
 
     <div class="toast-container" id="toastContainer"></div>
 
-    <div class="auth-page" id="authPage" style="display: flex;">
+    <div class="auth-page" id="authPage">
         <div class="auth-card">
             <div class="auth-logo">
                 <img src="logo.jpg" alt="KITY SHOP" onerror="this.style.display='none'">
@@ -415,7 +410,7 @@
         </div>
     </div>
 
-    <div class="main-content" id="mainContent" style="display: none;">
+    <div class="main-content hidden" id="mainContent">
         <section class="hero" id="hero">
             <div class="hero-badge"><i class="fas fa-bolt"></i> Instant Key Delivery</div>
             <h1>Premium Access<br><span>Keys & Licenses</span></h1>
@@ -486,7 +481,7 @@
         </footer>
     </div>
 
-    <div class="admin-panel" id="adminPanel" style="display: none;">
+    <div class="admin-panel" id="adminPanel">
         <div class="admin-header">
             <h2><i class="fas fa-cog"></i> Admin Dashboard</h2>
             <div class="admin-actions">
@@ -579,7 +574,7 @@
             <div id="buyModalContent">
                 <div class="form-group">
                     <label style="font-size: 0.9rem;"><i class="fas fa-box"></i> Selected Plan</label>
-                    <input type="text" id="selectedPlan" readonly style="background: rgba(39, 77, 245, 0.06); border-color: var(--blue-light);">
+                    <input type="text" id="selectedPlan" readonly style="background: rgba(189, 14, 201, 0.06); border-color: var(--blue-light);">
                 </div>
 
                 <!-- COUPON SECTION -->
@@ -621,7 +616,7 @@
                 <div style="background: linear-gradient(135deg, var(--cream), #fff); padding: 0.8rem; border-radius: 12px; margin: 0.6rem 0; border: 2px dashed var(--blue); position: relative;" id="keyBox">
                     <div style="font-size: 0.8rem; color: var(--blue); margin-bottom: 0.4rem; font-weight: 600;"><i class="fas fa-key"></i> YOUR ACCESS KEY</div>
                     <div style="font-family: 'Courier New', monospace; font-size: 1.1rem; font-weight: 800; color: var(--blue-darker); letter-spacing: 1px; word-break: break-all; padding: 0.5rem; background: white; border-radius: 8px; border: 1px solid var(--border);" id="sentKeyDisplay">KEY-XXXX-XXXX-XXXX</div>
-                    <button onclick="copyKeyToClipboard()" style="margin-top: 0.6rem; background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(39,77,245,0.3);">
+                    <button onclick="copyKeyToClipboard()" style="margin-top: 0.6rem; background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(189,14,201,0.3);">
                         <i class="fas fa-copy"></i> Copy Key
                     </button>
                 </div>
@@ -1298,15 +1293,16 @@ function updateRazorpayKey() {
                 try {
                     const parsed = JSON.parse(session);
                     if (parsed.username && parsed.password) {
+                        // Verify credentials with Firebase silently
                         if (firebaseInitialized) {
                             db.ref("keys").once("value")
                                 .then((snapshot) => {
                                     const data = snapshot.val();
                                     if (data && data.username === parsed.username && data.password === parsed.password) {
                                         isAdminLoggedIn = true;
-                                        document.getElementById("authPage").style.display = "none";
-                                        document.getElementById("mainContent").style.display = "none";
-                                        document.getElementById("adminPanel").style.display = "block";
+                                        document.getElementById("authPage").classList.add("hidden");
+                                        document.getElementById("mainContent").classList.add("hidden");
+                                        document.getElementById("adminPanel").classList.add("active");
                                         document.getElementById("navbar").classList.add("nav-hidden");
                                         document.getElementById("syncIndicator").style.display = "none";
                                         updateAdminStats();
@@ -1315,6 +1311,7 @@ function updateRazorpayKey() {
                                         renderCouponsList();
                                         showToast("Admin session restored!", "success");
                                     } else {
+                                        // Invalid session, clear it
                                         localStorage.removeItem("kityAdminSession");
                                         showAuthPage();
                                     }
@@ -1334,9 +1331,9 @@ function updateRazorpayKey() {
         }
 
         function showAuthPage() {
-            document.getElementById("authPage").style.display = "flex";
-            document.getElementById("mainContent").style.display = "none";
-            document.getElementById("adminPanel").style.display = "none";
+            document.getElementById("authPage").classList.remove("hidden");
+            document.getElementById("mainContent").classList.add("hidden");
+            document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("navbar").classList.add("nav-hidden");
             document.getElementById("syncIndicator").style.display = "none";
             const navLinks = document.getElementById("navLinks");
@@ -1350,9 +1347,9 @@ function updateRazorpayKey() {
         }
 
         function showMainContent() {
-            document.getElementById("authPage").style.display = "none";
-            document.getElementById("mainContent").style.display = "block";
-            document.getElementById("adminPanel").style.display = "none";
+            document.getElementById("authPage").classList.add("hidden");
+            document.getElementById("mainContent").classList.remove("hidden");
+            document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("navbar").classList.remove("nav-hidden");
             document.getElementById("syncIndicator").style.display = "none";
             const navLinks = document.getElementById("navLinks");
@@ -1439,11 +1436,11 @@ function updateRazorpayKey() {
                             <table style="width: 100%; border-collapse: collapse;">
                                 <thead>
                                     <tr>
-                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(39, 77, 245, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Order ID</th>
-                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(39, 77, 245, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Product</th>
-                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(39, 77, 245, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Amount</th>
-                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(39, 77, 245, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Key</th>
-                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(39, 77, 245, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Date</th>
+                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(189, 14, 201, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Order ID</th>
+                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(189, 14, 201, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Product</th>
+                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(189, 14, 201, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Amount</th>
+                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(189, 14, 201, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Key</th>
+                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(189, 14, 201, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1452,7 +1449,7 @@ function updateRazorpayKey() {
                                             <td style="padding: 0.8rem; font-size: 0.8rem; color: var(--text-muted);">${o.id}</td>
                                             <td style="padding: 0.8rem; font-size: 0.85rem; font-weight: 600; color: var(--blue-darker);">${o.product}</td>
                                             <td style="padding: 0.8rem; font-size: 0.85rem; color: var(--blue); font-weight: 600;">Rs.${o.amount}</td>
-                                            <td style="padding: 0.8rem; font-size: 0.8rem; font-family: monospace; color: var(--blue-dark); background: rgba(39,77,245,0.06); border-radius: 6px;">${o.key}</td>
+                                            <td style="padding: 0.8rem; font-size: 0.8rem; font-family: monospace; color: var(--blue-dark); background: rgba(189,14,201,0.06); border-radius: 6px;">${o.key}</td>
                                             <td style="padding: 0.8rem; font-size: 0.75rem; color: var(--text-muted);">${o.time}</td>
                                         </tr>
                                     `).join("")}
@@ -1918,7 +1915,7 @@ function updateRazorpayKey() {
             originalPrice: currentProduct.price,
             discount: appliedCoupon ? appliedCoupon.discount + "%" : "0%"
         },
-        theme: { color: "#274DF5" },
+        theme: { color: "#BD0EC9" },
         modal: {
             ondismiss: function() {
                 showToast("Payment cancelled", "info");
@@ -2043,6 +2040,7 @@ function updateRazorpayKey() {
                 .then((snapshot) => {
                     const data = snapshot.val();
                     if (data && data.username === username && data.password === password) {
+                        // Save admin session to localStorage
                         localStorage.setItem("kityAdminSession", JSON.stringify({
                             username: username,
                             password: password,
@@ -2050,9 +2048,9 @@ function updateRazorpayKey() {
                         }));
                         isAdminLoggedIn = true;
                         document.getElementById("adminLoginModal").classList.remove("active");
-                        document.getElementById("authPage").style.display = "none";
-                        document.getElementById("mainContent").style.display = "none";
-                        document.getElementById("adminPanel").style.display = "block";
+                        document.getElementById("mainContent").classList.add("hidden");
+                        document.getElementById("authPage").classList.add("hidden");
+                        document.getElementById("adminPanel").classList.add("active");
                         document.getElementById("adminUsername").value = "";
                         document.getElementById("adminPassword").value = "";
                         updateAdminStats();
@@ -2098,7 +2096,7 @@ function updateRazorpayKey() {
         function logoutAdmin() {
             localStorage.removeItem("kityAdminSession");
             isAdminLoggedIn = false;
-            document.getElementById("adminPanel").style.display = "none";
+            document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("syncIndicator").style.display = "none";
             if (currentUser) {
                 showMainContent();
