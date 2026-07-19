@@ -288,13 +288,10 @@
 <body>
     <div class="bg-animation"></div>
 
-    <!-- Page Load Loading Screen -->
-    <div id="pageLoader" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--cream); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.4s ease;">
-        <div style="text-align: center;">
-            <img src="logo.jpg" alt="KITY SHOP" style="height: 60px; width: auto; border-radius: 12px; object-fit: contain; margin-bottom: 1.5rem;" onerror="this.style.display='none'">
-            <div style="font-size: 1.5rem; font-weight: 800; color: var(--blue-darker); margin-bottom: 0.5rem;">KITY SHOP</div>
-            <div class="loading" style="width: 40px; height: 40px; border-width: 4px; margin: 1rem auto;"></div>
-            <div style="color: var(--text-muted); font-size: 0.9rem;">Loading...</div>
+    <div id="pageLoader" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--cream);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity 0.3s;">
+        <div style="text-align:center;">
+            <div style="font-size:1.5rem;font-weight:800;color:var(--blue-darker);margin-bottom:1rem;">KITY SHOP</div>
+            <div class="loading" style="width:40px;height:40px;border-width:4px;margin:0 auto;"></div>
         </div>
     </div>
 
@@ -1285,24 +1282,14 @@ function updateRazorpayKey() {
 
         if (firebaseInitialized) {
             auth.onAuthStateChanged((user) => {
-                // If admin is already logged in and showing, don't do anything
-                if (isAdminLoggedIn && document.getElementById("adminPanel").classList.contains("active")) {
-                    return;
-                }
-
                 if (user) {
                     currentUser = user;
                     console.log("User signed in:", user.email);
                     showMainContent();
-                    hidePageLoader();
                 } else {
                     currentUser = null;
                     console.log("User signed out");
-                    // Only show auth if not admin
-                    if (!isAdminLoggedIn) {
-                        showAuthPage();
-                        hidePageLoader();
-                    }
+                    showAuthPage();
                 }
             });
         }
@@ -2425,26 +2412,8 @@ function updateRazorpayKey() {
 
         document.getElementById("syncIndicator").style.display = "none";
 
-        // Page initialization flow:
-        // 1. Check if admin session exists
-        // 2. If yes, verify and show admin panel
-        // 3. If no, auth state listener will handle user auth
-        // 4. Loader hides only after decision is made
-
-        const hasAdminSession = checkAdminSession();
-
-        if (hasAdminSession) {
-            // Admin session found - verify and show admin panel
-            verifyAndShowAdminPanel();
-        } else {
-            // No admin session - auth state listener will handle
-            // But hide loader after a timeout in case auth takes too long
-            setTimeout(() => {
-                if (!currentUser && !isAdminLoggedIn) {
-                    hidePageLoader();
-                }
-            }, 3000);
-        }
+        // Check for admin session on page load
+        checkAdminSession();
 
         setupRealtimeListeners();
         loadCouponsFromFirebase();
