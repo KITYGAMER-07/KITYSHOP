@@ -283,7 +283,6 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
-<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -735,19 +734,27 @@
         let RAZORPAY_KEY_ID = "";
 
 function loadRazorpayKeyFromFirebase() {
-    if (!firebaseInitialized) return Promise.resolve();
+    if (!firebaseInitialized) {
+        console.warn("Firebase not initialized, cannot load Razorpay key");
+        return Promise.resolve();
+    }
     return db.ref("settings/razorpayKey").once("value")
         .then((snapshot) => {
             const key = snapshot.val();
-            if (key) {
-                RAZORPAY_KEY_ID = key;
-                console.log("Razorpay key loaded from Firebase");
+            if (key && typeof key === "string" && key.trim().startsWith("rzp_")) {
+                RAZORPAY_KEY_ID = key.trim();
+                console.log("✅ Razorpay key loaded from Firebase:", RAZORPAY_KEY_ID.substring(0, 8) + "****");
+            } else if (key) {
+                console.warn("⚠️ Razorpay key found but invalid format:", key);
+                RAZORPAY_KEY_ID = "";
             } else {
-                console.warn("No Razorpay key found in Firebase settings");
+                console.warn("⚠️ No Razorpay key found in Firebase at /settings/razorpayKey");
+                RAZORPAY_KEY_ID = "";
             }
         })
         .catch((err) => {
-            console.error("Error loading Razorpay key:", err);
+            console.error("❌ Error loading Razorpay key:", err);
+            RAZORPAY_KEY_ID = "";
         });
 }
 
@@ -756,14 +763,44 @@ function saveRazorpayKeyToFirebase(key) {
         showToast("Firebase not connected!", "error");
         return Promise.reject("No Firebase");
     }
-    return db.ref("settings/razorpayKey").set(key)
+    const cleanKey = key.trim();
+    if (!cleanKey.startsWith("rzp_")) {
+        showToast("Invalid key format! Must start with 'rzp_'", "error");
+        return Promise.reject("Invalid format");
+    }
+    return db.ref("settings/razorpayKey").set(cleanKey)
         .then(() => {
-            RAZORPAY_KEY_ID = key;
+            RAZORPAY_KEY_ID = cleanKey;
             showToast("Razorpay key updated successfully!", "success");
+            console.log("✅ Razorpay key saved to Firebase:", cleanKey.substring(0, 8) + "****");
         })
         .catch((err) => {
-            console.error("Error saving Razorpay key:", err);
-            showToast("Failed to save Razorpay key!", "error");
+            console.error("❌ Error saving Razorpay key:", err);
+            showToast("Failed to save Razorpay key! Check console.", "error");
+        });
+}
+
+function verifyRazorpayKeyInFirebase() {
+    if (!firebaseInitialized) {
+        console.warn("Firebase not initialized");
+        return Promise.resolve(false);
+    }
+    return db.ref("settings").once("value")
+        .then((snapshot) => {
+            const settings = snapshot.val();
+            console.log("📊 Firebase /settings node:", settings);
+            if (settings && settings.razorpayKey) {
+                console.log("✅ razorpayKey found:", settings.razorpayKey.substring(0, 8) + "****");
+                return true;
+            } else {
+                console.warn("❌ razorpayKey NOT found in /settings");
+                console.warn("💡 To fix: Go to Firebase Console → Realtime Database → add 'settings/razorpayKey' with your key");
+                return false;
+            }
+        })
+        .catch((err) => {
+            console.error("❌ Error checking Firebase:", err);
+            return false;
         });
 }
 
@@ -1857,55 +1894,55 @@ function updateRazorpayKey() {
             payBtn.disabled = true;
 
             // Use discounted price if coupon applied, otherwise original price
-            const finalAmount = (appliedCoupon && discountedPrice > 0) ? discountedPrice : currentProduct.price;
+    const finalAmount = (appliedCoupon && discountedPrice > 0) ? discountedPrice : currentProduct.price;
 
-            const options = {
-                key: RAZORPAY_KEY_ID,
-                amount: finalAmount * 100,
-                currency: "INR",
-                name: "KITY SHOP",
-                description: currentProduct.name + (appliedCoupon ? " (" + appliedCoupon.discount + "% OFF)" : ""),
-                image: "https://cdn-icons-png.flaticon.com/512/2885/2885417.png",
-                handler: function (response) {
-                    const buyerEmail = document.getElementById("email").value.trim();
-                    handlePaymentSuccess(response, buyerEmail);
-                },
-                prefill: { name: currentUser ? (currentUser.displayName || "") : "", email: document.getElementById("email").value || "", contact: "" },
-                notes: { 
-                    product: currentProduct.name,
-                    coupon: appliedCoupon ? appliedCoupon.code : "none",
-                    originalPrice: currentProduct.price,
-                    discount: appliedCoupon ? appliedCoupon.discount + "%" : "0%"
-                },
-                theme: { color: "#274DF5" },
-                modal: {
-                    ondismiss: function() {
-                        showToast("Payment cancelled", "info");
-                        payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
-                        payBtn.disabled = false;
-                    },
-                    escape: true,
-                    backdropclose: false
-                }
-            };
-            try {
-                const rzp = new Razorpay(options);
-                rzp.on("payment.failed", function (response) {
-                    showToast("Payment failed: " + response.error.description, "error");
-                    payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
-                    payBtn.disabled = false;
-                });
-                rzp.open();
-                setTimeout(() => {
-                    payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
-                    payBtn.disabled = false;
-                }, 1000);
-            } catch (error) {
-                showToast("Error loading Razorpay: " + error.message, "error");
+    const options = {
+        key: RAZORPAY_KEY_ID,
+        amount: finalAmount * 100,
+        currency: "INR",
+        name: "KITY SHOP",
+        description: currentProduct.name + (appliedCoupon ? " (" + appliedCoupon.discount + "% OFF)" : ""),
+        image: "https://cdn-icons-png.flaticon.com/512/2885/2885417.png",
+        handler: function (response) {
+            const buyerEmail = document.getElementById("email").value.trim();
+            handlePaymentSuccess(response, buyerEmail);
+        },
+        prefill: { name: currentUser ? (currentUser.displayName || "") : "", email: document.getElementById("email").value || "", contact: "" },
+        notes: { 
+            product: currentProduct.name,
+            coupon: appliedCoupon ? appliedCoupon.code : "none",
+            originalPrice: currentProduct.price,
+            discount: appliedCoupon ? appliedCoupon.discount + "%" : "0%"
+        },
+        theme: { color: "#274DF5" },
+        modal: {
+            ondismiss: function() {
+                showToast("Payment cancelled", "info");
                 payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
                 payBtn.disabled = false;
-            }
+            },
+            escape: true,
+            backdropclose: false
         }
+    };
+    try {
+        const rzp = new Razorpay(options);
+        rzp.on("payment.failed", function (response) {
+            showToast("Payment failed: " + response.error.description, "error");
+            payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
+            payBtn.disabled = false;
+        });
+        rzp.open();
+        setTimeout(() => {
+            payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
+            payBtn.disabled = false;
+        }, 1000);
+    } catch (error) {
+        showToast("Error loading Razorpay: " + error.message, "error");
+        payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
+        payBtn.disabled = false;
+    }
+}
 
         function copyKeyToClipboard() {
             const keyText = document.getElementById("sentKeyDisplay").textContent;
@@ -2373,6 +2410,15 @@ function updateRazorpayKey() {
         setupRealtimeListeners();
         loadCouponsFromFirebase();
         startOrderCleanupTimer();
+
+        // Debug: verify Razorpay key on load
+        setTimeout(() => {
+            verifyRazorpayKeyInFirebase().then((found) => {
+                if (!found && firebaseInitialized) {
+                    console.warn("⚠️ Razorpay key missing! Add it to Firebase at: /settings/razorpayKey");
+                }
+            });
+        }, 2000);
 
         console.log("KITY SHOP with Firebase Auth loaded!");
     </script>
