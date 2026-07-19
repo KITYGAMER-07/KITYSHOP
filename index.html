@@ -282,6 +282,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -509,6 +510,32 @@
         </div>
 
         <!-- COUPON MANAGEMENT SECTION -->
+        <!-- RAZORPAY KEY MANAGEMENT -->
+        <h3 style="margin: 2rem 0 1rem;"><i class="fas fa-credit-card"></i> Razorpay Key Management</h3>
+        <div style="background: var(--white); border-radius: 16px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 20px var(--card-shadow);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                <div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.2rem;">Current Key</div>
+                    <div style="font-family: 'Courier New', monospace; font-size: 1rem; font-weight: 700; color: var(--blue-darker);" id="currentRazorpayKey">Loading...</div>
+                </div>
+                <div style="background: rgba(22, 163, 74, 0.1); color: var(--success); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;" id="razorpayStatus">
+                    <i class="fas fa-check-circle"></i> Active
+                </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <input type="text" id="razorpayKeyInput" placeholder="Enter new Razorpay Key ID (e.g., rzp_live_...)" 
+                    style="flex: 1; min-width: 250px; padding: 0.6rem 0.8rem; background: var(--cream); border: 2px solid var(--border); border-radius: 10px; font-family: 'Courier New', monospace; font-size: 0.85rem; color: var(--text); transition: all 0.3s;">
+                <button class="add-stock-btn" id="saveRazorpayKeyBtn" onclick="updateRazorpayKey()" style="white-space: nowrap;">
+                    <i class="fas fa-save"></i> Update Key
+                </button>
+            </div>
+            <div style="margin-top: 0.8rem; font-size: 0.75rem; color: var(--text-muted);">
+                <i class="fas fa-info-circle" style="color: var(--blue);"></i> 
+                Enter your Razorpay Key ID here. It will be securely stored in Firebase and used for all payments. 
+                <b>Do not share this key!</b>
+            </div>
+        </div>
+
         <h3 style="margin: 2rem 0 1rem;"><i class="fas fa-ticket-alt"></i> Coupon Management</h3>
         <div style="background: var(--white); border-radius: 16px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 20px var(--card-shadow);">
             <div class="coupon-add-form">
@@ -704,7 +731,65 @@
             showToast("Firebase config missing! Using local data.", "error");
         }
 
-        const RAZORPAY_KEY_ID = "rzp_live_TD3L7tVFGUPTiA";
+        let RAZORPAY_KEY_ID = "";
+
+function loadRazorpayKeyFromFirebase() {
+    if (!firebaseInitialized) return Promise.resolve();
+    return db.ref("settings/razorpayKey").once("value")
+        .then((snapshot) => {
+            const key = snapshot.val();
+            if (key) {
+                RAZORPAY_KEY_ID = key;
+                console.log("Razorpay key loaded from Firebase");
+            } else {
+                console.warn("No Razorpay key found in Firebase settings");
+            }
+        })
+        .catch((err) => {
+            console.error("Error loading Razorpay key:", err);
+        });
+}
+
+function saveRazorpayKeyToFirebase(key) {
+    if (!firebaseInitialized) {
+        showToast("Firebase not connected!", "error");
+        return Promise.reject("No Firebase");
+    }
+    return db.ref("settings/razorpayKey").set(key)
+        .then(() => {
+            RAZORPAY_KEY_ID = key;
+            showToast("Razorpay key updated successfully!", "success");
+        })
+        .catch((err) => {
+            console.error("Error saving Razorpay key:", err);
+            showToast("Failed to save Razorpay key!", "error");
+        });
+}
+
+function updateRazorpayKey() {
+    const newKey = document.getElementById("razorpayKeyInput").value.trim();
+    if (!newKey) {
+        showToast("Please enter a valid Razorpay key!", "error");
+        return;
+    }
+    if (!newKey.startsWith("rzp_")) {
+        showToast("Invalid Razorpay key format! Must start with 'rzp_'", "error");
+        return;
+    }
+    const btn = document.getElementById("saveRazorpayKeyBtn");
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<div class="loading" style="width: 16px; height: 16px; border-width: 2px;"></div> Saving...';
+    btn.disabled = true;
+    saveRazorpayKeyToFirebase(newKey)
+        .then(() => {
+            document.getElementById("currentRazorpayKey").textContent = newKey.substring(0, 8) + "****" + newKey.substring(newKey.length - 4);
+            document.getElementById("razorpayKeyInput").value = "";
+        })
+        .finally(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
+}
 
         const defaultProducts = [
             { id: "5hours", name: "5 Hours Access", duration: "5 Hours", price: 49, stock: 15, icon: "fa-clock" },
@@ -1933,6 +2018,19 @@
                         renderAdminTables();
                         loadCouponsFromFirebase();
                         renderCouponsList();
+                        loadRazorpayKeyFromFirebase().then(() => {
+                            const keyDisplay = document.getElementById("currentRazorpayKey");
+                            const statusEl = document.getElementById("razorpayStatus");
+                            if (RAZORPAY_KEY_ID) {
+                                keyDisplay.textContent = RAZORPAY_KEY_ID.substring(0, 8) + "****" + RAZORPAY_KEY_ID.substring(RAZORPAY_KEY_ID.length - 4);
+                                statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Active';
+                                statusEl.style.cssText = "background: rgba(22, 163, 74, 0.1); color: var(--success); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
+                            } else {
+                                keyDisplay.textContent = "Not configured";
+                                statusEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Missing';
+                                statusEl.style.cssText = "background: rgba(217, 119, 6, 0.1); color: var(--warning); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
+                            }
+                        });
                         showToast("Welcome to Admin Panel!", "success");
                     } else {
                         if (!data) {
