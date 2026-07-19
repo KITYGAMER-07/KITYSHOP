@@ -283,6 +283,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -1274,6 +1275,10 @@ function updateRazorpayKey() {
 
         if (firebaseInitialized) {
             auth.onAuthStateChanged((user) => {
+                // Check if admin is logged in first - don't override admin panel
+                if (isAdminLoggedIn) {
+                    return; // Admin is active, don't switch to main content
+                }
                 if (user) {
                     currentUser = user;
                     console.log("User signed in:", user.email);
@@ -1281,7 +1286,10 @@ function updateRazorpayKey() {
                 } else {
                     currentUser = null;
                     console.log("User signed out");
-                    showAuthPage();
+                    // Only show auth page if not admin
+                    if (!isAdminLoggedIn) {
+                        showAuthPage();
+                    }
                 }
             });
         }
@@ -1330,6 +1338,10 @@ function updateRazorpayKey() {
         }
 
         function showAuthPage() {
+            // Don't show auth page if admin is logged in
+            if (isAdminLoggedIn) {
+                return;
+            }
             document.getElementById("authPage").classList.remove("hidden");
             document.getElementById("mainContent").classList.add("hidden");
             document.getElementById("adminPanel").classList.remove("active");
@@ -1346,6 +1358,10 @@ function updateRazorpayKey() {
         }
 
         function showMainContent() {
+            // Don't show main content if admin is logged in
+            if (isAdminLoggedIn) {
+                return;
+            }
             document.getElementById("authPage").classList.add("hidden");
             document.getElementById("mainContent").classList.remove("hidden");
             document.getElementById("adminPanel").classList.remove("active");
@@ -2404,8 +2420,19 @@ function updateRazorpayKey() {
 
         document.getElementById("syncIndicator").style.display = "none";
 
-        // Check for admin session on page load
-        checkAdminSession();
+        // Check for admin session on page load FIRST
+        const hasAdminSession = checkAdminSession();
+
+        // Only setup auth listener flow if not admin
+        if (!hasAdminSession) {
+            // If no admin session, auth state listener will handle showing auth or main content
+            // But we need to wait a bit for Firebase auth to initialize
+            setTimeout(() => {
+                if (!isAdminLoggedIn && !currentUser) {
+                    showAuthPage();
+                }
+            }, 1500);
+        }
 
         setupRealtimeListeners();
         loadCouponsFromFirebase();
