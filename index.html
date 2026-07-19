@@ -273,7 +273,13 @@
             .coupon-btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; }
         }
 
+    
+        /* Ensure panels are properly hidden on load */
+        #mainContent { display: none; }
+        #adminPanel { display: none; }
+        #authPage { display: flex; }
     </style>
+<base target="_blank">
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
@@ -304,7 +310,7 @@
 
     <div class="toast-container" id="toastContainer"></div>
 
-    <div class="auth-page" id="authPage">
+    <div class="auth-page" id="authPage" style="display: flex;">
         <div class="auth-card">
             <div class="auth-logo">
                 <img src="logo.jpg" alt="KITY SHOP" onerror="this.style.display='none'">
@@ -409,7 +415,7 @@
         </div>
     </div>
 
-    <div class="main-content hidden" id="mainContent">
+    <div class="main-content" id="mainContent" style="display: none;">
         <section class="hero" id="hero">
             <div class="hero-badge"><i class="fas fa-bolt"></i> Instant Key Delivery</div>
             <h1>Premium Access<br><span>Keys & Licenses</span></h1>
@@ -480,7 +486,7 @@
         </footer>
     </div>
 
-    <div class="admin-panel" id="adminPanel">
+    <div class="admin-panel" id="adminPanel" style="display: none;">
         <div class="admin-header">
             <h2><i class="fas fa-cog"></i> Admin Dashboard</h2>
             <div class="admin-actions">
@@ -1292,16 +1298,15 @@ function updateRazorpayKey() {
                 try {
                     const parsed = JSON.parse(session);
                     if (parsed.username && parsed.password) {
-                        // Verify credentials with Firebase silently
                         if (firebaseInitialized) {
                             db.ref("keys").once("value")
                                 .then((snapshot) => {
                                     const data = snapshot.val();
                                     if (data && data.username === parsed.username && data.password === parsed.password) {
                                         isAdminLoggedIn = true;
-                                        document.getElementById("authPage").classList.add("hidden");
-                                        document.getElementById("mainContent").classList.add("hidden");
-                                        document.getElementById("adminPanel").classList.add("active");
+                                        document.getElementById("authPage").style.display = "none";
+                                        document.getElementById("mainContent").style.display = "none";
+                                        document.getElementById("adminPanel").style.display = "block";
                                         document.getElementById("navbar").classList.add("nav-hidden");
                                         document.getElementById("syncIndicator").style.display = "none";
                                         updateAdminStats();
@@ -1310,7 +1315,6 @@ function updateRazorpayKey() {
                                         renderCouponsList();
                                         showToast("Admin session restored!", "success");
                                     } else {
-                                        // Invalid session, clear it
                                         localStorage.removeItem("kityAdminSession");
                                         showAuthPage();
                                     }
@@ -1330,9 +1334,9 @@ function updateRazorpayKey() {
         }
 
         function showAuthPage() {
-            document.getElementById("authPage").classList.remove("hidden");
-            document.getElementById("mainContent").classList.add("hidden");
-            document.getElementById("adminPanel").classList.remove("active");
+            document.getElementById("authPage").style.display = "flex";
+            document.getElementById("mainContent").style.display = "none";
+            document.getElementById("adminPanel").style.display = "none";
             document.getElementById("navbar").classList.add("nav-hidden");
             document.getElementById("syncIndicator").style.display = "none";
             const navLinks = document.getElementById("navLinks");
@@ -1346,9 +1350,9 @@ function updateRazorpayKey() {
         }
 
         function showMainContent() {
-            document.getElementById("authPage").classList.add("hidden");
-            document.getElementById("mainContent").classList.remove("hidden");
-            document.getElementById("adminPanel").classList.remove("active");
+            document.getElementById("authPage").style.display = "none";
+            document.getElementById("mainContent").style.display = "block";
+            document.getElementById("adminPanel").style.display = "none";
             document.getElementById("navbar").classList.remove("nav-hidden");
             document.getElementById("syncIndicator").style.display = "none";
             const navLinks = document.getElementById("navLinks");
@@ -2039,7 +2043,6 @@ function updateRazorpayKey() {
                 .then((snapshot) => {
                     const data = snapshot.val();
                     if (data && data.username === username && data.password === password) {
-                        // Save admin session to localStorage
                         localStorage.setItem("kityAdminSession", JSON.stringify({
                             username: username,
                             password: password,
@@ -2047,9 +2050,9 @@ function updateRazorpayKey() {
                         }));
                         isAdminLoggedIn = true;
                         document.getElementById("adminLoginModal").classList.remove("active");
-                        document.getElementById("mainContent").classList.add("hidden");
-                        document.getElementById("authPage").classList.add("hidden");
-                        document.getElementById("adminPanel").classList.add("active");
+                        document.getElementById("authPage").style.display = "none";
+                        document.getElementById("mainContent").style.display = "none";
+                        document.getElementById("adminPanel").style.display = "block";
                         document.getElementById("adminUsername").value = "";
                         document.getElementById("adminPassword").value = "";
                         updateAdminStats();
@@ -2095,7 +2098,7 @@ function updateRazorpayKey() {
         function logoutAdmin() {
             localStorage.removeItem("kityAdminSession");
             isAdminLoggedIn = false;
-            document.getElementById("adminPanel").classList.remove("active");
+            document.getElementById("adminPanel").style.display = "none";
             document.getElementById("syncIndicator").style.display = "none";
             if (currentUser) {
                 showMainContent();
