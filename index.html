@@ -288,6 +288,16 @@
 <body>
     <div class="bg-animation"></div>
 
+    <!-- Page Load Loading Screen -->
+    <div id="pageLoader" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--cream); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.4s ease;">
+        <div style="text-align: center;">
+            <img src="logo.jpg" alt="KITY SHOP" style="height: 60px; width: auto; border-radius: 12px; object-fit: contain; margin-bottom: 1.5rem;" onerror="this.style.display='none'">
+            <div style="font-size: 1.5rem; font-weight: 800; color: var(--blue-darker); margin-bottom: 0.5rem;">KITY SHOP</div>
+            <div class="loading" style="width: 40px; height: 40px; border-width: 4px; margin: 1rem auto;"></div>
+            <div style="color: var(--text-muted); font-size: 0.9rem;">Loading...</div>
+        </div>
+    </div>
+
     <nav id="navbar" class="nav-hidden">
         <div class="logo" onclick="smoothScrollTo('hero')">
             <img src="logo.jpg" alt="KITY SHOP" style="height: 40px; width: auto; border-radius: 8px; object-fit: contain;">
@@ -1275,20 +1285,23 @@ function updateRazorpayKey() {
 
         if (firebaseInitialized) {
             auth.onAuthStateChanged((user) => {
-                // Check if admin is logged in first - don't override admin panel
-                if (isAdminLoggedIn) {
-                    return; // Admin is active, don't switch to main content
+                // If admin is already logged in and showing, don't do anything
+                if (isAdminLoggedIn && document.getElementById("adminPanel").classList.contains("active")) {
+                    return;
                 }
+
                 if (user) {
                     currentUser = user;
                     console.log("User signed in:", user.email);
                     showMainContent();
+                    hidePageLoader();
                 } else {
                     currentUser = null;
                     console.log("User signed out");
-                    // Only show auth page if not admin
+                    // Only show auth if not admin
                     if (!isAdminLoggedIn) {
                         showAuthPage();
+                        hidePageLoader();
                     }
                 }
             });
@@ -1338,10 +1351,6 @@ function updateRazorpayKey() {
         }
 
         function showAuthPage() {
-            // Don't show auth page if admin is logged in
-            if (isAdminLoggedIn) {
-                return;
-            }
             document.getElementById("authPage").classList.remove("hidden");
             document.getElementById("mainContent").classList.add("hidden");
             document.getElementById("adminPanel").classList.remove("active");
@@ -1358,10 +1367,6 @@ function updateRazorpayKey() {
         }
 
         function showMainContent() {
-            // Don't show main content if admin is logged in
-            if (isAdminLoggedIn) {
-                return;
-            }
             document.getElementById("authPage").classList.add("hidden");
             document.getElementById("mainContent").classList.remove("hidden");
             document.getElementById("adminPanel").classList.remove("active");
@@ -2420,18 +2425,25 @@ function updateRazorpayKey() {
 
         document.getElementById("syncIndicator").style.display = "none";
 
-        // Check for admin session on page load FIRST
+        // Page initialization flow:
+        // 1. Check if admin session exists
+        // 2. If yes, verify and show admin panel
+        // 3. If no, auth state listener will handle user auth
+        // 4. Loader hides only after decision is made
+
         const hasAdminSession = checkAdminSession();
 
-        // Only setup auth listener flow if not admin
-        if (!hasAdminSession) {
-            // If no admin session, auth state listener will handle showing auth or main content
-            // But we need to wait a bit for Firebase auth to initialize
+        if (hasAdminSession) {
+            // Admin session found - verify and show admin panel
+            verifyAndShowAdminPanel();
+        } else {
+            // No admin session - auth state listener will handle
+            // But hide loader after a timeout in case auth takes too long
             setTimeout(() => {
-                if (!isAdminLoggedIn && !currentUser) {
-                    showAuthPage();
+                if (!currentUser && !isAdminLoggedIn) {
+                    hidePageLoader();
                 }
-            }, 1500);
+            }, 3000);
         }
 
         setupRealtimeListeners();
