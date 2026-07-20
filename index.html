@@ -285,6 +285,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -610,87 +611,87 @@
     </div>
 
     <div class="modal-overlay" id="buyModal">
-        <div class="modal">
+        <div class="modal" style="max-width: 420px; width: 92%; max-height: 85vh; overflow-y: auto; border-radius: 24px; padding: 1.5rem;">
             <div class="modal-header">
-                <h2 style="white-space: nowrap;"><i class="fas fa-shopping-cart"></i> Complete Purchase</h2>
+                <h2 style="white-space: nowrap; font-size: 1.3rem;"><i class="fas fa-shopping-cart"></i> Complete Purchase</h2>
             </div>
             <div id="buyModalContent">
                 <div class="form-group">
-                    <label style="font-size: 0.9rem;"><i class="fas fa-box"></i> Selected Plan</label>
-                    <input type="text" id="selectedPlan" readonly style="background: rgba(39, 77, 245, 0.06); border-color: var(--blue-light);">
+                    <label style="font-size: 0.85rem;"><i class="fas fa-box"></i> Selected Plan</label>
+                    <input type="text" id="selectedPlan" readonly style="background: rgba(39, 77, 245, 0.06); border-color: var(--blue-light); font-size: 0.9rem;">
                 </div>
 
                 <!-- COUPON SECTION -->
-                <div class="coupon-section">
-                    <label style="font-size: 0.85rem; font-weight: 600; color: var(--blue-darker); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+                <div class="coupon-section" style="padding: 0.8rem; margin: 0.8rem 0;">
+                    <label style="font-size: 0.8rem; font-weight: 600; color: var(--blue-darker); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.4rem;">
                         <i class="fas fa-ticket-alt" style="color: var(--blue);"></i> Have a Coupon?
                     </label>
                     <div class="coupon-input-wrap">
-                        <input type="text" id="couponCode" placeholder="Enter coupon code" style="text-transform: uppercase;">
-                        <button class="coupon-btn" id="applyCouponBtn" onclick="applyCoupon()">
+                        <input type="text" id="couponCode" placeholder="Enter code" style="text-transform: uppercase; font-size: 0.85rem; padding: 0.5rem 0.7rem;">
+                        <button class="coupon-btn" id="applyCouponBtn" onclick="applyCoupon()" style="padding: 0.5rem 0.8rem; font-size: 0.8rem;">
                             <i class="fas fa-check"></i> Apply
                         </button>
                     </div>
-                    <div class="coupon-status" id="couponStatus"></div>
+                    <div class="coupon-status" id="couponStatus" style="font-size: 0.75rem; margin-top: 0.3rem;"></div>
                 </div>
 
-                <div class="price-breakdown" id="priceBreakdown" style="display: none;">
-                    <div class="row"><span>Original Price</span><span id="originalPriceDisplay">Rs.0</span></div>
-                    <div class="row" id="discountRow"><span>Discount</span><span class="discount" id="discountDisplay">-Rs.0</span></div>
-                    <div class="row total"><span>Final Amount</span><span id="finalPriceDisplay">Rs.0</span></div>
+                <div class="price-breakdown" id="priceBreakdown" style="display: none; padding: 0.6rem; margin-top: 0.6rem;">
+                    <div class="row" style="padding: 0.2rem 0; font-size: 0.8rem;"><span>Original Price</span><span id="originalPriceDisplay">Rs.0</span></div>
+                    <div class="row" id="discountRow" style="padding: 0.2rem 0; font-size: 0.8rem;"><span>Discount</span><span class="discount" id="discountDisplay">-Rs.0</span></div>
+                    <div class="row total" style="padding-top: 0.4rem; margin-top: 0.2rem; font-size: 0.9rem;"><span>Final Amount</span><span id="finalPriceDisplay">Rs.0</span></div>
                 </div>
 
-                <div class="form-group">
-                    <label style="font-size: 0.9rem;"><i class="fas fa-envelope"></i> Email (optional)</label>
-                    <input type="email" id="email" placeholder="your@email.com">
-                    <small style="color: var(--text-muted); font-size: 0.75rem;">Enter your email for order confirmation.</small>
+                <div class="form-group" style="margin-bottom: 0.8rem;">
+                    <label style="font-size: 0.85rem;"><i class="fas fa-envelope"></i> Email (optional)</label>
+                    <input type="email" id="email" placeholder="your@email.com" style="font-size: 0.85rem; padding: 0.6rem;">
+                    <small style="color: var(--text-muted); font-size: 0.7rem;">Enter your email for order confirmation.</small>
                 </div>
-                <button class="btn-primary" id="payBtn" onclick="processPayment()" style="padding: 0.8rem; font-size: 0.95rem;">
+                <button class="btn-primary" id="payBtn" onclick="processPayment()" style="padding: 0.7rem; font-size: 0.9rem; width: 100%; justify-content: center;">
                     <i class="fas fa-credit-card"></i> Pay with Razorpay
                 </button>
-                <button class="btn-secondary" onclick="closeModal('buyModal'); resetBuyModal();" style="width: 100%; margin-top: 0.8rem; padding: 0.8rem; font-size: 0.95rem; justify-content: center;">
-                    <i class="fas fa-arrow-left"></i> Skip
+                <button class="btn-secondary" onclick="closeModal('buyModal'); resetBuyModal();" style="width: 100%; margin-top: 0.6rem; padding: 0.7rem; font-size: 0.9rem; justify-content: center;">
+                    <i class="fas fa-arrow-left"></i> Cancel
                 </button>
             </div>
-            <div id="paymentSuccess" class="hidden" style="text-align: center;">
-                <div class="success-check"><i class="fas fa-check"></i></div>
-                <h3 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Payment Successful!</h3>
-                <p style="color: var(--text-muted); margin: 0.3rem 0; font-size: 0.85rem;">Your access key is ready! Copy it below.</p>
+            <div id="paymentSuccess" class="hidden" style="text-align: center; max-height: 70vh; overflow-y: auto; padding-right: 0.5rem;">
+                <div class="success-check" style="width: 56px; height: 56px; font-size: 1.5rem; margin-bottom: 0.8rem;"><i class="fas fa-check"></i></div>
+                <h3 style="font-size: 1rem; margin-bottom: 0.2rem;">Payment Successful!</h3>
+                <p style="color: var(--text-muted); margin: 0.2rem 0; font-size: 0.8rem;">Your access key is ready! Copy it below.</p>
 
                 <!-- KEY BOX -->
-                <div style="background: linear-gradient(135deg, var(--cream), #fff); padding: 0.8rem; border-radius: 12px; margin: 0.6rem 0; border: 2px dashed var(--blue); position: relative;" id="keyBox">
-                    <div style="font-size: 0.8rem; color: var(--blue); margin-bottom: 0.4rem; font-weight: 600;"><i class="fas fa-key"></i> YOUR ACCESS KEY</div>
-                    <div style="font-family: 'Courier New', monospace; font-size: 1.1rem; font-weight: 800; color: var(--blue-darker); letter-spacing: 1px; word-break: break-all; padding: 0.5rem; background: white; border-radius: 8px; border: 1px solid var(--border);" id="sentKeyDisplay">KEY-XXXX-XXXX-XXXX</div>
-                    <button onclick="copyKeyToClipboard()" style="margin-top: 0.6rem; background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(39,77,245,0.3);">
+                <div style="background: linear-gradient(135deg, var(--cream), #fff); padding: 0.7rem; border-radius: 12px; margin: 0.5rem 0; border: 2px dashed var(--blue); position: relative;" id="keyBox">
+                    <div style="font-size: 0.75rem; color: var(--blue); margin-bottom: 0.3rem; font-weight: 600;"><i class="fas fa-key"></i> YOUR ACCESS KEY</div>
+                    <div style="font-family: 'Courier New', monospace; font-size: 0.95rem; font-weight: 800; color: var(--blue-darker); letter-spacing: 1px; word-break: break-all; padding: 0.4rem; background: white; border-radius: 8px; border: 1px solid var(--border);" id="sentKeyDisplay">KEY-XXXX-XXXX-XXXX</div>
+                    <button onclick="copyKeyToClipboard()" style="margin-top: 0.5rem; background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(39,77,245,0.3);">
                         <i class="fas fa-copy"></i> Copy Key
                     </button>
                 </div>
 
                 <!-- APK DOWNLOAD BOX -->
-                <div style="background: linear-gradient(135deg, rgba(22,163,74,0.08), rgba(22,163,74,0.03)); padding: 1.2rem; border-radius: 16px; margin: 1rem 0; border: 2px dashed var(--success);">
-                    <div style="font-size: 0.8rem; color: var(--success); margin-bottom: 0.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;"><i class="fas fa-mobile-alt"></i> DOWNLOAD APP</div>
-                    <div style="display: flex; align-items: center; gap: 1rem; background: white; padding: 1rem; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 0.8rem; text-align: left;">
-                        <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--success), #15803d); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; flex-shrink: 0;">
+                <div style="background: linear-gradient(135deg, rgba(22,163,74,0.08), rgba(22,163,74,0.03)); padding: 1rem; border-radius: 14px; margin: 0.6rem 0; border: 2px dashed var(--success);">
+                    <div style="font-size: 0.75rem; color: var(--success); margin-bottom: 0.4rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;"><i class="fas fa-mobile-alt"></i> DOWNLOAD APP</div>
+                    <div style="display: flex; align-items: center; gap: 0.8rem; background: white; padding: 0.8rem; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 0.6rem; text-align: left;">
+                        <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--success), #15803d); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; flex-shrink: 0;">
                             <i class="fab fa-android"></i>
                         </div>
                         <div style="flex: 1; min-width: 0;">
-                            <div style="font-weight: 700; color: var(--blue-darker); font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="apkFileNameDisplay">NovaEsp_50.0.2.apk</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted);">Android Application Package</div>
+                            <div style="font-weight: 700; color: var(--blue-darker); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="apkFileNameDisplay">NovaEsp_50.0.2.apk</div>
+                            <div style="font-size: 0.7rem; color: var(--text-muted);">Android Application Package</div>
                         </div>
                     </div>
-                    <button onclick="downloadApk()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background: linear-gradient(135deg, var(--success), #15803d); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.95rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(22,163,74,0.3);">
+                    <button onclick="downloadApk()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.4rem; background: linear-gradient(135deg, var(--success), #15803d); color: white; border: none; padding: 0.7rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(22,163,74,0.3);">
                         <i class="fas fa-download"></i> Download APK
                     </button>
                 </div>
 
-                <div style="background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.3); border-radius: 10px; padding: 0.5rem; margin: 0.5rem 0; color: var(--success); font-size: 0.8rem;">
+                <div style="background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.3); border-radius: 8px; padding: 0.4rem; margin: 0.4rem 0; color: var(--success); font-size: 0.75rem;">
                     <i class="fas fa-shield-alt"></i> <b>Keep this key safe!</b>
                 </div>
-                <button class="btn-primary" onclick="closeModal('buyModal'); resetBuyModal();" style="margin-top: 0.3rem; padding: 0.7rem 1.5rem; font-size: 0.9rem;">
+                <button class="btn-primary" onclick="closeModal('buyModal'); resetBuyModal();" style="margin-top: 0.2rem; padding: 0.6rem 1.2rem; font-size: 0.85rem; width: 100%; justify-content: center;">
                     <i class="fas fa-check-circle"></i> Done
                 </button>
-                <button class="btn-secondary" onclick="skipBackToForm()" style="width: 100%; margin-top: 0.6rem; padding: 0.7rem 1.5rem; font-size: 0.9rem; justify-content: center; border: 2px solid var(--border); color: var(--text-muted);">
-                    <i class="fas fa-arrow-left"></i> Skip
+                <button class="btn-secondary" onclick="skipBackToForm()" style="width: 100%; margin-top: 0.5rem; padding: 0.6rem 1.2rem; font-size: 0.85rem; justify-content: center; border: 2px solid var(--border); color: var(--text-muted);">
+                    <i class="fas fa-arrow-left"></i> Back
                 </button>
             </div>
         </div>
