@@ -1361,16 +1361,8 @@ function updateRazorpayKey() {
                     currentUser = null;
                     console.log("User signed out");
                     // Only show auth page if admin is not logged in
-                    // AND only if we're not still checking (loading screen visible)
                     if (!isAdminLoggedIn) {
-                        const loadingScreen = document.getElementById("authLoadingScreen");
-                        if (loadingScreen && loadingScreen.style.display !== "none") {
-                            // Still loading, let the timeout handle it
-                            // Or show auth page immediately
-                            showAuthPage();
-                        } else {
-                            showAuthPage();
-                        }
+                        showAuthPage();
                     }
                 }
             });
@@ -1382,13 +1374,13 @@ function updateRazorpayKey() {
                 try {
                     const parsed = JSON.parse(session);
                     if (parsed.username && parsed.password) {
-                        // Verify credentials with Firebase silently
                         if (firebaseInitialized) {
                             db.ref("keys").once("value")
                                 .then((snapshot) => {
                                     const data = snapshot.val();
                                     if (data && data.username === parsed.username && data.password === parsed.password) {
                                         isAdminLoggedIn = true;
+                                        document.getElementById("authPage").classList.remove("active");
                                         document.getElementById("authPage").classList.add("hidden");
                                         document.getElementById("mainContent").classList.add("hidden");
                                         document.getElementById("adminPanel").classList.add("active");
@@ -1398,35 +1390,43 @@ function updateRazorpayKey() {
                                         renderAdminTables();
                                         loadCouponsFromFirebase();
                                         renderCouponsList();
+                                        loadApkFromFirebase();
+                                        loadRazorpayKeyFromFirebase().then(() => {
+                                            const keyDisplay = document.getElementById("currentRazorpayKey");
+                                            const statusEl = document.getElementById("razorpayStatus");
+                                            if (RAZORPAY_KEY_ID) {
+                                                keyDisplay.textContent = RAZORPAY_KEY_ID.substring(0, 8) + "****" + RAZORPAY_KEY_ID.substring(RAZORPAY_KEY_ID.length - 4);
+                                                statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Active';
+                                                statusEl.style.cssText = "background: rgba(22, 163, 74, 0.1); color: var(--success); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
+                                            } else {
+                                                keyDisplay.textContent = "Not configured";
+                                                statusEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Missing';
+                                                statusEl.style.cssText = "background: rgba(217, 119, 6, 0.1); color: var(--warning); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
+                                            }
+                                        });
                                         showToast("Admin session restored!", "success");
                                     } else {
-                                        // Invalid session, clear it
                                         localStorage.removeItem("kityAdminSession");
-                                        // Don't show auth page here - let auth state listener handle it
-                                        // If user is logged in, main content will show
-                                        if (!currentUser) {
-                                            showAuthPage();
-                                        }
+                                        // Not admin - let auth state listener handle the view
                                     }
                                 })
                                 .catch(() => {
                                     localStorage.removeItem("kityAdminSession");
-                                    if (!currentUser) {
-                                        showAuthPage();
-                                    }
+                                    // Error - let auth state listener handle the view
                                 });
-                            return;
+                            return; // Admin check is async, return and let it handle
                         }
                     }
                 } catch (e) {
                     console.error("Session parse error:", e);
+                    localStorage.removeItem("kityAdminSession");
                 }
             }
-            // Don't force auth page - let the auth state listener decide
-            // If user is already logged in, main content will show automatically
-            if (!currentUser && !isAdminLoggedIn) {
-                showAuthPage();
-            }
+            // NOT an admin session - DO NOT show auth page here
+            // The Firebase auth state listener will automatically:
+            // - Call showMainContent() if user is logged in
+            // - Call showAuthPage() if user is NOT logged in
+            // So we do NOTHING here for regular users!
         }
 
         function showAuthPage() {
@@ -2544,114 +2544,9 @@ function updateRazorpayKey() {
 
         document.getElementById("syncIndicator").style.display = "none";
 
-        // ====== PROPER INITIALIZATION FLOW ======
-        // Step 1: Show loading screen while checking auth
-        const loadingScreen = document.getElementById("authLoadingScreen");
-
-        function hideLoadingScreen() {
-            if (loadingScreen) {
-                loadingScreen.style.opacity = "0";
-                setTimeout(() => {
-                    loadingScreen.style.display = "none";
-                }, 400);
-            }
-        }
-
-        function initializeApp() {
-            // Check admin session first
-            const session = localStorage.getItem("kityAdminSession");
-            if (session) {
-                try {
-                    const parsed = JSON.parse(session);
-                    if (parsed.username && parsed.password && firebaseInitialized) {
-                        db.ref("keys").once("value")
-                            .then((snapshot) => {
-                                const data = snapshot.val();
-                                if (data && data.username === parsed.username && data.password === parsed.password) {
-                                    isAdminLoggedIn = true;
-                                    document.getElementById("authPage").classList.remove("active");
-                                    document.getElementById("authPage").classList.add("hidden");
-                                    document.getElementById("mainContent").classList.add("hidden");
-                                    document.getElementById("adminPanel").classList.add("active");
-                                    document.getElementById("navbar").classList.add("nav-hidden");
-                                    document.getElementById("syncIndicator").style.display = "none";
-                                    updateAdminStats();
-                                    renderAdminTables();
-                                    loadCouponsFromFirebase();
-                                    renderCouponsList();
-                                    loadApkFromFirebase();
-                                    loadRazorpayKeyFromFirebase().then(() => {
-                                        const keyDisplay = document.getElementById("currentRazorpayKey");
-                                        const statusEl = document.getElementById("razorpayStatus");
-                                        if (RAZORPAY_KEY_ID) {
-                                            keyDisplay.textContent = RAZORPAY_KEY_ID.substring(0, 8) + "****" + RAZORPAY_KEY_ID.substring(RAZORPAY_KEY_ID.length - 4);
-                                            statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Active';
-                                            statusEl.style.cssText = "background: rgba(22, 163, 74, 0.1); color: var(--success); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
-                                        } else {
-                                            keyDisplay.textContent = "Not configured";
-                                            statusEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Missing';
-                                            statusEl.style.cssText = "background: rgba(217, 119, 6, 0.1); color: var(--warning); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
-                                        }
-                                    });
-                                    showToast("Admin session restored!", "success");
-                                } else {
-                                    localStorage.removeItem("kityAdminSession");
-                                    // Check if regular user is logged in
-                                    checkRegularUserAuth();
-                                }
-                                hideLoadingScreen();
-                            })
-                            .catch(() => {
-                                localStorage.removeItem("kityAdminSession");
-                                checkRegularUserAuth();
-                                hideLoadingScreen();
-                            });
-                        return; // Don't proceed further, async handling above
-                    }
-                } catch (e) {
-                    console.error("Session parse error:", e);
-                    localStorage.removeItem("kityAdminSession");
-                }
-            }
-            // No admin session, check regular user auth
-            checkRegularUserAuth();
-        }
-
-        function checkRegularUserAuth() {
-            if (firebaseInitialized) {
-                // Wait a bit for auth state to be determined
-                const authCheckTimeout = setTimeout(() => {
-                    // If still no user after timeout, show auth page
-                    if (!currentUser && !isAdminLoggedIn) {
-                        showAuthPage();
-                        hideLoadingScreen();
-                    }
-                }, 3000); // 3 second timeout
-
-                // Auth state listener will handle the rest
-                // If user is logged in, it will call showMainContent()
-                // We need to hide loading screen when auth state is determined
-                const originalShowMain = showMainContent;
-                showMainContent = function() {
-                    originalShowMain();
-                    clearTimeout(authCheckTimeout);
-                    hideLoadingScreen();
-                };
-                const originalShowAuth = showAuthPage;
-                showAuthPage = function() {
-                    originalShowAuth();
-                    clearTimeout(authCheckTimeout);
-                    hideLoadingScreen();
-                };
-            } else {
-                // No Firebase, show auth page
-                showAuthPage();
-                hideLoadingScreen();
-            }
-        }
-
-        // Start initialization
-        initializeApp();
+        // ====== SIMPLE INITIALIZATION ======
+        // Just check admin session. Regular user auth is handled by onAuthStateChanged listener.
+        checkAdminSession();
 
         setupRealtimeListeners();
         loadCouponsFromFirebase();
@@ -2745,12 +2640,5 @@ function updateRazorpayKey() {
 
         console.log("KITY SHOP with Firebase Auth loaded!");
     </script>
-    <!-- Loading Screen - shown while checking auth state -->
-    <div id="authLoadingScreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--cream); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease;">
-        <div style="width: 50px; height: 50px; border: 4px solid rgba(39, 77, 245, 0.15); border-radius: 50%; border-top-color: var(--blue); animation: spin 1s ease-in-out infinite; margin-bottom: 1.5rem;"></div>
-        <div style="font-size: 1rem; font-weight: 600; color: var(--blue-darker);">KITY SHOP</div>
-        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Loading...</div>
-    </div>
-
 </body>
 </html>
