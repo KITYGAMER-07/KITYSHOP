@@ -1459,6 +1459,8 @@ function updateRazorpayKey() {
                 mainItems.forEach(el => el.style.display = '');
             }
             setTimeout(() => { addUserMenuToNav(); }, 100);
+            // Show products immediately with defaults, then update from Firebase
+            renderProducts();
             loadProductsFromFirebase();
             loadOrdersFromFirebase();
             loadApkFromFirebase();
@@ -1728,11 +1730,11 @@ function updateRazorpayKey() {
                 }
                 loadKeysFromFirebase();
                 setSyncing(false);
-                renderProducts();
+                renderProducts(); // Re-render with updated data
             }, (error) => {
                 console.error("Error loading products:", error);
                 setSyncing(false);
-                renderProducts();
+                // Don't re-render on error - defaults already showing
             });
         }
 
