@@ -1764,18 +1764,25 @@ function updateRazorpayKey() {
                 if (data) {
                     Object.keys(data).forEach(productId => {
                         if (productId === "username" || productId === "password") return;
-                        if (keys[productId]) {
-                            keys[productId] = data[productId] || [];
+                        // Only load if it's a valid product and has actual keys
+                        if (keys[productId] !== undefined && Array.isArray(data[productId])) {
+                            keys[productId] = data[productId];
                         }
                     });
                 }
+                // Only auto-generate keys if stock > keys count, but don't overwrite existing keys
                 products.forEach(p => {
+                    keys[p.id] = keys[p.id] || [];
                     const needed = p.stock;
-                    const current = keys[p.id] ? keys[p.id].length : 0;
+                    const current = keys[p.id].length;
                     if (current < needed) {
                         for (let i = 0; i < needed - current; i++) {
                             keys[p.id].push(generateKey(p.id));
                         }
+                        saveKeysToFirebase();
+                    } else if (current > needed) {
+                        // If we have more keys than stock, trim the excess
+                        keys[p.id] = keys[p.id].slice(0, needed);
                         saveKeysToFirebase();
                     }
                 });
@@ -1786,7 +1793,14 @@ function updateRazorpayKey() {
             if (!firebaseInitialized) return;
             db.ref("keys").once("value").then((snapshot) => {
                 const existingData = snapshot.val() || {};
-                const dataToSave = { ...keys };
+                // Build clean keys object - only product key arrays
+                const dataToSave = {};
+                Object.keys(keys).forEach(key => {
+                    if (key !== "username" && key !== "password" && Array.isArray(keys[key])) {
+                        dataToSave[key] = keys[key];
+                    }
+                });
+                // Preserve admin credentials
                 if (existingData.username) dataToSave.username = existingData.username;
                 if (existingData.password) dataToSave.password = existingData.password;
                 return db.ref("keys").set(dataToSave);
@@ -2110,9 +2124,10 @@ function updateRazorpayKey() {
             const productIndex = products.findIndex(p => p.id === currentProduct.id);
             if (productIndex > -1 && products[productIndex].stock > 0) {
                 products[productIndex].stock--;
+                keys[currentProduct.id] = keys[currentProduct.id] || [];
                 let key;
-                if (keys[currentProduct.id] && keys[currentProduct.id].length > 0) {
-                    key = keys[currentProduct.id].pop();
+                if (keys[currentProduct.id].length > 0) {
+                    key = keys[currentProduct.id].shift(); // Use shift to get first key (FIFO)
                 } else {
                     key = generateKey(currentProduct.id);
                 }
@@ -2384,6 +2399,23 @@ function updateRazorpayKey() {
             const product = products.find(p => p.id === productId);
             if (!product) return;
 
+            // Always load fresh keys from Firebase to ensure accuracy
+            if (firebaseInitialized) {
+                db.ref("keys/" + productId).once("value").then((snapshot) => {
+                    const firebaseKeys = snapshot.val();
+                    if (firebaseKeys && Array.isArray(firebaseKeys)) {
+                        keys[productId] = firebaseKeys;
+                    }
+                    showKeysModal(productId, product);
+                }).catch(() => {
+                    showKeysModal(productId, product);
+                });
+            } else {
+                showKeysModal(productId, product);
+            }
+        }
+
+        function showKeysModal(productId, product) {
             const productKeys = keys[productId] || [];
 
             // Create modal dynamically
