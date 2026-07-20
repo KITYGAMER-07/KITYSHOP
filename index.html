@@ -283,6 +283,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -563,6 +564,48 @@
         <div id="couponsList" style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2rem;">
             <div style="text-align: center; padding: 1rem; color: var(--text-muted);">Loading coupons...</div>
         </div>
+
+        <!-- APK URL MANAGEMENT -->
+        <h3 style="margin: 2rem 0 1rem;"><i class="fab fa-github"></i> APK Download Link</h3>
+        <div style="background: var(--white); border-radius: 16px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 20px var(--card-shadow);">
+            <div style="display: flex; align-items: center; gap: 1rem; background: linear-gradient(135deg, rgba(22,163,74,0.08), rgba(22,163,74,0.03)); border: 2px solid rgba(22,163,74,0.3); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem;">
+                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--success), #15803d); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; flex-shrink: 0;">
+                    <i class="fab fa-android"></i>
+                </div>
+                <div style="flex: 1; min-width: 0;">
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Current APK File</div>
+                    <div style="font-size: 1rem; font-weight: 700; color: var(--blue-darker); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="currentApkName">NovaEsp_50.0.2.apk</div>
+                    <div style="font-size: 0.75rem; color: var(--success); font-weight: 600; margin-top: 0.2rem;"><i class="fas fa-check-circle"></i> Active</div>
+                </div>
+            </div>
+
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 500;"><i class="fas fa-link" style="color: var(--blue);"></i> Update APK Download URL:</div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <input type="url" id="apkUrlInput" placeholder="https://github.com/.../app.apk" 
+                    style="flex: 1; min-width: 250px; padding: 0.7rem 1rem; background: var(--cream); border: 2px solid var(--border); border-radius: 12px; font-size: 0.9rem; color: var(--text); transition: all 0.3s; font-family: 'Inter', sans-serif;">
+                <button onclick="updateApkUrl()" style="background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap; box-shadow: 0 4px 15px rgba(39,77,245,0.25);">
+                    <i class="fas fa-save"></i> Update
+                </button>
+            </div>
+
+            <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button onclick="testApkDownload()" style="flex: 1; min-width: 140px; background: var(--white); color: var(--blue-dark); border: 2px solid var(--border); padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+                    <i class="fas fa-download"></i> Test Download
+                </button>
+                <button onclick="openGithubReleases()" style="flex: 1; min-width: 140px; background: var(--white); color: var(--text); border: 2px solid var(--border); padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+                    <i class="fab fa-github"></i> GitHub Releases
+                </button>
+            </div>
+
+            <div style="margin-top: 1rem; padding: 0.8rem; background: var(--cream); border-radius: 10px; border: 1px solid var(--border);">
+                <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.6;">
+                    <i class="fas fa-lightbulb" style="color: var(--warning);"></i> <b>How to update APK:</b><br>
+                    1. Upload new APK to <a href="https://github.com/KITYGAMER-07/KITYSHOP/releases" target="_blank" style="color: var(--blue); font-weight: 600;">GitHub Releases</a><br>
+                    2. Copy the direct download link<br>
+                    3. Paste it above and click "Update"
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="modal-overlay" id="buyModal">
@@ -612,6 +655,8 @@
                 <div class="success-check"><i class="fas fa-check"></i></div>
                 <h3 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Payment Successful!</h3>
                 <p style="color: var(--text-muted); margin: 0.3rem 0; font-size: 0.85rem;">Your access key is ready! Copy it below.</p>
+
+                <!-- KEY BOX -->
                 <div style="background: linear-gradient(135deg, var(--cream), #fff); padding: 0.8rem; border-radius: 12px; margin: 0.6rem 0; border: 2px dashed var(--blue); position: relative;" id="keyBox">
                     <div style="font-size: 0.8rem; color: var(--blue); margin-bottom: 0.4rem; font-weight: 600;"><i class="fas fa-key"></i> YOUR ACCESS KEY</div>
                     <div style="font-family: 'Courier New', monospace; font-size: 1.1rem; font-weight: 800; color: var(--blue-darker); letter-spacing: 1px; word-break: break-all; padding: 0.5rem; background: white; border-radius: 8px; border: 1px solid var(--border);" id="sentKeyDisplay">KEY-XXXX-XXXX-XXXX</div>
@@ -619,6 +664,24 @@
                         <i class="fas fa-copy"></i> Copy Key
                     </button>
                 </div>
+
+                <!-- APK DOWNLOAD BOX -->
+                <div style="background: linear-gradient(135deg, rgba(22,163,74,0.08), rgba(22,163,74,0.03)); padding: 1.2rem; border-radius: 16px; margin: 1rem 0; border: 2px dashed var(--success);">
+                    <div style="font-size: 0.8rem; color: var(--success); margin-bottom: 0.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;"><i class="fas fa-mobile-alt"></i> DOWNLOAD APP</div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: white; padding: 1rem; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 0.8rem; text-align: left;">
+                        <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--success), #15803d); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; flex-shrink: 0;">
+                            <i class="fab fa-android"></i>
+                        </div>
+                        <div style="flex: 1; min-width: 0;">
+                            <div style="font-weight: 700; color: var(--blue-darker); font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="apkFileNameDisplay">NovaEsp_50.0.2.apk</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Android Application Package</div>
+                        </div>
+                    </div>
+                    <button onclick="downloadApk()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background: linear-gradient(135deg, var(--success), #15803d); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.95rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(22,163,74,0.3);">
+                        <i class="fas fa-download"></i> Download APK
+                    </button>
+                </div>
+
                 <div style="background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.3); border-radius: 10px; padding: 0.5rem; margin: 0.5rem 0; color: var(--success); font-size: 0.8rem;">
                     <i class="fas fa-shield-alt"></i> <b>Keep this key safe!</b>
                 </div>
@@ -838,6 +901,10 @@ function updateRazorpayKey() {
             { id: "30days", name: "30 Days Access", duration: "30 Days", price: 1299, stock: 8, icon: "fa-calendar" },
             { id: "60days", name: "60 Days Access", duration: "60 Days", price: 2299, stock: 5, icon: "fa-calendar" }
         ];
+
+        // GitHub Releases APK URL - Change this when you update your APK
+        let globalApkUrl = "https://github.com/KITYGAMER-07/KITYSHOP/releases/download/v1.0.0/NovaEsp_50.0.2.apk";
+        let globalApkName = "NovaEsp_50.0.2.apk";
 
         let products = JSON.parse(JSON.stringify(defaultProducts));
         let keys = {};
@@ -1359,6 +1426,7 @@ function updateRazorpayKey() {
             setTimeout(() => { addUserMenuToNav(); }, 100);
             loadProductsFromFirebase();
             loadOrdersFromFirebase();
+            loadApkFromFirebase();
         }
 
         function addUserMenuToNav() {
@@ -1440,6 +1508,7 @@ function updateRazorpayKey() {
                                         <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(39, 77, 245, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Amount</th>
                                         <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(39, 77, 245, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Key</th>
                                         <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(39, 77, 245, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">Date</th>
+                                        <th style="padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); background: rgba(39, 77, 245, 0.06); font-weight: 600; color: var(--blue); font-size: 0.85rem;">APK</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1450,7 +1519,10 @@ function updateRazorpayKey() {
                                             <td style="padding: 0.8rem; font-size: 0.85rem; color: var(--blue); font-weight: 600;">Rs.${o.amount}</td>
                                             <td style="padding: 0.8rem; font-size: 0.8rem; font-family: monospace; color: var(--blue-dark); background: rgba(39,77,245,0.06); border-radius: 6px;">${o.key}</td>
                                             <td style="padding: 0.8rem; font-size: 0.75rem; color: var(--text-muted);">${o.time}</td>
-                                        </tr>
+                                        <td style="padding: 0.8rem;">
+                                            ${o.apkUrl ? `<button onclick="window.open('${o.apkUrl}', '_blank')" style="background: linear-gradient(135deg, var(--success), #15803d); color: white; border: none; padding: 0.3rem 0.7rem; border-radius: 50px; font-size: 0.7rem; font-weight: 600; cursor: pointer;"><i class="fas fa-download"></i> APK</button>` : '-'}
+                                        </td>
+                                    </tr>
                                     `).join("")}
                                 </tbody>
                             </table>
@@ -1535,6 +1607,13 @@ function updateRazorpayKey() {
                                     <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">
                                         <i class="fas fa-clock"></i> Purchased on ${o.time}
                                     </div>
+                                    ${o.apkUrl ? `
+                                    <div style="margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid var(--border);">
+                                        <button onclick="window.open('${o.apkUrl}', '_blank')" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.4rem; background: linear-gradient(135deg, var(--success), #15803d); color: white; border: none; padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s; box-shadow: 0 4px 12px rgba(22,163,74,0.25);">
+                                            <i class="fas fa-download"></i> Download APK
+                                        </button>
+                                    </div>
+                                    ` : ''}
                                 </div>
                             `).join("")}
                         </div>
@@ -1986,6 +2065,8 @@ function updateRazorpayKey() {
                     couponCode: appliedCoupon ? appliedCoupon.code : null,
                     discountPercent: appliedCoupon ? appliedCoupon.discount : 0,
                     key: key,
+                    apkUrl: globalApkUrl,
+                    apkName: globalApkName,
                     paymentId: response.razorpay_payment_id,
                     status: "Delivered",
                     time: new Date().toLocaleString()
@@ -1999,6 +2080,7 @@ function updateRazorpayKey() {
                 document.getElementById("buyModalContent").classList.add("hidden");
                 document.getElementById("paymentSuccess").classList.remove("hidden");
                 document.getElementById("sentKeyDisplay").textContent = key;
+                document.getElementById("apkFileNameDisplay").textContent = globalApkName;
                 saveProductsToFirebase();
                 saveKeysToFirebase();
                 saveOrderToFirebase(order);
@@ -2056,6 +2138,7 @@ function updateRazorpayKey() {
                         renderAdminTables();
                         loadCouponsFromFirebase();
                         renderCouponsList();
+                        loadApkFromFirebase();
                         loadRazorpayKeyFromFirebase().then(() => {
                             const keyDisplay = document.getElementById("currentRazorpayKey");
                             const statusEl = document.getElementById("razorpayStatus");
@@ -2419,6 +2502,83 @@ function updateRazorpayKey() {
                 }
             });
         }, 2000);
+
+        // ========== APK FUNCTIONS ==========
+
+        function downloadApk() {
+            if (!globalApkUrl) {
+                showToast("APK not available! Contact admin.", "error");
+                return;
+            }
+            const link = document.createElement("a");
+            link.href = globalApkUrl;
+            link.download = globalApkName;
+            link.target = "_blank";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("APK download started!", "success");
+        }
+
+        function updateApkUrl() {
+            const url = document.getElementById("apkUrlInput").value.trim();
+            if (!url) {
+                showToast("Please enter a valid URL!", "error");
+                return;
+            }
+            if (!url.startsWith("http")) {
+                showToast("URL must start with http:// or https://", "error");
+                return;
+            }
+            globalApkUrl = url;
+            globalApkName = url.split("/").pop() || "app.apk";
+            document.getElementById("currentApkName").textContent = globalApkName;
+            document.getElementById("apkUrlInput").value = "";
+
+            if (firebaseInitialized) {
+                db.ref("settings/apk").set({
+                    url: globalApkUrl,
+                    name: globalApkName,
+                    updatedAt: new Date().toISOString()
+                }).then(() => {
+                    showToast("APK URL updated!", "success");
+                }).catch(err => {
+                    showToast("Saved locally!", "success");
+                });
+            } else {
+                showToast("APK URL updated!", "success");
+            }
+        }
+
+        function testApkDownload() {
+            if (globalApkUrl) {
+                window.open(globalApkUrl, "_blank");
+            } else {
+                showToast("No APK URL set!", "error");
+            }
+        }
+
+        function openGithubReleases() {
+            window.open("https://github.com/KITYGAMER-07/KITYSHOP/releases", "_blank");
+        }
+
+        function loadApkFromFirebase() {
+            if (!firebaseInitialized) return Promise.resolve();
+            return db.ref("settings/apk").once("value")
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    if (data && data.url) {
+                        globalApkUrl = data.url;
+                        globalApkName = data.name || data.url.split("/").pop();
+                        if (document.getElementById("currentApkName")) {
+                            document.getElementById("currentApkName").textContent = globalApkName;
+                        }
+                    }
+                })
+                .catch(err => console.error("Error loading APK:", err));
+        }
+
+        // ========== APK FUNCTIONS END ==========
 
         console.log("KITY SHOP with Firebase Auth loaded!");
     </script>
