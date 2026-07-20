@@ -195,7 +195,8 @@
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         .sync-indicator.syncing .dot { background: var(--warning); animation: spin 1s linear infinite; border-radius: 0; width: 10px; height: 10px; border: 2px solid var(--warning); border-top-color: transparent; }
 
-        .auth-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 0.5rem; z-index: 500; overflow: hidden; }
+        .auth-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; padding: 0.5rem; z-index: 500; overflow: hidden; }
+        .auth-page.active { display: flex; }
         .auth-card { background: var(--white); border-radius: 20px; padding: 1.2rem 1.5rem; width: 100%; max-width: 360px; border: 1px solid var(--border); box-shadow: 0 20px 60px rgba(8, 20, 74, 0.1); animation: slideUp 0.5s ease; max-height: 95vh; overflow-y: auto; scrollbar-width: thin; }
         .auth-card::-webkit-scrollbar { display: none; }
         .auth-card { -ms-overflow-style: none; scrollbar-width: none; }
@@ -274,6 +275,7 @@
         }
 
     </style>
+<base target="_blank">
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
@@ -1337,6 +1339,10 @@ function updateRazorpayKey() {
             auth.signOut().then(() => {
                 currentUser = null;
                 showToast("Logged out successfully", "info");
+                // Force show auth page after logout
+                setTimeout(() => {
+                    showAuthPage();
+                }, 500);
             }).catch((error) => {
                 showToast("Logout failed: " + error.message, "error");
             });
@@ -1347,11 +1353,25 @@ function updateRazorpayKey() {
                 if (user) {
                     currentUser = user;
                     console.log("User signed in:", user.email);
-                    showMainContent();
+                    // Only show main content if not in admin panel
+                    if (!isAdminLoggedIn) {
+                        showMainContent();
+                    }
                 } else {
                     currentUser = null;
                     console.log("User signed out");
-                    showAuthPage();
+                    // Only show auth page if admin is not logged in
+                    // AND only if we're not still checking (loading screen visible)
+                    if (!isAdminLoggedIn) {
+                        const loadingScreen = document.getElementById("authLoadingScreen");
+                        if (loadingScreen && loadingScreen.style.display !== "none") {
+                            // Still loading, let the timeout handle it
+                            // Or show auth page immediately
+                            showAuthPage();
+                        } else {
+                            showAuthPage();
+                        }
+                    }
                 }
             });
         }
@@ -1382,12 +1402,18 @@ function updateRazorpayKey() {
                                     } else {
                                         // Invalid session, clear it
                                         localStorage.removeItem("kityAdminSession");
-                                        showAuthPage();
+                                        // Don't show auth page here - let auth state listener handle it
+                                        // If user is logged in, main content will show
+                                        if (!currentUser) {
+                                            showAuthPage();
+                                        }
                                     }
                                 })
                                 .catch(() => {
                                     localStorage.removeItem("kityAdminSession");
-                                    showAuthPage();
+                                    if (!currentUser) {
+                                        showAuthPage();
+                                    }
                                 });
                             return;
                         }
@@ -1396,10 +1422,15 @@ function updateRazorpayKey() {
                     console.error("Session parse error:", e);
                 }
             }
-            showAuthPage();
+            // Don't force auth page - let the auth state listener decide
+            // If user is already logged in, main content will show automatically
+            if (!currentUser && !isAdminLoggedIn) {
+                showAuthPage();
+            }
         }
 
         function showAuthPage() {
+            document.getElementById("authPage").classList.add("active");
             document.getElementById("authPage").classList.remove("hidden");
             document.getElementById("mainContent").classList.add("hidden");
             document.getElementById("adminPanel").classList.remove("active");
@@ -1416,6 +1447,7 @@ function updateRazorpayKey() {
         }
 
         function showMainContent() {
+            document.getElementById("authPage").classList.remove("active");
             document.getElementById("authPage").classList.add("hidden");
             document.getElementById("mainContent").classList.remove("hidden");
             document.getElementById("adminPanel").classList.remove("active");
@@ -2512,8 +2544,114 @@ function updateRazorpayKey() {
 
         document.getElementById("syncIndicator").style.display = "none";
 
-        // Check for admin session on page load
-        checkAdminSession();
+        // ====== PROPER INITIALIZATION FLOW ======
+        // Step 1: Show loading screen while checking auth
+        const loadingScreen = document.getElementById("authLoadingScreen");
+
+        function hideLoadingScreen() {
+            if (loadingScreen) {
+                loadingScreen.style.opacity = "0";
+                setTimeout(() => {
+                    loadingScreen.style.display = "none";
+                }, 400);
+            }
+        }
+
+        function initializeApp() {
+            // Check admin session first
+            const session = localStorage.getItem("kityAdminSession");
+            if (session) {
+                try {
+                    const parsed = JSON.parse(session);
+                    if (parsed.username && parsed.password && firebaseInitialized) {
+                        db.ref("keys").once("value")
+                            .then((snapshot) => {
+                                const data = snapshot.val();
+                                if (data && data.username === parsed.username && data.password === parsed.password) {
+                                    isAdminLoggedIn = true;
+                                    document.getElementById("authPage").classList.remove("active");
+                                    document.getElementById("authPage").classList.add("hidden");
+                                    document.getElementById("mainContent").classList.add("hidden");
+                                    document.getElementById("adminPanel").classList.add("active");
+                                    document.getElementById("navbar").classList.add("nav-hidden");
+                                    document.getElementById("syncIndicator").style.display = "none";
+                                    updateAdminStats();
+                                    renderAdminTables();
+                                    loadCouponsFromFirebase();
+                                    renderCouponsList();
+                                    loadApkFromFirebase();
+                                    loadRazorpayKeyFromFirebase().then(() => {
+                                        const keyDisplay = document.getElementById("currentRazorpayKey");
+                                        const statusEl = document.getElementById("razorpayStatus");
+                                        if (RAZORPAY_KEY_ID) {
+                                            keyDisplay.textContent = RAZORPAY_KEY_ID.substring(0, 8) + "****" + RAZORPAY_KEY_ID.substring(RAZORPAY_KEY_ID.length - 4);
+                                            statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Active';
+                                            statusEl.style.cssText = "background: rgba(22, 163, 74, 0.1); color: var(--success); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
+                                        } else {
+                                            keyDisplay.textContent = "Not configured";
+                                            statusEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Missing';
+                                            statusEl.style.cssText = "background: rgba(217, 119, 6, 0.1); color: var(--warning); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
+                                        }
+                                    });
+                                    showToast("Admin session restored!", "success");
+                                } else {
+                                    localStorage.removeItem("kityAdminSession");
+                                    // Check if regular user is logged in
+                                    checkRegularUserAuth();
+                                }
+                                hideLoadingScreen();
+                            })
+                            .catch(() => {
+                                localStorage.removeItem("kityAdminSession");
+                                checkRegularUserAuth();
+                                hideLoadingScreen();
+                            });
+                        return; // Don't proceed further, async handling above
+                    }
+                } catch (e) {
+                    console.error("Session parse error:", e);
+                    localStorage.removeItem("kityAdminSession");
+                }
+            }
+            // No admin session, check regular user auth
+            checkRegularUserAuth();
+        }
+
+        function checkRegularUserAuth() {
+            if (firebaseInitialized) {
+                // Wait a bit for auth state to be determined
+                const authCheckTimeout = setTimeout(() => {
+                    // If still no user after timeout, show auth page
+                    if (!currentUser && !isAdminLoggedIn) {
+                        showAuthPage();
+                        hideLoadingScreen();
+                    }
+                }, 3000); // 3 second timeout
+
+                // Auth state listener will handle the rest
+                // If user is logged in, it will call showMainContent()
+                // We need to hide loading screen when auth state is determined
+                const originalShowMain = showMainContent;
+                showMainContent = function() {
+                    originalShowMain();
+                    clearTimeout(authCheckTimeout);
+                    hideLoadingScreen();
+                };
+                const originalShowAuth = showAuthPage;
+                showAuthPage = function() {
+                    originalShowAuth();
+                    clearTimeout(authCheckTimeout);
+                    hideLoadingScreen();
+                };
+            } else {
+                // No Firebase, show auth page
+                showAuthPage();
+                hideLoadingScreen();
+            }
+        }
+
+        // Start initialization
+        initializeApp();
 
         setupRealtimeListeners();
         loadCouponsFromFirebase();
@@ -2607,5 +2745,12 @@ function updateRazorpayKey() {
 
         console.log("KITY SHOP with Firebase Auth loaded!");
     </script>
+    <!-- Loading Screen - shown while checking auth state -->
+    <div id="authLoadingScreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--cream); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease;">
+        <div style="width: 50px; height: 50px; border: 4px solid rgba(39, 77, 245, 0.15); border-radius: 50%; border-top-color: var(--blue); animation: spin 1s ease-in-out infinite; margin-bottom: 1.5rem;"></div>
+        <div style="font-size: 1rem; font-weight: 600; color: var(--blue-darker);">KITY SHOP</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Loading...</div>
+    </div>
+
 </body>
 </html>
