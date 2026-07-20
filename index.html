@@ -284,6 +284,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -789,6 +790,14 @@
             auth = firebase.auth();
             firebaseInitialized = true;
             console.log("Firebase initialized successfully");
+        // Pre-load Razorpay key on startup
+        loadRazorpayKeyFromFirebase().then(() => {
+            if (RAZORPAY_KEY_ID) {
+                console.log("✅ Razorpay key pre-loaded successfully");
+            } else {
+                console.warn("⚠️ No Razorpay key found. Admin must configure it.");
+            }
+        });
         } catch (e) {
             console.error("Firebase initialization failed:", e);
             showToast("Firebase config missing! Using local data.", "error");
@@ -1969,6 +1978,28 @@ function updateRazorpayKey() {
         function processPayment() {
             const email = document.getElementById("email").value.trim();
             const payBtn = document.getElementById("payBtn");
+
+            // Check if Razorpay key is loaded, if not try to load it first
+            if (!RAZORPAY_KEY_ID) {
+                payBtn.innerHTML = '<div class="loading"></div> Loading payment config...';
+                payBtn.disabled = true;
+                loadRazorpayKeyFromFirebase().then(() => {
+                    if (!RAZORPAY_KEY_ID) {
+                        payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
+                        payBtn.disabled = false;
+                        showToast("Razorpay key not configured! Contact admin.", "error");
+                        return;
+                    }
+                    // Key loaded, proceed with payment
+                    processPayment();
+                }).catch(() => {
+                    payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay with Razorpay';
+                    payBtn.disabled = false;
+                    showToast("Failed to load payment config! Contact admin.", "error");
+                });
+                return;
+            }
+
             payBtn.innerHTML = '<div class="loading"></div> Loading...';
             payBtn.disabled = true;
 
