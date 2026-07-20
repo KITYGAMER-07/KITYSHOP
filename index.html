@@ -288,6 +288,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -748,14 +749,14 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Quantity to Delete</label>
-                <input type="number" id="deleteStockQuantity" placeholder="5" min="1">
+                <label>Key to Delete</label>
+                <input type="text" id="deleteStockKey" placeholder="Enter exact key to delete (e.g., KEY-ABCD-EFGH-IJKL)" style="font-family: 'Courier New', monospace; text-transform: uppercase;">
             </div>
             <div style="background: rgba(220,38,38,0.06); border: 1px solid rgba(220,38,38,0.2); border-radius: 10px; padding: 0.8rem; margin-bottom: 1rem; font-size: 0.85rem; color: var(--danger);">
-                <i class="fas fa-exclamation-triangle"></i> This will permanently remove keys from stock.
+                <i class="fas fa-exclamation-triangle"></i> This will permanently remove the specified key from stock.
             </div>
             <button class="btn-primary" onclick="deleteStock()" style="background: linear-gradient(135deg, var(--danger), #b91c1c);">
-                <i class="fas fa-trash"></i> Delete Stock
+                <i class="fas fa-trash"></i> Delete Key
             </button>
         </div>
     </div>
@@ -2382,10 +2383,10 @@ function updateRazorpayKey() {
 
         function deleteStock() {
             const duration = document.getElementById("deleteStockDuration").value;
-            const quantity = parseInt(document.getElementById("deleteStockQuantity").value);
+            const keyToDelete = document.getElementById("deleteStockKey").value.trim().toUpperCase();
 
-            if (!quantity || quantity < 1) {
-                showToast("Please enter a valid quantity to delete!", "error");
+            if (!keyToDelete) {
+                showToast("Please enter a key to delete!", "error");
                 return;
             }
 
@@ -2400,18 +2401,21 @@ function updateRazorpayKey() {
                 return;
             }
 
-            if (quantity > product.stock) {
-                showToast("Cannot delete more than available stock (" + product.stock + ")!", "error");
+            // Check if key exists in the keys array
+            if (!keys[duration] || keys[duration].length === 0) {
+                showToast("No keys available for this product!", "error");
                 return;
             }
 
-            const actualDelete = Math.min(quantity, product.stock);
-            product.stock -= actualDelete;
-
-            // Remove keys from the array
-            if (keys[duration] && keys[duration].length > 0) {
-                keys[duration].splice(0, actualDelete);
+            const keyIndex = keys[duration].indexOf(keyToDelete);
+            if (keyIndex === -1) {
+                showToast("Key not found! Please check the key and try again.", "error");
+                return;
             }
+
+            // Remove the specific key
+            keys[duration].splice(keyIndex, 1);
+            product.stock -= 1;
 
             saveProductsToFirebase();
             saveKeysToFirebase();
@@ -2420,8 +2424,8 @@ function updateRazorpayKey() {
             renderAdminTables();
             closeModal("deleteStockModal");
 
-            document.getElementById("deleteStockQuantity").value = "";
-            showToast("Deleted " + actualDelete + " key(s) from " + product.name + "!", "success");
+            document.getElementById("deleteStockKey").value = "";
+            showToast("Key '" + keyToDelete + "' deleted from " + product.name + "!", "success");
         }
 
         function showToast(message, type) {
