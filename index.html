@@ -1375,21 +1375,27 @@ function updateRazorpayKey() {
                     const parsed = JSON.parse(session);
                     if (parsed.username && parsed.password) {
                         if (firebaseInitialized) {
+                            // Show admin panel immediately with default data
+                            isAdminLoggedIn = true;
+                            document.getElementById("authPage").classList.remove("active");
+                            document.getElementById("authPage").classList.add("hidden");
+                            document.getElementById("mainContent").classList.add("hidden");
+                            document.getElementById("adminPanel").classList.add("active");
+                            document.getElementById("navbar").classList.add("nav-hidden");
+                            document.getElementById("syncIndicator").style.display = "none";
+                            // Render with defaults immediately
+                            updateAdminStats();
+                            renderAdminTables();
+                            renderCouponsList();
+                            showToast("Admin session restored!", "success");
+
+                            // Verify credentials and load Firebase data in background
                             db.ref("keys").once("value")
                                 .then((snapshot) => {
                                     const data = snapshot.val();
                                     if (data && data.username === parsed.username && data.password === parsed.password) {
-                                        isAdminLoggedIn = true;
-                                        document.getElementById("authPage").classList.remove("active");
-                                        document.getElementById("authPage").classList.add("hidden");
-                                        document.getElementById("mainContent").classList.add("hidden");
-                                        document.getElementById("adminPanel").classList.add("active");
-                                        document.getElementById("navbar").classList.add("nav-hidden");
-                                        document.getElementById("syncIndicator").style.display = "none";
-                                        updateAdminStats();
-                                        renderAdminTables();
+                                        // Valid - load Firebase data
                                         loadCouponsFromFirebase();
-                                        renderCouponsList();
                                         loadApkFromFirebase();
                                         loadRazorpayKeyFromFirebase().then(() => {
                                             const keyDisplay = document.getElementById("currentRazorpayKey");
@@ -1404,17 +1410,19 @@ function updateRazorpayKey() {
                                                 statusEl.style.cssText = "background: rgba(217, 119, 6, 0.1); color: var(--warning); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
                                             }
                                         });
-                                        showToast("Admin session restored!", "success");
                                     } else {
+                                        // Invalid session
                                         localStorage.removeItem("kityAdminSession");
-                                        // Not admin - let auth state listener handle the view
+                                        isAdminLoggedIn = false;
+                                        logoutAdmin();
                                     }
                                 })
                                 .catch(() => {
                                     localStorage.removeItem("kityAdminSession");
-                                    // Error - let auth state listener handle the view
+                                    isAdminLoggedIn = false;
+                                    logoutAdmin();
                                 });
-                            return; // Admin check is async, return and let it handle
+                            return; // Admin shown immediately, Firebase loads in background
                         }
                     }
                 } catch (e) {
