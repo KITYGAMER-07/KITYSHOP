@@ -2281,11 +2281,14 @@ function updateRazorpayKey() {
                     <tr>
                         <td>${p.name}</td>
                         <td>Rs.${p.price}</td>
-                        <td>${p.stock}</td>
+                        <td><span style="font-weight: 700; color: var(--blue);">${p.stock}</span></td>
                         <td>${status}</td>
                         <td>
                             <button class="action-btn edit" onclick="editProduct('${p.id}')">
                                 <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="action-btn" onclick="viewKeys('${p.id}')" style="background: rgba(39, 77, 245, 0.1); color: var(--blue);">
+                                <i class="fas fa-key"></i> View Keys
                             </button>
                             <button class="action-btn delete" onclick="deleteProduct('${p.id}')">
                                 <i class="fas fa-trash"></i> Delete
@@ -2375,6 +2378,82 @@ function updateRazorpayKey() {
                     showToast("Stock cleared!", "info");
                 }
             }
+        }
+
+        function viewKeys(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const productKeys = keys[productId] || [];
+
+            // Create modal dynamically
+            const modal = document.createElement("div");
+            modal.className = "modal-overlay active";
+            modal.id = "viewKeysModal";
+            modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 20, 74, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
+
+            let keysHtml = '';
+            if (productKeys.length === 0) {
+                keysHtml = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                        <p>No keys available for this plan.</p>
+                    </div>
+                `;
+            } else {
+                keysHtml = `
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 400px; overflow-y: auto; padding-right: 0.5rem;">
+                        ${productKeys.map((key, index) => `
+                            <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--cream); padding: 0.6rem 0.8rem; border-radius: 10px; border: 1px solid var(--border);">
+                                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; min-width: 30px;">#${index + 1}</span>
+                                <span style="font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 700; color: var(--blue-darker); flex: 1; letter-spacing: 0.5px;">${key}</span>
+                                <button onclick="copyAdminKey('${key.replace(/'/g, "\'")}')" style="background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.3rem 0.8rem; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.75rem; transition: all 0.3s; white-space: nowrap;">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div style="margin-top: 1rem; padding: 0.8rem; background: rgba(39, 77, 245, 0.06); border-radius: 10px; border: 1px solid var(--border); text-align: center;">
+                        <span style="font-size: 0.85rem; color: var(--blue-dark); font-weight: 600;">
+                            <i class="fas fa-layer-group"></i> Total: ${productKeys.length} keys | 
+                            <i class="fas fa-box"></i> ${product.name}
+                        </span>
+                    </div>
+                `;
+            }
+
+            modal.innerHTML = `
+                <div class="modal" style="max-width: 600px; width: 92%; max-height: 80vh; overflow-y: auto;">
+                    <div class="modal-header">
+                        <h2><i class="fas fa-key"></i> ${product.name} - Keys</h2>
+                        <button class="close-btn" onclick="document.getElementById('viewKeysModal').remove()">&times;</button>
+                    </div>
+                    ${keysHtml}
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Close on overlay click
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        function copyAdminKey(key) {
+            navigator.clipboard.writeText(key).then(() => {
+                showToast("Key copied: " + key.substring(0, 12) + "...", "success");
+            }).catch(() => {
+                const textArea = document.createElement("textarea");
+                textArea.value = key;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textArea);
+                showToast("Key copied: " + key.substring(0, 12) + "...", "success");
+            });
         }
 
         function showDeleteStockModal() {
