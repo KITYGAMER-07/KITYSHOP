@@ -120,9 +120,9 @@
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--blue-light); box-shadow: 0 0 0 3px rgba(39, 77, 245, 0.1); }
         .form-group input::placeholder { color: var(--text-muted); }
         .modal .btn-primary { width: 100%; justify-content: center; }
-        .admin-panel { display: none; padding: 1rem; max-width: 1200px; margin: 0 auto; padding-top: 1rem; }
+        .admin-panel { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; padding-top: 6rem; }
         .admin-panel.active { display: block; }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
         .admin-header h2 { color: var(--blue-darker); white-space: nowrap; }
         .admin-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
         .admin-action-btn { padding: 0.7rem 1.4rem; border-radius: 12px; border: none; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif; white-space: nowrap; }
@@ -275,7 +275,6 @@
         }
 
     </style>
-<base target="_blank">
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
@@ -506,7 +505,7 @@
             <div class="stat-card"><h4>Sold Today</h4><div class="value" id="soldToday">0</div></div>
             <div class="stat-card"><h4>Revenue</h4><div class="value" id="revenue">Rs.0</div></div>
         </div>
-        <div style="margin-bottom: 1.5rem; display: flex; justify-content: center; width: 100%;">
+        <div style="margin-bottom: 1.5rem; text-align: right;">
             <button onclick="forceReloadManualKeys()" style="background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 4px 15px rgba(39,77,245,0.25);">
                 <i class="fas fa-sync-alt"></i> Refresh Manual Keys from Firebase
             </button>
@@ -1382,103 +1381,81 @@ function updateRazorpayKey() {
 
         function checkAdminSession() {
             const session = localStorage.getItem("kityAdminSession");
-            if (!session) {
-                console.log("No admin session found");
-                return;
-            }
-
-            try {
-                const parsed = JSON.parse(session);
-                if (!parsed.username || !parsed.password) {
-                    console.log("Invalid session data");
-                    localStorage.removeItem("kityAdminSession");
-                    return;
-                }
-
-                if (!firebaseInitialized) {
-                    console.log("Firebase not initialized, cannot verify session");
-                    return;
-                }
-
-                console.log("Checking admin session for:", parsed.username);
-
-                // Verify credentials with Firebase BEFORE showing admin panel
-                db.ref("keys").once("value")
-                    .then((snapshot) => {
-                        const data = snapshot.val();
-                        if (!data) {
-                            console.log("No admin data in Firebase");
-                            localStorage.removeItem("kityAdminSession");
-                            return;
-                        }
-
-                        const storedUsername = data.username || "";
-                        const storedPassword = data.password || "";
-
-                        if (storedUsername === parsed.username && storedPassword === parsed.password) {
-                            // VALID SESSION - Show admin panel
-                            console.log("Admin session verified!");
+            if (session) {
+                try {
+                    const parsed = JSON.parse(session);
+                    if (parsed.username && parsed.password) {
+                        if (firebaseInitialized) {
+                            // Show admin panel immediately with default data
                             isAdminLoggedIn = true;
-
                             document.getElementById("authPage").classList.remove("active");
                             document.getElementById("authPage").classList.add("hidden");
                             document.getElementById("mainContent").classList.add("hidden");
                             document.getElementById("adminPanel").classList.add("active");
                             document.getElementById("navbar").classList.add("nav-hidden");
                             document.getElementById("syncIndicator").style.display = "none";
-
+                            // Render with defaults immediately
                             updateAdminStats();
                             renderAdminTables();
-                            loadCouponsFromFirebase();
                             renderCouponsList();
-                            loadApkFromFirebase();
-                            loadManualKeysFromFirebase();
-
-                            loadRazorpayKeyFromFirebase().then(() => {
-                                const keyDisplay = document.getElementById("currentRazorpayKey");
-                                const statusEl = document.getElementById("razorpayStatus");
-                                if (RAZORPAY_KEY_ID) {
-                                    keyDisplay.textContent = RAZORPAY_KEY_ID.substring(0, 8) + "****" + RAZORPAY_KEY_ID.substring(RAZORPAY_KEY_ID.length - 4);
-                                    statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Active';
-                                    statusEl.style.cssText = "background: rgba(22, 163, 74, 0.1); color: var(--success); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
-                                } else {
-                                    keyDisplay.textContent = "Not configured";
-                                    statusEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Missing';
-                                    statusEl.style.cssText = "background: rgba(217, 119, 6, 0.1); color: var(--warning); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
-                                }
-                            });
-
                             showToast("Admin session restored!", "success");
-                        } else {
-                            console.log("Session credentials mismatch - clearing session");
-                            console.log("Stored:", storedUsername, "| Session:", parsed.username);
-                            localStorage.removeItem("kityAdminSession");
-                            isAdminLoggedIn = false;
+
+                            // Verify credentials and load Firebase data in background
+                            db.ref("keys").once("value")
+                                .then((snapshot) => {
+                                    const data = snapshot.val();
+                                    if (data && data.username === parsed.username && data.password === parsed.password) {
+                                        // Valid - load Firebase data
+                                        loadCouponsFromFirebase();
+                                        loadApkFromFirebase();
+                                        loadManualKeysFromFirebase();
+                                        loadRazorpayKeyFromFirebase().then(() => {
+                                            const keyDisplay = document.getElementById("currentRazorpayKey");
+                                            const statusEl = document.getElementById("razorpayStatus");
+                                            if (RAZORPAY_KEY_ID) {
+                                                keyDisplay.textContent = RAZORPAY_KEY_ID.substring(0, 8) + "****" + RAZORPAY_KEY_ID.substring(RAZORPAY_KEY_ID.length - 4);
+                                                statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Active';
+                                                statusEl.style.cssText = "background: rgba(22, 163, 74, 0.1); color: var(--success); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
+                                            } else {
+                                                keyDisplay.textContent = "Not configured";
+                                                statusEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Missing';
+                                                statusEl.style.cssText = "background: rgba(217, 119, 6, 0.1); color: var(--warning); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
+                                            }
+                                        });
+                                    } else {
+                                        // Invalid session
+                                        localStorage.removeItem("kityAdminSession");
+                                        isAdminLoggedIn = false;
+                                        logoutAdmin();
+                                    }
+                                })
+                                .catch(() => {
+                                    localStorage.removeItem("kityAdminSession");
+                                    isAdminLoggedIn = false;
+                                    logoutAdmin();
+                                });
+                            return; // Admin shown immediately, Firebase loads in background
                         }
-                    })
-                    .catch((err) => {
-                        console.error("Session verification error:", err);
-                        localStorage.removeItem("kityAdminSession");
-                        isAdminLoggedIn = false;
-                    });
-            } catch (e) {
-                console.error("Session parse error:", e);
-                localStorage.removeItem("kityAdminSession");
-                isAdminLoggedIn = false;
+                    }
+                } catch (e) {
+                    console.error("Session parse error:", e);
+                    localStorage.removeItem("kityAdminSession");
+                }
             }
+            // NOT an admin session - DO NOT show auth page here
+            // The Firebase auth state listener will automatically:
+            // - Call showMainContent() if user is logged in
+            // - Call showAuthPage() if user is NOT logged in
+            // So we do NOTHING here for regular users!
         }
 
         function showAuthPage() {
-            console.log("Showing auth page");
-            isAdminLoggedIn = false;
-
             document.getElementById("authPage").classList.add("active");
             document.getElementById("authPage").classList.remove("hidden");
             document.getElementById("mainContent").classList.add("hidden");
             document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("navbar").classList.add("nav-hidden");
             document.getElementById("syncIndicator").style.display = "none";
-
             const navLinks = document.getElementById("navLinks");
             if (navLinks) {
                 const existingUserItems = navLinks.querySelectorAll('.user-nav-item');
@@ -1490,23 +1467,19 @@ function updateRazorpayKey() {
         }
 
         function showMainContent() {
-            console.log("Showing main content");
-            isAdminLoggedIn = false;
-
             document.getElementById("authPage").classList.remove("active");
             document.getElementById("authPage").classList.add("hidden");
             document.getElementById("mainContent").classList.remove("hidden");
             document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("navbar").classList.remove("nav-hidden");
             document.getElementById("syncIndicator").style.display = "none";
-
             const navLinks = document.getElementById("navLinks");
             if (navLinks) {
                 const mainItems = navLinks.querySelectorAll('.main-nav-item');
                 mainItems.forEach(el => el.style.display = '');
             }
             setTimeout(() => { addUserMenuToNav(); }, 100);
-
+            // Show products immediately with defaults, then update from Firebase
             renderProducts();
             loadProductsFromFirebase();
             loadOrdersFromFirebase();
@@ -1554,9 +1527,9 @@ function updateRazorpayKey() {
             modal.id = "myOrdersModal";
             modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 20, 74, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
             modal.innerHTML = `
-                <div class="modal" style="max-width: 95vw; width: 95vw; max-height: 85vh; overflow-y: auto; padding: 1.2rem;">
-                    <div class="modal-header" style="margin-bottom: 1rem;">
-                        <h2 style="font-size: 1.1rem;"><i class="fas fa-shopping-bag"></i> My Orders</h2>
+                <div class="modal" style="max-width: 700px; width: 92%; max-height: 80vh; overflow-y: auto;">
+                    <div class="modal-header">
+                        <h2><i class="fas fa-shopping-bag"></i> My Orders</h2>
                         <button class="close-btn" onclick="document.getElementById('myOrdersModal').remove()">&times;</button>
                     </div>
                     <div id="myOrdersContent">
@@ -1633,9 +1606,9 @@ function updateRazorpayKey() {
             modal.id = "myKeysModal";
             modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 20, 74, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
             modal.innerHTML = `
-                <div class="modal" style="max-width: 95vw; width: 95vw; max-height: 85vh; overflow-y: auto; padding: 1.2rem;">
-                    <div class="modal-header" style="margin-bottom: 1rem;">
-                        <h2 style="font-size: 1.1rem;"><i class="fas fa-key"></i> My Keys</h2>
+                <div class="modal" style="max-width: 700px; width: 92%; max-height: 80vh; overflow-y: auto;">
+                    <div class="modal-header">
+                        <h2><i class="fas fa-key"></i> My Keys</h2>
                         <button class="close-btn" onclick="document.getElementById('myKeysModal').remove()">&times;</button>
                     </div>
                     <div id="myKeysContent">
@@ -1786,13 +1759,12 @@ function updateRazorpayKey() {
         }
 
         function saveProductsToFirebase() {
-            if (!firebaseInitialized) return Promise.resolve();
+            if (!firebaseInitialized) return;
             setSyncing(true);
+            const productsRef = db.ref("products");
             const dataToSave = {};
             products.forEach(p => { dataToSave[p.id] = { price: p.price, stock: p.stock }; });
-            return db.ref("products").set(dataToSave)
-                .then(() => { setSyncing(false); })
-                .catch(err => { console.error("Error saving products:", err); setSyncing(false); throw err; });
+            productsRef.set(dataToSave).then(() => { setSyncing(false); }).catch(err => { console.error("Error saving products:", err); setSyncing(false); });
         }
 
         function loadKeysFromFirebase() {
@@ -1803,71 +1775,75 @@ function updateRazorpayKey() {
                 if (data) {
                     Object.keys(data).forEach(productId => {
                         if (productId === "username" || productId === "password") return;
+                        // Only load if it's a valid product and has actual keys
                         if (keys[productId] !== undefined && Array.isArray(data[productId])) {
                             keys[productId] = data[productId];
                         }
                     });
                 }
-                // Sync stock with actual available keys
+                // Do NOT auto-generate local keys - only use Firebase keys
+                // If stock > keys count, just update the stock to match available keys
                 products.forEach(p => {
                     keys[p.id] = keys[p.id] || [];
                     const current = keys[p.id].length;
                     if (current !== p.stock) {
-                        p.stock = current;
+                        p.stock = current; // Sync stock with actual available keys
                     }
                 });
+                // Save updated stock counts back to Firebase
                 saveProductsToFirebase();
             });
-            // Also load manual keys (this will also sync stock)
+            // Also load manual keys
             loadManualKeysFromFirebase();
         }
 
         function saveKeysToFirebase() {
-            if (!firebaseInitialized) return Promise.resolve();
-            return db.ref("keys").once("value").then((snapshot) => {
+            if (!firebaseInitialized) return;
+            db.ref("keys").once("value").then((snapshot) => {
                 const existingData = snapshot.val() || {};
+                // Build clean keys object - only product key arrays
                 const dataToSave = {};
                 Object.keys(keys).forEach(key => {
                     if (key !== "username" && key !== "password" && Array.isArray(keys[key])) {
                         dataToSave[key] = keys[key];
                     }
                 });
+                // Preserve admin credentials
                 if (existingData.username) dataToSave.username = existingData.username;
                 if (existingData.password) dataToSave.password = existingData.password;
                 return db.ref("keys").set(dataToSave);
-            }).catch(err => { console.error("Error saving keys:", err); throw err; });
+            }).catch(err => { console.error("Error saving keys:", err); });
         }
 
         function saveManualKeysToFirebase() {
             if (!firebaseInitialized) {
                 console.warn("Firebase not initialized, cannot save manual keys");
-                return Promise.reject("No Firebase");
+                return;
             }
             const dataToSave = {};
             Object.keys(manualKeys).forEach(key => {
-                if (Array.isArray(manualKeys[key]) && manualKeys[key].length > 0) {
+                if (Array.isArray(manualKeys[key])) {
                     dataToSave[key] = manualKeys[key];
                 }
             });
             console.log("Saving manual keys to Firebase:", dataToSave);
-            return db.ref("manualKeys").set(dataToSave)
+            db.ref("manualKeys").set(dataToSave)
                 .then(() => {
                     console.log("✅ Manual keys saved to Firebase successfully");
                 })
                 .catch(err => {
                     console.error("❌ Error saving manual keys:", err);
                     showToast("Failed to save manual keys to Firebase!", "error");
-                    throw err;
                 });
         }
 
         function loadManualKeysFromFirebase() {
             if (!firebaseInitialized) {
                 console.warn("Firebase not initialized, cannot load manual keys");
-                return Promise.resolve();
+                return;
             }
             console.log("Loading manual keys from Firebase...");
-            return db.ref("manualKeys").once("value")
+            db.ref("manualKeys").once("value")
                 .then((snapshot) => {
                     const data = snapshot.val();
                     if (data) {
@@ -1875,21 +1851,8 @@ function updateRazorpayKey() {
                         Object.keys(data).forEach(productId => {
                             if (manualKeys[productId] !== undefined && Array.isArray(data[productId])) {
                                 manualKeys[productId] = data[productId];
-                                // Also sync to keys array
-                                keys[productId] = data[productId];
-                                // Sync product stock with actual manual keys count
-                                const product = products.find(p => p.id === productId);
-                                if (product) {
-                                    product.stock = data[productId].length;
-                                }
                                 console.log(`  - ${productId}: ${data[productId].length} manual keys`);
                             }
-                        });
-                        // Save synced stock to Firebase
-                        return saveProductsToFirebase().then(() => {
-                            renderProducts();
-                            updateAdminStats();
-                            renderAdminTables();
                         });
                     } else {
                         console.log("ℹ️ No manual keys found in Firebase (this is OK for first time)");
@@ -1933,19 +1896,10 @@ function updateRazorpayKey() {
                         Object.keys(data).forEach(productId => {
                             if (manualKeys[productId] !== undefined && Array.isArray(data[productId])) {
                                 manualKeys[productId] = data[productId];
-                                // Sync product stock
-                                const product = products.find(p => p.id === productId);
-                                if (product) {
-                                    product.stock = data[productId].length;
-                                }
                                 console.log("forceReloadManualKeys - Loaded " + data[productId].length + " keys for " + productId);
                             }
                         });
-                        saveProductsToFirebase();
-                        renderProducts();
-                        updateAdminStats();
-                        renderAdminTables();
-                        showToast("Manual keys reloaded & stock synced!", "success");
+                        showToast("Manual keys reloaded from Firebase!", "success");
                     } else {
                         showToast("No manual keys found in Firebase!", "error");
                     }
@@ -2272,33 +2226,23 @@ function updateRazorpayKey() {
         function handlePaymentSuccess(response, email) {
             const productIndex = products.findIndex(p => p.id === currentProduct.id);
             if (productIndex > -1 && products[productIndex].stock > 0) {
+                products[productIndex].stock--;
                 keys[currentProduct.id] = keys[currentProduct.id] || [];
-                manualKeys[currentProduct.id] = manualKeys[currentProduct.id] || [];
-
-                let key = null;
-
-                // Try to get key from manualKeys first (admin-added keys)
-                if (manualKeys[currentProduct.id].length > 0) {
-                    key = manualKeys[currentProduct.id].shift();
-                    // Also remove from keys array if exists there
-                    const keysIndex = keys[currentProduct.id].indexOf(key);
-                    if (keysIndex !== -1) {
-                        keys[currentProduct.id].splice(keysIndex, 1);
-                    }
-                } 
-                // Fallback to keys array
-                else if (keys[currentProduct.id].length > 0) {
-                    key = keys[currentProduct.id].shift();
-                }
-
-                if (!key) {
+                let key;
+                if (keys[currentProduct.id].length > 0) {
+                    key = keys[currentProduct.id].shift(); // Use shift to get first key (FIFO)
+                } else {
                     showToast("No keys available in stock!", "error");
                     return;
                 }
-
-                // Sync stock with actual manual keys count
-                const actualStock = (manualKeys[currentProduct.id] || []).length;
-                products[productIndex].stock = actualStock;
+                // Also remove from manualKeys if this was an admin-added key
+                if (manualKeys[currentProduct.id]) {
+                    const manualIndex = manualKeys[currentProduct.id].indexOf(key);
+                    if (manualIndex !== -1) {
+                        manualKeys[currentProduct.id].splice(manualIndex, 1);
+                        saveManualKeysToFirebase();
+                    }
+                }
 
                 // Calculate final amount with coupon
                 const finalAmount = (appliedCoupon && discountedPrice > 0) ? discountedPrice : currentProduct.price;
@@ -2332,46 +2276,9 @@ function updateRazorpayKey() {
                 document.getElementById("paymentSuccess").classList.remove("hidden");
                 document.getElementById("sentKeyDisplay").textContent = key;
                 document.getElementById("apkFileNameDisplay").textContent = globalApkName;
-                // Build and save all data
-                const manualKeysData = {};
-                Object.keys(manualKeys).forEach(key => {
-                    if (Array.isArray(manualKeys[key]) && manualKeys[key].length > 0) {
-                        manualKeysData[key] = manualKeys[key];
-                    }
-                });
-
-                const productsData = {};
-                products.forEach(p => {
-                    productsData[p.id] = { price: p.price, stock: p.stock };
-                });
-
-                db.ref("keys").once("value").then((snapshot) => {
-                    const existingData = snapshot.val() || {};
-
-                    const keysData = {};
-                    Object.keys(keys).forEach(key => {
-                        if (key !== "username" && key !== "password" && Array.isArray(keys[key])) {
-                            keysData[key] = keys[key];
-                        }
-                    });
-
-                    // PRESERVE admin credentials
-                    if (existingData.username) keysData.username = existingData.username;
-                    if (existingData.password) keysData.password = existingData.password;
-
-                    return Promise.all([
-                        db.ref("manualKeys").set(manualKeysData),
-                        db.ref("products").set(productsData),
-                        db.ref("keys").set(keysData),
-                        db.ref("orders/" + order.id).set(order)
-                    ]);
-                .then(() => {
-                        console.log("✅ Order saved, stock updated");
-                    })
-                    .catch(err => {
-                        console.error("Save error:", err);
-                    });
-                });
+                saveProductsToFirebase();
+                saveKeysToFirebase();
+                saveOrderToFirebase(order);
                 if (currentUser && firebaseInitialized) {
                     db.ref("userOrders/" + currentUser.uid + "/" + order.id).set(order);
                 }
@@ -2391,73 +2298,43 @@ function updateRazorpayKey() {
         function loginAdmin() {
             const username = document.getElementById("adminUsername").value.trim();
             const password = document.getElementById("adminPassword").value;
-
             if (!username || !password) {
                 showToast("Please enter username and password!", "error");
                 return;
             }
-
             const loginBtn = document.querySelector("#adminLoginModal .btn-primary");
             const originalText = loginBtn.innerHTML;
             loginBtn.innerHTML = '<div class="loading"></div> Verifying...';
             loginBtn.disabled = true;
-
             if (!firebaseInitialized) {
                 showToast("Firebase not connected! Cannot verify login.", "error");
                 loginBtn.innerHTML = originalText;
                 loginBtn.disabled = false;
                 return;
             }
-
-            // Try to get admin credentials from Firebase
             db.ref("keys").once("value")
                 .then((snapshot) => {
                     const data = snapshot.val();
-                    console.log("Admin login - Firebase data:", data);
-
-                    if (!data) {
-                        showToast("No admin credentials found in Firebase!", "error");
-                        return;
-                    }
-
-                    // Check credentials with exact match
-                    const storedUsername = data.username || "";
-                    const storedPassword = data.password || "";
-
-                    console.log("Stored username:", storedUsername, "| Entered:", username);
-                    console.log("Password match:", storedPassword === password);
-
-                    if (storedUsername === username && storedPassword === password) {
-                        // SUCCESS - Save session
+                    if (data && data.username === username && data.password === password) {
+                        // Save admin session to localStorage
                         localStorage.setItem("kityAdminSession", JSON.stringify({
                             username: username,
                             password: password,
                             loginTime: new Date().toISOString()
                         }));
-
                         isAdminLoggedIn = true;
-
-                        // Hide all other views
                         document.getElementById("adminLoginModal").classList.remove("active");
                         document.getElementById("mainContent").classList.add("hidden");
-                        document.getElementById("authPage").classList.remove("active");
                         document.getElementById("authPage").classList.add("hidden");
                         document.getElementById("adminPanel").classList.add("active");
-                        document.getElementById("navbar").classList.add("nav-hidden");
-                        document.getElementById("syncIndicator").style.display = "none";
-
-                        // Clear form
                         document.getElementById("adminUsername").value = "";
                         document.getElementById("adminPassword").value = "";
-
-                        // Load admin data
                         updateAdminStats();
                         renderAdminTables();
                         loadCouponsFromFirebase();
                         renderCouponsList();
                         loadApkFromFirebase();
                         loadManualKeysFromFirebase();
-
                         loadRazorpayKeyFromFirebase().then(() => {
                             const keyDisplay = document.getElementById("currentRazorpayKey");
                             const statusEl = document.getElementById("razorpayStatus");
@@ -2471,21 +2348,30 @@ function updateRazorpayKey() {
                                 statusEl.style.cssText = "background: rgba(217, 119, 6, 0.1); color: var(--warning); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
                             }
                         });
-
                         showToast("Welcome to Admin Panel!", "success");
+                        // Check manual keys status in Firebase
+                        setTimeout(() => {
+                            checkManualKeysInFirebase().then((exists) => {
+                                if (!exists) {
+                                    console.log("💡 No manualKeys found in Firebase. Add stock with custom keys to create it.");
+                                }
+                            });
+                        }, 1000);
                     } else {
-                        if (storedUsername !== username) {
-                            showToast("Invalid username! Stored: '" + storedUsername + "' | Entered: '" + username + "'", "error");
-                        } else if (storedPassword !== password) {
+                        if (!data) {
+                            showToast("No login data found in Firebase!", "error");
+                        } else if (data.username !== username) {
+                            showToast("Invalid username!", "error");
+                        } else if (data.password !== password) {
                             showToast("Invalid password!", "error");
                         } else {
-                            showToast("Invalid credentials!", "error");
+                            showToast("Invalid username or password!", "error");
                         }
                     }
                 })
                 .catch((error) => {
                     console.error("Login verification failed:", error);
-                    showToast("Login verification failed: " + error.message, "error");
+                    showToast("Login verification failed!", "error");
                 })
                 .finally(() => {
                     loginBtn.innerHTML = originalText;
@@ -2494,53 +2380,29 @@ function updateRazorpayKey() {
         }
 
         function logoutAdmin() {
-            console.log("Admin logout called");
             localStorage.removeItem("kityAdminSession");
             isAdminLoggedIn = false;
-
             document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("syncIndicator").style.display = "none";
-
-            // Check if regular user is logged in
-            if (currentUser && firebaseInitialized) {
-                console.log("Regular user still logged in, showing main content");
+            if (currentUser) {
                 showMainContent();
             } else {
-                console.log("No user logged in, showing auth page");
                 showAuthPage();
             }
-
-            showToast("Admin logged out successfully", "info");
+            showToast("Logged out successfully", "info");
         }
 
         function updateAdminStats() {
-            // Calculate actual key counts from manualKeys (not just product.stock)
-            let totalActualKeys = 0;
-            let availableProducts = 0;
-
-            products.forEach(p => {
-                const manualCount = (manualKeys[p.id] || []).length;
-                const keysCount = (keys[p.id] || []).length;
-                const actualCount = Math.max(manualCount, keysCount);
-
-                totalActualKeys += actualCount;
-                if (actualCount > 0) availableProducts++;
-
-                // Sync product stock with actual count
-                if (p.stock !== actualCount) {
-                    p.stock = actualCount;
-                }
-            });
-
+            const total = products.reduce((sum, p) => sum + p.stock, 0);
+            const available = products.filter(p => p.stock > 0).length;
             const todayOrders = orders.filter(o => {
                 const orderDate = new Date(o.time).toDateString();
                 const today = new Date().toDateString();
                 return orderDate === today;
             }).length;
             const revenue = orders.reduce((sum, o) => sum + o.amount, 0);
-
-            document.getElementById("totalKeys").textContent = totalActualKeys;
-            document.getElementById("availableKeys").textContent = availableProducts;
+            document.getElementById("totalKeys").textContent = total;
+            document.getElementById("availableKeys").textContent = available;
             document.getElementById("soldToday").textContent = todayOrders;
             document.getElementById("revenue").textContent = "Rs." + revenue;
         }
@@ -2548,28 +2410,14 @@ function updateRazorpayKey() {
         function renderAdminTables() {
             const tbody = document.getElementById("adminTableBody");
             tbody.innerHTML = products.map(p => {
-                const manualCount = (manualKeys[p.id] || []).length;
-                const keysCount = (keys[p.id] || []).length;
-                const actualCount = Math.max(manualCount, keysCount);
-
-                // Sync stock if mismatch
-                if (p.stock !== actualCount) {
-                    p.stock = actualCount;
-                }
-
-                const status = actualCount > 0 ?
+                const status = p.stock > 0 ?
                     '<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Active</span>' :
                     '<span style="color: var(--danger);"><i class="fas fa-times-circle"></i> Out of Stock</span>';
-
-                const stockDisplay = actualCount > 0 
-                    ? `<span style="font-weight: 700; color: var(--blue);">${actualCount}</span>`
-                    : `<span style="font-weight: 700; color: var(--danger);">0</span>`;
-
                 return `
                     <tr>
                         <td>${p.name}</td>
                         <td>Rs.${p.price}</td>
-                        <td>${stockDisplay}</td>
+                        <td><span style="font-weight: 700; color: var(--blue);">${p.stock}</span></td>
                         <td>${status}</td>
                         <td>
                             <button class="action-btn edit" onclick="editProduct('${p.id}')">
@@ -2636,9 +2484,9 @@ function updateRazorpayKey() {
                 keys[duration].push(...customKeys);
                 manualKeys[duration].push(...customKeys);
 
-                saveManualKeysToFirebase();
-                saveKeysToFirebase();
                 saveProductsToFirebase();
+                saveKeysToFirebase();
+                saveManualKeysToFirebase();
 
                 // Verify manual keys were saved
                 setTimeout(() => {
@@ -2649,6 +2497,7 @@ function updateRazorpayKey() {
                             console.log("✅ Verified: " + saved.length + " keys saved to Firebase");
                         } else {
                             console.warn("⚠️ Verification failed: manual keys not found in Firebase!");
+                            showToast("Warning: Keys may not have saved to Firebase!", "error");
                         }
                     });
                 }, 1000);
@@ -2683,14 +2532,12 @@ function updateRazorpayKey() {
                 if (product) {
                     product.stock = 0;
                     keys[id] = [];
-                    manualKeys[id] = [];
                     saveProductsToFirebase();
                     saveKeysToFirebase();
-                    saveManualKeysToFirebase();
                     renderProducts();
                     updateAdminStats();
                     renderAdminTables();
-                    showToast("Stock and all keys cleared!", "info");
+                    showToast("Stock cleared!", "info");
                 }
             }
         }
@@ -2705,7 +2552,7 @@ function updateRazorpayKey() {
             loadingModal.id = "viewKeysLoadingModal";
             loadingModal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 20, 74, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
             loadingModal.innerHTML = `
-                <div class="modal" style="max-width: 90vw; width: auto; min-width: 280px; text-align: center; padding: 2rem;">
+                <div class="modal" style="max-width: 400px; text-align: center;">
                     <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
                     <h3 style="font-size: 1rem; color: var(--blue-darker);">Loading admin keys...</h3>
                     <p style="color: var(--text-muted); font-size: 0.8rem;">Fetching from Firebase</p>
@@ -2745,22 +2592,14 @@ function updateRazorpayKey() {
         }
 
         function showKeysModal(productId, product) {
-            // Get keys from BOTH manualKeys and keys arrays
+            // Show ONLY manual keys (admin-added keys) - NOT auto-generated keys
             let productManualKeys = [];
-            let productKeys = [];
-
             if (firebaseInitialized) {
                 productManualKeys = manualKeys[productId] || [];
-                productKeys = keys[productId] || [];
             }
 
-            // Combine both arrays (remove duplicates)
-            const allKeys = [...new Set([...productManualKeys, ...productKeys])];
-
-            console.log("showKeysModal - Product:", productId);
-            console.log("showKeysModal - manualKeys count:", productManualKeys.length);
-            console.log("showKeysModal - keys count:", productKeys.length);
-            console.log("showKeysModal - total unique keys:", allKeys.length);
+            console.log("showKeysModal - Product:", productId, "Manual keys count:", productManualKeys.length);
+            console.log("showKeysModal - manualKeys[" + productId + "]:", manualKeys[productId]);
 
             // Create modal dynamically
             const modal = document.createElement("div");
@@ -2769,28 +2608,25 @@ function updateRazorpayKey() {
             modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 20, 74, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
 
             let keysHtml = '';
-            if (allKeys.length === 0) {
+            if (productManualKeys.length === 0) {
                 keysHtml = `
                     <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
                         <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
-                        <p><b>No keys found for this plan.</b></p>
-                        <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">Stock shows ${product.stock} but no keys in database.</p>
-                        <div style="margin-top: 1rem; padding: 0.8rem; background: rgba(220,38,38,0.06); border-radius: 8px; border: 1px solid rgba(220,38,38,0.2); font-size: 0.75rem; color: var(--danger);">
-                            <i class="fas fa-exclamation-triangle"></i> <b>Issue:</b> Stock count (${product.stock}) doesn't match actual keys (0).<br>
-                            Click "Refresh Manual Keys" button to fix.
+                        <p>No admin-added keys found for this plan.</p>
+                        <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">Only keys manually entered in "Add Stock" will appear here.</p>
+                        <div style="margin-top: 1rem; padding: 0.8rem; background: var(--cream); border-radius: 8px; border: 1px solid var(--border); font-size: 0.75rem; color: var(--text-muted);">
+                            <i class="fas fa-bug" style="color: var(--warning);"></i> Debug: manualKeys[${productId}] has ${productManualKeys.length} items
                         </div>
                     </div>
                 `;
             } else {
                 keysHtml = `
-                    <div style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 55vh; overflow-y: auto; padding-right: 0.5rem;">
-                        ${allKeys.map((key, index) => `
-                            <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--cream); padding: 0.6rem 0.8rem; border-radius: 10px; border: 1px solid var(--border); min-width: 0;">
-                                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; flex-shrink: 0;">#${index + 1}</span>
-                                <div style="overflow-x: auto; flex: 1; min-width: 0; -webkit-overflow-scrolling: touch;">
-                                    <span style="font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 700; color: var(--blue-darker); letter-spacing: 0.5px; white-space: nowrap; display: block; padding: 0.2rem 0;">${key}</span>
-                                </div>
-                                <button onclick="copyAdminKey('${key.replace(/'/g, "\'")}')" style="background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.75rem; transition: all 0.3s; white-space: nowrap; flex-shrink: 0; min-width: 60px;">
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 400px; overflow-y: auto; padding-right: 0.5rem;">
+                        ${productManualKeys.map((key, index) => `
+                            <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--cream); padding: 0.6rem 0.8rem; border-radius: 10px; border: 1px solid var(--border);">
+                                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; min-width: 30px;">#${index + 1}</span>
+                                <span style="font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 700; color: var(--blue-darker); flex: 1; letter-spacing: 0.5px;">${key}</span>
+                                <button onclick="copyAdminKey('${key.replace(/'/g, "\'")}')" style="background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.3rem 0.8rem; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.75rem; transition: all 0.3s; white-space: nowrap;">
                                     <i class="fas fa-copy"></i> Copy
                                 </button>
                             </div>
@@ -2798,7 +2634,7 @@ function updateRazorpayKey() {
                     </div>
                     <div style="margin-top: 1rem; padding: 0.8rem; background: rgba(39, 77, 245, 0.06); border-radius: 10px; border: 1px solid var(--border); text-align: center;">
                         <span style="font-size: 0.85rem; color: var(--blue-dark); font-weight: 600;">
-                            <i class="fas fa-key"></i> Total Keys: ${allKeys.length} | 
+                            <i class="fas fa-user-shield"></i> Admin-Added Keys: ${productManualKeys.length} | 
                             <i class="fas fa-box"></i> ${product.name}
                         </span>
                     </div>
@@ -2806,9 +2642,9 @@ function updateRazorpayKey() {
             }
 
             modal.innerHTML = `
-                <div class="modal" style="max-width: 95vw; width: 95vw; max-height: 85vh; overflow-y: auto; padding: 1.5rem;">
-                    <div class="modal-header" style="margin-bottom: 1rem;">
-                        <h2 style="font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><i class="fas fa-key"></i> ${product.name}</h2>
+                <div class="modal" style="max-width: 600px; width: 92%; max-height: 80vh; overflow-y: auto;">
+                    <div class="modal-header">
+                        <h2><i class="fas fa-key"></i> ${product.name} - Keys</h2>
                         <button class="close-btn" onclick="document.getElementById('viewKeysModal').remove()">&times;</button>
                     </div>
                     ${keysHtml}
@@ -2858,75 +2694,45 @@ function updateRazorpayKey() {
                 return;
             }
 
-            // FIRST: Check if key exists in manualKeys (admin-added keys)
-            let foundInManual = false;
-            if (manualKeys[duration] && manualKeys[duration].length > 0) {
-                const manualIndex = manualKeys[duration].indexOf(keyToDelete);
-                if (manualIndex !== -1) {
-                    manualKeys[duration].splice(manualIndex, 1);
-                    foundInManual = true;
-                }
+            if (product.stock === 0) {
+                showToast("This product is already out of stock!", "error");
+                return;
             }
 
-            // SECOND: Check if key exists in keys array
-            let foundInKeys = false;
-            if (keys[duration] && keys[duration].length > 0) {
-                const keyIndex = keys[duration].indexOf(keyToDelete);
-                if (keyIndex !== -1) {
-                    keys[duration].splice(keyIndex, 1);
-                    foundInKeys = true;
-                }
+            // Check if key exists in the keys array
+            if (!keys[duration] || keys[duration].length === 0) {
+                showToast("No keys available for this product!", "error");
+                return;
             }
 
-            // If key not found anywhere
-            if (!foundInManual && !foundInKeys) {
+            const keyIndex = keys[duration].indexOf(keyToDelete);
+            if (keyIndex === -1) {
                 showToast("Key not found! Please check the key and try again.", "error");
                 return;
             }
 
-            // Sync stock count with actual manual keys count
-            const actualStock = (manualKeys[duration] || []).length;
-            product.stock = actualStock;
+            // Remove the specific key from main keys
+            keys[duration].splice(keyIndex, 1);
+            product.stock -= 1;
 
-            // Build save data
-            const manualKeysData = {};
-            Object.keys(manualKeys).forEach(key => {
-                if (Array.isArray(manualKeys[key]) && manualKeys[key].length > 0) {
-                    manualKeysData[key] = manualKeys[key];
+            // Also remove from manualKeys if it exists there
+            if (manualKeys[duration]) {
+                const manualIndex = manualKeys[duration].indexOf(keyToDelete);
+                if (manualIndex !== -1) {
+                    manualKeys[duration].splice(manualIndex, 1);
+                    saveManualKeysToFirebase();
                 }
-            });
+            }
 
-            const productsData = {};
-            products.forEach(p => {
-                productsData[p.id] = { price: p.price, stock: p.stock };
-            });
+            saveProductsToFirebase();
+            saveKeysToFirebase();
+            renderProducts();
+            updateAdminStats();
+            renderAdminTables();
+            closeModal("deleteStockModal");
 
-            const keysData = {};
-            Object.keys(keys).forEach(key => {
-                if (key !== "username" && key !== "password" && Array.isArray(keys[key])) {
-                    keysData[key] = keys[key];
-                }
-            });
-
-            // Save everything to Firebase with Promise.all
-            Promise.all([
-                db.ref("manualKeys").set(manualKeysData),
-                db.ref("products").set(productsData),
-                db.ref("keys").set(keysData)
-            ])
-            .then(() => {
-                    renderProducts();
-                    updateAdminStats();
-                    renderAdminTables();
-                    closeModal("deleteStockModal");
-                    document.getElementById("deleteStockKey").value = "";
-                    showToast("Key '" + keyToDelete + "' deleted! Stock synced to " + actualStock, "success");
-                })
-                .catch((err) => {
-                    console.error("Delete save failed:", err);
-                    showToast("Delete failed: " + err.message, "error");
-                });
-            });
+            document.getElementById("deleteStockKey").value = "";
+            showToast("Key '" + keyToDelete + "' deleted from " + product.name + "!", "success");
         }
 
         function showToast(message, type) {
