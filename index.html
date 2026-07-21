@@ -2013,9 +2013,14 @@ function updateRazorpayKey() {
                         if (saved) {
                             return { ...def, price: saved.price !== undefined ? saved.price : def.price, stock: saved.stock !== undefined ? saved.stock : def.stock };
                         }
-                        return def;
+                        return { ...def, stock: 0 }; // Default to 0 if not in Firebase
                     });
-                    renderProducts();
+                } else {
+                    // No products data in Firebase - keep stocks at 0 (don't use defaults)
+                    products = defaultProducts.map(def => ({ ...def, stock: 0 }));
+                }
+                renderProducts();
+                if (isAdminLoggedIn) {
                     updateAdminStats();
                     renderAdminTables();
                 }
