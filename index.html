@@ -290,6 +290,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -1406,6 +1407,7 @@ function updateRazorpayKey() {
                                     const data = snapshot.val();
                                     if (data && data.username === parsed.username && data.password === parsed.password) {
                                         // Valid - load Firebase data
+                                        loadKeysFromFirebase();
                                         loadCouponsFromFirebase();
                                         loadApkFromFirebase();
                                         loadManualKeysFromFirebase();
@@ -2331,6 +2333,7 @@ function updateRazorpayKey() {
                         document.getElementById("adminPassword").value = "";
                         updateAdminStats();
                         renderAdminTables();
+                        loadKeysFromFirebase();
                         loadCouponsFromFirebase();
                         renderCouponsList();
                         loadApkFromFirebase();
@@ -2699,33 +2702,34 @@ function updateRazorpayKey() {
                 return;
             }
 
-            // Check if key exists in the keys array
-            if (!keys[duration] || keys[duration].length === 0) {
-                showToast("No keys available for this product!", "error");
-                return;
-            }
+            // Ensure arrays are initialized
+            if (!keys[duration]) keys[duration] = [];
+            if (!manualKeys[duration]) manualKeys[duration] = [];
 
+            // Check if key exists in keys or manualKeys
             const keyIndex = keys[duration].indexOf(keyToDelete);
-            if (keyIndex === -1) {
+            const manualKeyIndex = manualKeys[duration].indexOf(keyToDelete);
+
+            if (keyIndex === -1 && manualKeyIndex === -1) {
                 showToast("Key not found! Please check the key and try again.", "error");
                 return;
             }
 
-            // Remove the specific key from main keys
-            keys[duration].splice(keyIndex, 1);
-            product.stock -= 1;
-
-            // Also remove from manualKeys if it exists there
-            if (manualKeys[duration]) {
-                const manualIndex = manualKeys[duration].indexOf(keyToDelete);
-                if (manualIndex !== -1) {
-                    manualKeys[duration].splice(manualIndex, 1);
-                    saveManualKeysToFirebase();
-                }
+            // Remove from keys array if present
+            if (keyIndex !== -1) {
+                keys[duration].splice(keyIndex, 1);
             }
+
+            // Remove from manualKeys array if present
+            if (manualKeyIndex !== -1) {
+                manualKeys[duration].splice(manualKeyIndex, 1);
+            }
+
+            product.stock -= 1;
 
             saveProductsToFirebase();
             saveKeysToFirebase();
+            saveManualKeysToFirebase();
             renderProducts();
             updateAdminStats();
             renderAdminTables();
