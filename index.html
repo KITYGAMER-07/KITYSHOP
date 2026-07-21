@@ -505,6 +505,11 @@
             <div class="stat-card"><h4>Sold Today</h4><div class="value" id="soldToday">0</div></div>
             <div class="stat-card"><h4>Revenue</h4><div class="value" id="revenue">Rs.0</div></div>
         </div>
+        <div style="margin-bottom: 1.5rem; text-align: right;">
+            <button onclick="forceReloadManualKeys()" style="background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 4px 15px rgba(39,77,245,0.25);">
+                <i class="fas fa-sync-alt"></i> Refresh Manual Keys from Firebase
+            </button>
+        </div>
         <div class="admin-table">
             <table>
                 <thead><tr><th>Duration</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead>
@@ -1877,6 +1882,34 @@ function updateRazorpayKey() {
                 });
         }
 
+        function forceReloadManualKeys() {
+            if (!firebaseInitialized) {
+                showToast("Firebase not connected!", "error");
+                return;
+            }
+            showToast("Reloading manual keys from Firebase...", "info");
+            db.ref("manualKeys").once("value")
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    console.log("forceReloadManualKeys - Raw Firebase data:", data);
+                    if (data) {
+                        Object.keys(data).forEach(productId => {
+                            if (manualKeys[productId] !== undefined && Array.isArray(data[productId])) {
+                                manualKeys[productId] = data[productId];
+                                console.log("forceReloadManualKeys - Loaded " + data[productId].length + " keys for " + productId);
+                            }
+                        });
+                        showToast("Manual keys reloaded from Firebase!", "success");
+                    } else {
+                        showToast("No manual keys found in Firebase!", "error");
+                    }
+                })
+                .catch((err) => {
+                    console.error("forceReloadManualKeys error:", err);
+                    showToast("Failed to reload manual keys!", "error");
+                });
+        }
+
         function loadOrdersFromFirebase() {
             if (!firebaseInitialized) return;
             const ordersRef = db.ref("orders");
@@ -2443,6 +2476,10 @@ function updateRazorpayKey() {
                 product.price = price;
                 product.stock += customKeys.length;
 
+                // Ensure arrays exist
+                if (!keys[duration]) keys[duration] = [];
+                if (!manualKeys[duration]) manualKeys[duration] = [];
+
                 // Only manual keys - no auto-generation
                 keys[duration].push(...customKeys);
                 manualKeys[duration].push(...customKeys);
@@ -2450,6 +2487,21 @@ function updateRazorpayKey() {
                 saveProductsToFirebase();
                 saveKeysToFirebase();
                 saveManualKeysToFirebase();
+
+                // Verify manual keys were saved
+                setTimeout(() => {
+                    db.ref("manualKeys/" + duration).once("value").then((snap) => {
+                        const saved = snap.val();
+                        console.log("Verification - manualKeys/" + duration + " in Firebase:", saved);
+                        if (saved && Array.isArray(saved) && saved.length > 0) {
+                            console.log("✅ Verified: " + saved.length + " keys saved to Firebase");
+                        } else {
+                            console.warn("⚠️ Verification failed: manual keys not found in Firebase!");
+                            showToast("Warning: Keys may not have saved to Firebase!", "error");
+                        }
+                    });
+                }, 1000);
+
                 renderProducts();
                 updateAdminStats();
                 renderAdminTables();
@@ -2494,19 +2546,48 @@ function updateRazorpayKey() {
             const product = products.find(p => p.id === productId);
             if (!product) return;
 
+            // Show loading modal first
+            const loadingModal = document.createElement("div");
+            loadingModal.className = "modal-overlay active";
+            loadingModal.id = "viewKeysLoadingModal";
+            loadingModal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 20, 74, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
+            loadingModal.innerHTML = `
+                <div class="modal" style="max-width: 400px; text-align: center;">
+                    <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
+                    <h3 style="font-size: 1rem; color: var(--blue-darker);">Loading admin keys...</h3>
+                    <p style="color: var(--text-muted); font-size: 0.8rem;">Fetching from Firebase</p>
+                </div>
+            `;
+            document.body.appendChild(loadingModal);
+
             // Load fresh MANUAL keys from Firebase to ensure accuracy
             if (firebaseInitialized) {
-                db.ref("manualKeys/" + productId).once("value").then((snapshot) => {
-                    const firebaseManualKeys = snapshot.val();
-                    if (firebaseManualKeys && Array.isArray(firebaseManualKeys)) {
-                        manualKeys[productId] = firebaseManualKeys;
-                    }
-                    showKeysModal(productId, product);
-                }).catch(() => {
-                    showKeysModal(productId, product);
-                });
+                db.ref("manualKeys/" + productId).once("value")
+                    .then((snapshot) => {
+                        const firebaseManualKeys = snapshot.val();
+                        console.log("viewKeys - Firebase raw data for " + productId + ":", firebaseManualKeys);
+                        if (firebaseManualKeys && Array.isArray(firebaseManualKeys)) {
+                            manualKeys[productId] = firebaseManualKeys;
+                            console.log("viewKeys - Loaded " + firebaseManualKeys.length + " manual keys for " + productId);
+                        } else {
+                            console.log("viewKeys - No manual keys found in Firebase for " + productId);
+                            // Also check local manualKeys
+                            console.log("viewKeys - Local manualKeys[" + productId + "]:", manualKeys[productId]);
+                        }
+                        document.body.removeChild(loadingModal);
+                        showKeysModal(productId, product);
+                    })
+                    .catch((err) => {
+                        console.error("viewKeys - Error loading manual keys:", err);
+                        document.body.removeChild(loadingModal);
+                        showKeysModal(productId, product);
+                    });
             } else {
-                showKeysModal(productId, product);
+                console.log("viewKeys - Firebase not initialized, showing local data");
+                setTimeout(() => {
+                    document.body.removeChild(loadingModal);
+                    showKeysModal(productId, product);
+                }, 500);
             }
         }
 
@@ -2516,6 +2597,9 @@ function updateRazorpayKey() {
             if (firebaseInitialized) {
                 productManualKeys = manualKeys[productId] || [];
             }
+
+            console.log("showKeysModal - Product:", productId, "Manual keys count:", productManualKeys.length);
+            console.log("showKeysModal - manualKeys[" + productId + "]:", manualKeys[productId]);
 
             // Create modal dynamically
             const modal = document.createElement("div");
@@ -2530,6 +2614,9 @@ function updateRazorpayKey() {
                         <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
                         <p>No admin-added keys found for this plan.</p>
                         <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">Only keys manually entered in "Add Stock" will appear here.</p>
+                        <div style="margin-top: 1rem; padding: 0.8rem; background: var(--cream); border-radius: 8px; border: 1px solid var(--border); font-size: 0.75rem; color: var(--text-muted);">
+                            <i class="fas fa-bug" style="color: var(--warning);"></i> Debug: manualKeys[${productId}] has ${productManualKeys.length} items
+                        </div>
                     </div>
                 `;
             } else {
