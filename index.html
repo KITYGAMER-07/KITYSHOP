@@ -289,6 +289,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -489,8 +490,11 @@
     <div class="admin-panel" id="adminPanel">
         <div class="admin-header">
             <h2><i class="fas fa-cog"></i> Admin Dashboard</h2>
+            <div style="background: linear-gradient(135deg, rgba(39,77,245,0.1), rgba(91,127,255,0.06)); border: 1px solid var(--blue-light); border-radius: 12px; padding: 0.5rem 1rem; font-size: 0.8rem; color: var(--blue); font-weight: 600;">
+                <i class="fas fa-user-shield"></i> Manual Keys Only Mode
+            </div>
             <div class="admin-actions">
-                <button class="admin-action-btn add" onclick="showAddStockModal()"><i class="fas fa-plus"></i> Add Stock</button>
+                <button class="admin-action-btn add" onclick="showAddStockModal()"><i class="fas fa-plus"></i> Add Keys</button>
                 <button class="admin-action-btn delete" onclick="showDeleteStockModal()"><i class="fas fa-minus"></i> Delete Stock</button>
                 <button class="admin-action-btn logout" onclick="logoutAdmin()"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
@@ -708,7 +712,7 @@
     <div class="modal-overlay" id="addStockModal">
         <div class="modal">
             <div class="modal-header">
-                <h2><i class="fas fa-plus"></i> Add Stock</h2>
+                <h2><i class="fas fa-plus"></i> Add Stock (Manual Keys Only)</h2>
                 <button class="close-btn" onclick="closeModal('addStockModal')">&times;</button>
             </div>
             <div class="form-group">
@@ -724,8 +728,8 @@
                 </select>
             </div>
             <div class="form-group"><label>Price (Rs.)</label><input type="number" id="stockPrice" placeholder="199"></div>
-            <div class="form-group"><label>Quantity to Add</label><input type="number" id="stockQuantity" placeholder="10"></div>
-            <div class="form-group"><label>Keys (one per line, optional)</label><textarea id="stockKeys" rows="5" placeholder="KEY-ABC-123-XYZ"></textarea></div>
+            <div class="form-group" style="display: none;"><label>Quantity to Add</label><input type="number" id="stockQuantity" placeholder="10" value="1"></div>
+            <div class="form-group"><label>Keys (one per line, <span style="color: var(--danger);">REQUIRED</span>)</label><textarea id="stockKeys" rows="5" placeholder="KEY-ABC-123-XYZ&#10;KEY-DEF-456-UVW&#10;KEY-GHI-789-RST" required style="border-color: var(--blue-light);"></textarea><div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;"><i class="fas fa-info-circle" style="color: var(--blue);"></i> Enter at least one key. Auto-generation is disabled.</div></div>
             <button class="btn-primary" onclick="addStock()"><i class="fas fa-plus"></i> Add Stock</button>
         </div>
     </div>
@@ -733,7 +737,7 @@
     <div class="modal-overlay" id="deleteStockModal">
         <div class="modal">
             <div class="modal-header">
-                <h2><i class="fas fa-minus"></i> Delete Stock</h2>
+                <h2><i class="fas fa-minus"></i> Delete Key</h2>
                 <button class="close-btn" onclick="closeModal('deleteStockModal')">&times;</button>
             </div>
             <div class="form-group">
@@ -753,7 +757,7 @@
                 <input type="text" id="deleteStockKey" placeholder="Enter exact key to delete (e.g., KEY-ABCD-EFGH-IJKL)" style="font-family: 'Courier New', monospace; text-transform: uppercase;">
             </div>
             <div style="background: rgba(220,38,38,0.06); border: 1px solid rgba(220,38,38,0.2); border-radius: 10px; padding: 0.8rem; margin-bottom: 1rem; font-size: 0.85rem; color: var(--danger);">
-                <i class="fas fa-exclamation-triangle"></i> This will permanently remove the specified key from stock.
+                <i class="fas fa-exclamation-triangle"></i> This will permanently delete the specified admin-added key from stock.
             </div>
             <button class="btn-primary" onclick="deleteStock()" style="background: linear-gradient(135deg, var(--danger), #b91c1c);">
                 <i class="fas fa-trash"></i> Delete Key
@@ -914,6 +918,7 @@ function updateRazorpayKey() {
 
         let products = JSON.parse(JSON.stringify(defaultProducts));
         let keys = {};
+        let manualKeys = {};
         let orders = [];
         let currentProduct = null;
 
@@ -1153,6 +1158,7 @@ function updateRazorpayKey() {
         // Keys will only come from Firebase or admin input
         products.forEach(p => {
             keys[p.id] = [];
+            manualKeys[p.id] = [];
         });
 
         function switchAuthTab(tab) {
@@ -1397,6 +1403,7 @@ function updateRazorpayKey() {
                                         // Valid - load Firebase data
                                         loadCouponsFromFirebase();
                                         loadApkFromFirebase();
+                                        loadManualKeysFromFirebase();
                                         loadRazorpayKeyFromFirebase().then(() => {
                                             const keyDisplay = document.getElementById("currentRazorpayKey");
                                             const statusEl = document.getElementById("razorpayStatus");
@@ -1781,6 +1788,8 @@ function updateRazorpayKey() {
                 // Save updated stock counts back to Firebase
                 saveProductsToFirebase();
             });
+            // Also load manual keys
+            loadManualKeysFromFirebase();
         }
 
         function saveKeysToFirebase() {
@@ -1799,6 +1808,73 @@ function updateRazorpayKey() {
                 if (existingData.password) dataToSave.password = existingData.password;
                 return db.ref("keys").set(dataToSave);
             }).catch(err => { console.error("Error saving keys:", err); });
+        }
+
+        function saveManualKeysToFirebase() {
+            if (!firebaseInitialized) {
+                console.warn("Firebase not initialized, cannot save manual keys");
+                return;
+            }
+            const dataToSave = {};
+            Object.keys(manualKeys).forEach(key => {
+                if (Array.isArray(manualKeys[key])) {
+                    dataToSave[key] = manualKeys[key];
+                }
+            });
+            console.log("Saving manual keys to Firebase:", dataToSave);
+            db.ref("manualKeys").set(dataToSave)
+                .then(() => {
+                    console.log("✅ Manual keys saved to Firebase successfully");
+                })
+                .catch(err => {
+                    console.error("❌ Error saving manual keys:", err);
+                    showToast("Failed to save manual keys to Firebase!", "error");
+                });
+        }
+
+        function loadManualKeysFromFirebase() {
+            if (!firebaseInitialized) {
+                console.warn("Firebase not initialized, cannot load manual keys");
+                return;
+            }
+            console.log("Loading manual keys from Firebase...");
+            db.ref("manualKeys").once("value")
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        console.log("✅ Manual keys loaded from Firebase:", data);
+                        Object.keys(data).forEach(productId => {
+                            if (manualKeys[productId] !== undefined && Array.isArray(data[productId])) {
+                                manualKeys[productId] = data[productId];
+                                console.log(`  - ${productId}: ${data[productId].length} manual keys`);
+                            }
+                        });
+                    } else {
+                        console.log("ℹ️ No manual keys found in Firebase (this is OK for first time)");
+                    }
+                })
+                .catch((error) => {
+                    console.error("❌ Error loading manual keys:", error);
+                });
+        }
+
+        function checkManualKeysInFirebase() {
+            if (!firebaseInitialized) return Promise.resolve(false);
+            return db.ref("manualKeys").once("value")
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        console.log("📊 Manual keys in Firebase:", data);
+                        return true;
+                    } else {
+                        console.log("ℹ️ No manualKeys node in Firebase yet");
+                        return false;
+                    }
+                })
+                .catch((err) => {
+                    console.error("❌ Error checking manual keys:", err);
+                    return false;
+                });
         }
 
         function loadOrdersFromFirebase() {
@@ -2126,6 +2202,14 @@ function updateRazorpayKey() {
                     showToast("No keys available in stock!", "error");
                     return;
                 }
+                // Also remove from manualKeys if this was an admin-added key
+                if (manualKeys[currentProduct.id]) {
+                    const manualIndex = manualKeys[currentProduct.id].indexOf(key);
+                    if (manualIndex !== -1) {
+                        manualKeys[currentProduct.id].splice(manualIndex, 1);
+                        saveManualKeysToFirebase();
+                    }
+                }
 
                 // Calculate final amount with coupon
                 const finalAmount = (appliedCoupon && discountedPrice > 0) ? discountedPrice : currentProduct.price;
@@ -2217,6 +2301,7 @@ function updateRazorpayKey() {
                         loadCouponsFromFirebase();
                         renderCouponsList();
                         loadApkFromFirebase();
+                        loadManualKeysFromFirebase();
                         loadRazorpayKeyFromFirebase().then(() => {
                             const keyDisplay = document.getElementById("currentRazorpayKey");
                             const statusEl = document.getElementById("razorpayStatus");
@@ -2231,6 +2316,14 @@ function updateRazorpayKey() {
                             }
                         });
                         showToast("Welcome to Admin Panel!", "success");
+                        // Check manual keys status in Firebase
+                        setTimeout(() => {
+                            checkManualKeysInFirebase().then((exists) => {
+                                if (!exists) {
+                                    console.log("💡 No manualKeys found in Firebase. Add stock with custom keys to create it.");
+                                }
+                            });
+                        }, 1000);
                     } else {
                         if (!data) {
                             showToast("No login data found in Firebase!", "error");
@@ -2328,38 +2421,45 @@ function updateRazorpayKey() {
         function addStock() {
             const duration = document.getElementById("stockDuration").value;
             const price = parseInt(document.getElementById("stockPrice").value);
-            const quantity = parseInt(document.getElementById("stockQuantity").value);
             const keysInput = document.getElementById("stockKeys").value.trim();
-            if (!price || !quantity) {
-                showToast("Please fill in all required fields!", "error");
+
+            if (!price) {
+                showToast("Please enter a price!", "error");
                 return;
             }
+            if (!keysInput) {
+                showToast("Please enter at least one key! Auto-generation is disabled.", "error");
+                return;
+            }
+
+            const customKeys = keysInput.split("\n").filter(k => k.trim());
+            if (customKeys.length === 0) {
+                showToast("Please enter valid keys!", "error");
+                return;
+            }
+
             const product = products.find(p => p.id === duration);
             if (product) {
                 product.price = price;
-                product.stock += quantity;
-                if (keysInput) {
-                    const customKeys = keysInput.split("\n").filter(k => k.trim());
-                    keys[duration].push(...customKeys);
-                } else {
-                    for (let i = 0; i < quantity; i++) {
-                        keys[duration].push(generateKey(duration));
-                    }
-                }
+                product.stock += customKeys.length;
+
+                // Only manual keys - no auto-generation
+                keys[duration].push(...customKeys);
+                manualKeys[duration].push(...customKeys);
+
                 saveProductsToFirebase();
                 saveKeysToFirebase();
+                saveManualKeysToFirebase();
                 renderProducts();
                 updateAdminStats();
                 renderAdminTables();
                 closeModal("addStockModal");
-                showToast("Added " + quantity + " keys to " + product.name + "!", "success");
+                showToast("Added " + customKeys.length + " keys to " + product.name + "!", "success");
                 document.getElementById("stockPrice").value = "";
                 document.getElementById("stockQuantity").value = "";
                 document.getElementById("stockKeys").value = "";
             }
-        }
-
-        function editProduct(id) {
+        }function editProduct(id) {
             const product = products.find(p => p.id === id);
             if (product) {
                 const newPrice = prompt("Enter new price (Rs.):", product.price);
@@ -2394,12 +2494,12 @@ function updateRazorpayKey() {
             const product = products.find(p => p.id === productId);
             if (!product) return;
 
-            // Always load fresh keys from Firebase to ensure accuracy
+            // Load fresh MANUAL keys from Firebase to ensure accuracy
             if (firebaseInitialized) {
-                db.ref("keys/" + productId).once("value").then((snapshot) => {
-                    const firebaseKeys = snapshot.val();
-                    if (firebaseKeys && Array.isArray(firebaseKeys)) {
-                        keys[productId] = firebaseKeys;
+                db.ref("manualKeys/" + productId).once("value").then((snapshot) => {
+                    const firebaseManualKeys = snapshot.val();
+                    if (firebaseManualKeys && Array.isArray(firebaseManualKeys)) {
+                        manualKeys[productId] = firebaseManualKeys;
                     }
                     showKeysModal(productId, product);
                 }).catch(() => {
@@ -2411,11 +2511,10 @@ function updateRazorpayKey() {
         }
 
         function showKeysModal(productId, product) {
-            // Only show keys from Firebase, NOT local keys
-            let productKeys = [];
+            // Show ONLY manual keys (admin-added keys) - NOT auto-generated keys
+            let productManualKeys = [];
             if (firebaseInitialized) {
-                // We already loaded fresh keys in viewKeys(), so use those
-                productKeys = keys[productId] || [];
+                productManualKeys = manualKeys[productId] || [];
             }
 
             // Create modal dynamically
@@ -2425,17 +2524,18 @@ function updateRazorpayKey() {
             modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 20, 74, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
 
             let keysHtml = '';
-            if (productKeys.length === 0) {
+            if (productManualKeys.length === 0) {
                 keysHtml = `
                     <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
                         <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
-                        <p>No keys available for this plan.</p>
+                        <p>No admin-added keys found for this plan.</p>
+                        <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">Only keys manually entered in "Add Stock" will appear here.</p>
                     </div>
                 `;
             } else {
                 keysHtml = `
                     <div style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 400px; overflow-y: auto; padding-right: 0.5rem;">
-                        ${productKeys.map((key, index) => `
+                        ${productManualKeys.map((key, index) => `
                             <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--cream); padding: 0.6rem 0.8rem; border-radius: 10px; border: 1px solid var(--border);">
                                 <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; min-width: 30px;">#${index + 1}</span>
                                 <span style="font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 700; color: var(--blue-darker); flex: 1; letter-spacing: 0.5px;">${key}</span>
@@ -2447,7 +2547,7 @@ function updateRazorpayKey() {
                     </div>
                     <div style="margin-top: 1rem; padding: 0.8rem; background: rgba(39, 77, 245, 0.06); border-radius: 10px; border: 1px solid var(--border); text-align: center;">
                         <span style="font-size: 0.85rem; color: var(--blue-dark); font-weight: 600;">
-                            <i class="fas fa-layer-group"></i> Total: ${productKeys.length} keys | 
+                            <i class="fas fa-user-shield"></i> Admin-Added Keys: ${productManualKeys.length} | 
                             <i class="fas fa-box"></i> ${product.name}
                         </span>
                     </div>
@@ -2524,9 +2624,18 @@ function updateRazorpayKey() {
                 return;
             }
 
-            // Remove the specific key
+            // Remove the specific key from main keys
             keys[duration].splice(keyIndex, 1);
             product.stock -= 1;
+
+            // Also remove from manualKeys if it exists there
+            if (manualKeys[duration]) {
+                const manualIndex = manualKeys[duration].indexOf(keyToDelete);
+                if (manualIndex !== -1) {
+                    manualKeys[duration].splice(manualIndex, 1);
+                    saveManualKeysToFirebase();
+                }
+            }
 
             saveProductsToFirebase();
             saveKeysToFirebase();
