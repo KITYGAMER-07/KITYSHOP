@@ -291,6 +291,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -790,6 +791,7 @@
         let db, auth;
         let firebaseInitialized = false;
         let currentUser = null;
+        let adminCheckComplete = false;
 
         try {
             firebase.initializeApp(firebaseConfig);
@@ -1372,8 +1374,8 @@ function updateRazorpayKey() {
                 } else {
                     currentUser = null;
                     console.log("User signed out");
-                    // Only show auth page if admin is not logged in
-                    if (!isAdminLoggedIn) {
+                    // Only show auth page if admin is not logged in AND admin check is complete
+                    if (!isAdminLoggedIn && adminCheckComplete) {
                         showAuthPage();
                     }
                 }
@@ -1436,6 +1438,7 @@ function updateRazorpayKey() {
                                     isAdminLoggedIn = false;
                                     logoutAdmin();
                                 });
+                            adminCheckComplete = true;
                             return; // Admin shown immediately, Firebase loads in background
                         }
                     }
@@ -1444,11 +1447,11 @@ function updateRazorpayKey() {
                     localStorage.removeItem("kityAdminSession");
                 }
             }
-            // NOT an admin session - DO NOT show auth page here
-            // The Firebase auth state listener will automatically:
-            // - Call showMainContent() if user is logged in
-            // - Call showAuthPage() if user is NOT logged in
-            // So we do NOTHING here for regular users!
+            // NOT an admin session
+            adminCheckComplete = true;
+            if (!currentUser) {
+                showAuthPage();
+            }
         }
 
         function showAuthPage() {
