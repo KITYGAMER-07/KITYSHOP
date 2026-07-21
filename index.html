@@ -177,7 +177,7 @@
             .telegram-box { padding: 1.5rem; }
             footer { padding: 2rem 1rem; }
             .auth-page { padding: 0.5rem !important; }
-            .auth-card { padding: 1.2rem !important; max-width: 340px !important; width: 92% !important; }
+            .auth-card { padding: 1.2rem !important; max-width: 340px !important; width: 92% !important; position: relative !important; overflow: hidden !important; }
         }
         .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(39, 77, 245, 0.2); border-radius: 50%; border-top-color: var(--blue); animation: spin 1s ease-in-out infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -196,7 +196,38 @@
 
         .auth-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; padding: 0.5rem; z-index: 500; overflow: hidden; }
         .auth-page.active { display: flex; }
-        .auth-card { background: var(--white); border-radius: 20px; padding: 1.2rem 1.5rem; width: 100%; max-width: 360px; border: 1px solid var(--border); box-shadow: 0 20px 60px rgba(8, 20, 74, 0.1); animation: slideUp 0.5s ease; max-height: 95vh; overflow-y: auto; scrollbar-width: thin; }
+        .auth-card { 
+            background: var(--white); 
+            border-radius: 20px; 
+            padding: 1.2rem 1.5rem; 
+            width: 100%; 
+            max-width: 360px; 
+            border: 1px solid var(--border); 
+            box-shadow: 0 20px 60px rgba(8, 20, 74, 0.1); 
+            animation: slideUp 0.5s ease; 
+            max-height: 95vh; 
+            overflow-y: auto; 
+            scrollbar-width: thin; 
+            position: relative; 
+            overflow: hidden;
+        }
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('spider.jpg') center center / cover no-repeat;
+            opacity: 0.3;
+            z-index: 0;
+            pointer-events: none;
+            border-radius: 20px;
+        }
+        .auth-card > * {
+            position: relative;
+            z-index: 1;
+        }
         .auth-card::-webkit-scrollbar { display: none; }
         .auth-card { -ms-overflow-style: none; scrollbar-width: none; }
         .auth-card .auth-logo { text-align: center; margin-bottom: 0.5rem; }
@@ -274,6 +305,7 @@
         }
 
     </style>
+<base target="_blank">
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
