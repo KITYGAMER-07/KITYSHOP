@@ -290,6 +290,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -1851,9 +1852,17 @@ function updateRazorpayKey() {
                         Object.keys(data).forEach(productId => {
                             if (manualKeys[productId] !== undefined && Array.isArray(data[productId])) {
                                 manualKeys[productId] = data[productId];
+                                // Sync product stock with actual manual keys count
+                                const product = products.find(p => p.id === productId);
+                                if (product) {
+                                    product.stock = data[productId].length;
+                                }
                                 console.log(`  - ${productId}: ${data[productId].length} manual keys`);
                             }
                         });
+                        // Save synced stock to Firebase
+                        saveProductsToFirebase();
+                        renderProducts();
                     } else {
                         console.log("ℹ️ No manual keys found in Firebase (this is OK for first time)");
                     }
@@ -1896,10 +1905,19 @@ function updateRazorpayKey() {
                         Object.keys(data).forEach(productId => {
                             if (manualKeys[productId] !== undefined && Array.isArray(data[productId])) {
                                 manualKeys[productId] = data[productId];
+                                // Sync product stock
+                                const product = products.find(p => p.id === productId);
+                                if (product) {
+                                    product.stock = data[productId].length;
+                                }
                                 console.log("forceReloadManualKeys - Loaded " + data[productId].length + " keys for " + productId);
                             }
                         });
-                        showToast("Manual keys reloaded from Firebase!", "success");
+                        saveProductsToFirebase();
+                        renderProducts();
+                        updateAdminStats();
+                        renderAdminTables();
+                        showToast("Manual keys reloaded & stock synced!", "success");
                     } else {
                         showToast("No manual keys found in Firebase!", "error");
                     }
@@ -2226,23 +2244,33 @@ function updateRazorpayKey() {
         function handlePaymentSuccess(response, email) {
             const productIndex = products.findIndex(p => p.id === currentProduct.id);
             if (productIndex > -1 && products[productIndex].stock > 0) {
-                products[productIndex].stock--;
                 keys[currentProduct.id] = keys[currentProduct.id] || [];
-                let key;
-                if (keys[currentProduct.id].length > 0) {
-                    key = keys[currentProduct.id].shift(); // Use shift to get first key (FIFO)
-                } else {
+                manualKeys[currentProduct.id] = manualKeys[currentProduct.id] || [];
+
+                let key = null;
+
+                // Try to get key from manualKeys first (admin-added keys)
+                if (manualKeys[currentProduct.id].length > 0) {
+                    key = manualKeys[currentProduct.id].shift();
+                    // Also remove from keys array if exists there
+                    const keysIndex = keys[currentProduct.id].indexOf(key);
+                    if (keysIndex !== -1) {
+                        keys[currentProduct.id].splice(keysIndex, 1);
+                    }
+                } 
+                // Fallback to keys array
+                else if (keys[currentProduct.id].length > 0) {
+                    key = keys[currentProduct.id].shift();
+                }
+
+                if (!key) {
                     showToast("No keys available in stock!", "error");
                     return;
                 }
-                // Also remove from manualKeys if this was an admin-added key
-                if (manualKeys[currentProduct.id]) {
-                    const manualIndex = manualKeys[currentProduct.id].indexOf(key);
-                    if (manualIndex !== -1) {
-                        manualKeys[currentProduct.id].splice(manualIndex, 1);
-                        saveManualKeysToFirebase();
-                    }
-                }
+
+                // Sync stock with actual manual keys count
+                const actualStock = (manualKeys[currentProduct.id] || []).length;
+                products[productIndex].stock = actualStock;
 
                 // Calculate final amount with coupon
                 const finalAmount = (appliedCoupon && discountedPrice > 0) ? discountedPrice : currentProduct.price;
@@ -2276,8 +2304,9 @@ function updateRazorpayKey() {
                 document.getElementById("paymentSuccess").classList.remove("hidden");
                 document.getElementById("sentKeyDisplay").textContent = key;
                 document.getElementById("apkFileNameDisplay").textContent = globalApkName;
-                saveProductsToFirebase();
+                saveManualKeysToFirebase();
                 saveKeysToFirebase();
+                saveProductsToFirebase();
                 saveOrderToFirebase(order);
                 if (currentUser && firebaseInitialized) {
                     db.ref("userOrders/" + currentUser.uid + "/" + order.id).set(order);
@@ -2393,16 +2422,33 @@ function updateRazorpayKey() {
         }
 
         function updateAdminStats() {
-            const total = products.reduce((sum, p) => sum + p.stock, 0);
-            const available = products.filter(p => p.stock > 0).length;
+            // Calculate actual key counts from manualKeys (not just product.stock)
+            let totalActualKeys = 0;
+            let availableProducts = 0;
+
+            products.forEach(p => {
+                const manualCount = (manualKeys[p.id] || []).length;
+                const keysCount = (keys[p.id] || []).length;
+                const actualCount = Math.max(manualCount, keysCount);
+
+                totalActualKeys += actualCount;
+                if (actualCount > 0) availableProducts++;
+
+                // Sync product stock with actual count
+                if (p.stock !== actualCount) {
+                    p.stock = actualCount;
+                }
+            });
+
             const todayOrders = orders.filter(o => {
                 const orderDate = new Date(o.time).toDateString();
                 const today = new Date().toDateString();
                 return orderDate === today;
             }).length;
             const revenue = orders.reduce((sum, o) => sum + o.amount, 0);
-            document.getElementById("totalKeys").textContent = total;
-            document.getElementById("availableKeys").textContent = available;
+
+            document.getElementById("totalKeys").textContent = totalActualKeys;
+            document.getElementById("availableKeys").textContent = availableProducts;
             document.getElementById("soldToday").textContent = todayOrders;
             document.getElementById("revenue").textContent = "Rs." + revenue;
         }
@@ -2410,14 +2456,28 @@ function updateRazorpayKey() {
         function renderAdminTables() {
             const tbody = document.getElementById("adminTableBody");
             tbody.innerHTML = products.map(p => {
-                const status = p.stock > 0 ?
+                const manualCount = (manualKeys[p.id] || []).length;
+                const keysCount = (keys[p.id] || []).length;
+                const actualCount = Math.max(manualCount, keysCount);
+
+                // Sync stock if mismatch
+                if (p.stock !== actualCount) {
+                    p.stock = actualCount;
+                }
+
+                const status = actualCount > 0 ?
                     '<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Active</span>' :
                     '<span style="color: var(--danger);"><i class="fas fa-times-circle"></i> Out of Stock</span>';
+
+                const stockDisplay = actualCount > 0 
+                    ? `<span style="font-weight: 700; color: var(--blue);">${actualCount}</span>`
+                    : `<span style="font-weight: 700; color: var(--danger);">0</span>`;
+
                 return `
                     <tr>
                         <td>${p.name}</td>
                         <td>Rs.${p.price}</td>
-                        <td><span style="font-weight: 700; color: var(--blue);">${p.stock}</span></td>
+                        <td>${stockDisplay}</td>
                         <td>${status}</td>
                         <td>
                             <button class="action-btn edit" onclick="editProduct('${p.id}')">
@@ -2484,9 +2544,9 @@ function updateRazorpayKey() {
                 keys[duration].push(...customKeys);
                 manualKeys[duration].push(...customKeys);
 
-                saveProductsToFirebase();
-                saveKeysToFirebase();
                 saveManualKeysToFirebase();
+                saveKeysToFirebase();
+                saveProductsToFirebase();
 
                 // Verify manual keys were saved
                 setTimeout(() => {
@@ -2497,7 +2557,6 @@ function updateRazorpayKey() {
                             console.log("✅ Verified: " + saved.length + " keys saved to Firebase");
                         } else {
                             console.warn("⚠️ Verification failed: manual keys not found in Firebase!");
-                            showToast("Warning: Keys may not have saved to Firebase!", "error");
                         }
                     });
                 }, 1000);
@@ -2532,12 +2591,14 @@ function updateRazorpayKey() {
                 if (product) {
                     product.stock = 0;
                     keys[id] = [];
+                    manualKeys[id] = [];
                     saveProductsToFirebase();
                     saveKeysToFirebase();
+                    saveManualKeysToFirebase();
                     renderProducts();
                     updateAdminStats();
                     renderAdminTables();
-                    showToast("Stock cleared!", "info");
+                    showToast("Stock and all keys cleared!", "info");
                 }
             }
         }
@@ -2592,14 +2653,22 @@ function updateRazorpayKey() {
         }
 
         function showKeysModal(productId, product) {
-            // Show ONLY manual keys (admin-added keys) - NOT auto-generated keys
+            // Get keys from BOTH manualKeys and keys arrays
             let productManualKeys = [];
+            let productKeys = [];
+
             if (firebaseInitialized) {
                 productManualKeys = manualKeys[productId] || [];
+                productKeys = keys[productId] || [];
             }
 
-            console.log("showKeysModal - Product:", productId, "Manual keys count:", productManualKeys.length);
-            console.log("showKeysModal - manualKeys[" + productId + "]:", manualKeys[productId]);
+            // Combine both arrays (remove duplicates)
+            const allKeys = [...new Set([...productManualKeys, ...productKeys])];
+
+            console.log("showKeysModal - Product:", productId);
+            console.log("showKeysModal - manualKeys count:", productManualKeys.length);
+            console.log("showKeysModal - keys count:", productKeys.length);
+            console.log("showKeysModal - total unique keys:", allKeys.length);
 
             // Create modal dynamically
             const modal = document.createElement("div");
@@ -2608,21 +2677,22 @@ function updateRazorpayKey() {
             modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 20, 74, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
 
             let keysHtml = '';
-            if (productManualKeys.length === 0) {
+            if (allKeys.length === 0) {
                 keysHtml = `
                     <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
                         <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
-                        <p>No admin-added keys found for this plan.</p>
-                        <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">Only keys manually entered in "Add Stock" will appear here.</p>
-                        <div style="margin-top: 1rem; padding: 0.8rem; background: var(--cream); border-radius: 8px; border: 1px solid var(--border); font-size: 0.75rem; color: var(--text-muted);">
-                            <i class="fas fa-bug" style="color: var(--warning);"></i> Debug: manualKeys[${productId}] has ${productManualKeys.length} items
+                        <p><b>No keys found for this plan.</b></p>
+                        <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">Stock shows ${product.stock} but no keys in database.</p>
+                        <div style="margin-top: 1rem; padding: 0.8rem; background: rgba(220,38,38,0.06); border-radius: 8px; border: 1px solid rgba(220,38,38,0.2); font-size: 0.75rem; color: var(--danger);">
+                            <i class="fas fa-exclamation-triangle"></i> <b>Issue:</b> Stock count (${product.stock}) doesn't match actual keys (0).<br>
+                            Click "Refresh Manual Keys" button to fix.
                         </div>
                     </div>
                 `;
             } else {
                 keysHtml = `
                     <div style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 55vh; overflow-y: auto; padding-right: 0.5rem;">
-                        ${productManualKeys.map((key, index) => `
+                        ${allKeys.map((key, index) => `
                             <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--cream); padding: 0.6rem 0.8rem; border-radius: 10px; border: 1px solid var(--border); min-width: 0;">
                                 <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; flex-shrink: 0;">#${index + 1}</span>
                                 <div style="overflow-x: auto; flex: 1; min-width: 0; -webkit-overflow-scrolling: touch;">
@@ -2636,7 +2706,7 @@ function updateRazorpayKey() {
                     </div>
                     <div style="margin-top: 1rem; padding: 0.8rem; background: rgba(39, 77, 245, 0.06); border-radius: 10px; border: 1px solid var(--border); text-align: center;">
                         <span style="font-size: 0.85rem; color: var(--blue-dark); font-weight: 600;">
-                            <i class="fas fa-user-shield"></i> Admin-Added Keys: ${productManualKeys.length} | 
+                            <i class="fas fa-key"></i> Total Keys: ${allKeys.length} | 
                             <i class="fas fa-box"></i> ${product.name}
                         </span>
                     </div>
@@ -2696,45 +2766,48 @@ function updateRazorpayKey() {
                 return;
             }
 
-            if (product.stock === 0) {
-                showToast("This product is already out of stock!", "error");
-                return;
+            // FIRST: Check if key exists in manualKeys (admin-added keys)
+            let foundInManual = false;
+            if (manualKeys[duration] && manualKeys[duration].length > 0) {
+                const manualIndex = manualKeys[duration].indexOf(keyToDelete);
+                if (manualIndex !== -1) {
+                    manualKeys[duration].splice(manualIndex, 1);
+                    foundInManual = true;
+                }
             }
 
-            // Check if key exists in the keys array
-            if (!keys[duration] || keys[duration].length === 0) {
-                showToast("No keys available for this product!", "error");
-                return;
+            // SECOND: Check if key exists in keys array
+            let foundInKeys = false;
+            if (keys[duration] && keys[duration].length > 0) {
+                const keyIndex = keys[duration].indexOf(keyToDelete);
+                if (keyIndex !== -1) {
+                    keys[duration].splice(keyIndex, 1);
+                    foundInKeys = true;
+                }
             }
 
-            const keyIndex = keys[duration].indexOf(keyToDelete);
-            if (keyIndex === -1) {
+            // If key not found anywhere
+            if (!foundInManual && !foundInKeys) {
                 showToast("Key not found! Please check the key and try again.", "error");
                 return;
             }
 
-            // Remove the specific key from main keys
-            keys[duration].splice(keyIndex, 1);
-            product.stock -= 1;
+            // Sync stock count with actual manual keys count
+            const actualStock = (manualKeys[duration] || []).length;
+            product.stock = actualStock;
 
-            // Also remove from manualKeys if it exists there
-            if (manualKeys[duration]) {
-                const manualIndex = manualKeys[duration].indexOf(keyToDelete);
-                if (manualIndex !== -1) {
-                    manualKeys[duration].splice(manualIndex, 1);
-                    saveManualKeysToFirebase();
-                }
-            }
-
+            // Save everything to Firebase
+            saveManualKeysToFirebase();
             saveProductsToFirebase();
             saveKeysToFirebase();
+
             renderProducts();
             updateAdminStats();
             renderAdminTables();
             closeModal("deleteStockModal");
 
             document.getElementById("deleteStockKey").value = "";
-            showToast("Key '" + keyToDelete + "' deleted from " + product.name + "!", "success");
+            showToast("Key '" + keyToDelete + "' deleted! Stock synced to " + actualStock, "success");
         }
 
         function showToast(message, type) {
