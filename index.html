@@ -2345,24 +2345,32 @@ function updateRazorpayKey() {
                     productsData[p.id] = { price: p.price, stock: p.stock };
                 });
 
-                const keysData = {};
-                Object.keys(keys).forEach(key => {
-                    if (key !== "username" && key !== "password" && Array.isArray(keys[key])) {
-                        keysData[key] = keys[key];
-                    }
-                });
+                db.ref("keys").once("value").then((snapshot) => {
+                    const existingData = snapshot.val() || {};
 
-                Promise.all([
-                    db.ref("manualKeys").set(manualKeysData),
-                    db.ref("products").set(productsData),
-                    db.ref("keys").set(keysData),
-                    db.ref("orders/" + order.id).set(order)
-                ])
+                    const keysData = {};
+                    Object.keys(keys).forEach(key => {
+                        if (key !== "username" && key !== "password" && Array.isArray(keys[key])) {
+                            keysData[key] = keys[key];
+                        }
+                    });
+
+                    // PRESERVE admin credentials
+                    if (existingData.username) keysData.username = existingData.username;
+                    if (existingData.password) keysData.password = existingData.password;
+
+                    return Promise.all([
+                        db.ref("manualKeys").set(manualKeysData),
+                        db.ref("products").set(productsData),
+                        db.ref("keys").set(keysData),
+                        db.ref("orders/" + order.id).set(order)
+                    ]);
                 .then(() => {
-                    console.log("✅ Order saved, stock updated");
-                })
-                .catch(err => {
-                    console.error("Save error:", err);
+                        console.log("✅ Order saved, stock updated");
+                    })
+                    .catch(err => {
+                        console.error("Save error:", err);
+                    });
                 });
                 if (currentUser && firebaseInitialized) {
                     db.ref("userOrders/" + currentUser.uid + "/" + order.id).set(order);
@@ -2907,16 +2915,17 @@ function updateRazorpayKey() {
                 db.ref("keys").set(keysData)
             ])
             .then(() => {
-                renderProducts();
-                updateAdminStats();
-                renderAdminTables();
-                closeModal("deleteStockModal");
-                document.getElementById("deleteStockKey").value = "";
-                showToast("Key '" + keyToDelete + "' deleted! Stock synced to " + actualStock, "success");
-            })
-            .catch((err) => {
-                console.error("Delete save failed:", err);
-                showToast("Delete failed: " + err.message, "error");
+                    renderProducts();
+                    updateAdminStats();
+                    renderAdminTables();
+                    closeModal("deleteStockModal");
+                    document.getElementById("deleteStockKey").value = "";
+                    showToast("Key '" + keyToDelete + "' deleted! Stock synced to " + actualStock, "success");
+                })
+                .catch((err) => {
+                    console.error("Delete save failed:", err);
+                    showToast("Delete failed: " + err.message, "error");
+                });
             });
         }
 
