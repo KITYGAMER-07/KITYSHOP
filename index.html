@@ -1527,9 +1527,9 @@ function updateRazorpayKey() {
             modal.id = "myOrdersModal";
             modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 20, 74, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
             modal.innerHTML = `
-                <div class="modal" style="max-width: 700px; width: 92%; max-height: 80vh; overflow-y: auto;">
-                    <div class="modal-header">
-                        <h2><i class="fas fa-shopping-bag"></i> My Orders</h2>
+                <div class="modal" style="max-width: 95vw; width: 95vw; max-height: 85vh; overflow-y: auto; padding: 1.2rem;">
+                    <div class="modal-header" style="margin-bottom: 1rem;">
+                        <h2 style="font-size: 1.1rem;"><i class="fas fa-shopping-bag"></i> My Orders</h2>
                         <button class="close-btn" onclick="document.getElementById('myOrdersModal').remove()">&times;</button>
                     </div>
                     <div id="myOrdersContent">
@@ -1606,9 +1606,9 @@ function updateRazorpayKey() {
             modal.id = "myKeysModal";
             modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 20, 74, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
             modal.innerHTML = `
-                <div class="modal" style="max-width: 700px; width: 92%; max-height: 80vh; overflow-y: auto;">
-                    <div class="modal-header">
-                        <h2><i class="fas fa-key"></i> My Keys</h2>
+                <div class="modal" style="max-width: 95vw; width: 95vw; max-height: 85vh; overflow-y: auto; padding: 1.2rem;">
+                    <div class="modal-header" style="margin-bottom: 1rem;">
+                        <h2 style="font-size: 1.1rem;"><i class="fas fa-key"></i> My Keys</h2>
                         <button class="close-btn" onclick="document.getElementById('myKeysModal').remove()">&times;</button>
                     </div>
                     <div id="myKeysContent">
@@ -2552,7 +2552,7 @@ function updateRazorpayKey() {
             loadingModal.id = "viewKeysLoadingModal";
             loadingModal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 20, 74, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
             loadingModal.innerHTML = `
-                <div class="modal" style="max-width: 400px; text-align: center;">
+                <div class="modal" style="max-width: 90vw; width: auto; min-width: 280px; text-align: center; padding: 2rem;">
                     <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
                     <h3 style="font-size: 1rem; color: var(--blue-darker);">Loading admin keys...</h3>
                     <p style="color: var(--text-muted); font-size: 0.8rem;">Fetching from Firebase</p>
@@ -2621,12 +2621,14 @@ function updateRazorpayKey() {
                 `;
             } else {
                 keysHtml = `
-                    <div style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 400px; overflow-y: auto; padding-right: 0.5rem;">
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 55vh; overflow-y: auto; padding-right: 0.5rem;">
                         ${productManualKeys.map((key, index) => `
-                            <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--cream); padding: 0.6rem 0.8rem; border-radius: 10px; border: 1px solid var(--border);">
-                                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; min-width: 30px;">#${index + 1}</span>
-                                <span style="font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 700; color: var(--blue-darker); flex: 1; letter-spacing: 0.5px;">${key}</span>
-                                <button onclick="copyAdminKey('${key.replace(/'/g, "\'")}')" style="background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.3rem 0.8rem; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.75rem; transition: all 0.3s; white-space: nowrap;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--cream); padding: 0.6rem 0.8rem; border-radius: 10px; border: 1px solid var(--border); min-width: 0;">
+                                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; flex-shrink: 0;">#${index + 1}</span>
+                                <div style="overflow-x: auto; flex: 1; min-width: 0; -webkit-overflow-scrolling: touch;">
+                                    <span style="font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 700; color: var(--blue-darker); letter-spacing: 0.5px; white-space: nowrap; display: block; padding: 0.2rem 0;">${key}</span>
+                                </div>
+                                <button onclick="copyAdminKey('${key.replace(/'/g, "\'")}')" style="background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.75rem; transition: all 0.3s; white-space: nowrap; flex-shrink: 0; min-width: 60px;">
                                     <i class="fas fa-copy"></i> Copy
                                 </button>
                             </div>
@@ -2642,9 +2644,9 @@ function updateRazorpayKey() {
             }
 
             modal.innerHTML = `
-                <div class="modal" style="max-width: 600px; width: 92%; max-height: 80vh; overflow-y: auto;">
-                    <div class="modal-header">
-                        <h2><i class="fas fa-key"></i> ${product.name} - Keys</h2>
+                <div class="modal" style="max-width: 95vw; width: 95vw; max-height: 85vh; overflow-y: auto; padding: 1.5rem;">
+                    <div class="modal-header" style="margin-bottom: 1rem;">
+                        <h2 style="font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><i class="fas fa-key"></i> ${product.name}</h2>
                         <button class="close-btn" onclick="document.getElementById('viewKeysModal').remove()">&times;</button>
                     </div>
                     ${keysHtml}
