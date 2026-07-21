@@ -120,7 +120,7 @@
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--blue-light); box-shadow: 0 0 0 3px rgba(39, 77, 245, 0.1); }
         .form-group input::placeholder { color: var(--text-muted); }
         .modal .btn-primary { width: 100%; justify-content: center; }
-        .admin-panel { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; padding-top: 6rem; }
+        .admin-panel { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; padding-top: 2rem; }
         .admin-panel.active { display: block; }
         .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
         .admin-header h2 { color: var(--blue-darker); white-space: nowrap; }
@@ -275,6 +275,7 @@
         }
 
     </style>
+<base target="_blank">
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
@@ -506,7 +507,7 @@
             <div class="stat-card"><h4>Sold Today</h4><div class="value" id="soldToday">0</div></div>
             <div class="stat-card"><h4>Revenue</h4><div class="value" id="revenue">Rs.0</div></div>
         </div>
-        <div style="margin-bottom: 1.5rem; text-align: right;">
+        <div style="margin-bottom: 1.5rem; text-align: center;">
             <button onclick="forceReloadManualKeys()" style="background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 4px 15px rgba(39,77,245,0.25);">
                 <i class="fas fa-sync-alt"></i> Refresh Manual Keys from Firebase
             </button>
