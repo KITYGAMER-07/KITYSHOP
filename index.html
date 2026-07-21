@@ -1382,81 +1382,103 @@ function updateRazorpayKey() {
 
         function checkAdminSession() {
             const session = localStorage.getItem("kityAdminSession");
-            if (session) {
-                try {
-                    const parsed = JSON.parse(session);
-                    if (parsed.username && parsed.password) {
-                        if (firebaseInitialized) {
-                            // Show admin panel immediately with default data
+            if (!session) {
+                console.log("No admin session found");
+                return;
+            }
+
+            try {
+                const parsed = JSON.parse(session);
+                if (!parsed.username || !parsed.password) {
+                    console.log("Invalid session data");
+                    localStorage.removeItem("kityAdminSession");
+                    return;
+                }
+
+                if (!firebaseInitialized) {
+                    console.log("Firebase not initialized, cannot verify session");
+                    return;
+                }
+
+                console.log("Checking admin session for:", parsed.username);
+
+                // Verify credentials with Firebase BEFORE showing admin panel
+                db.ref("keys").once("value")
+                    .then((snapshot) => {
+                        const data = snapshot.val();
+                        if (!data) {
+                            console.log("No admin data in Firebase");
+                            localStorage.removeItem("kityAdminSession");
+                            return;
+                        }
+
+                        const storedUsername = data.username || "";
+                        const storedPassword = data.password || "";
+
+                        if (storedUsername === parsed.username && storedPassword === parsed.password) {
+                            // VALID SESSION - Show admin panel
+                            console.log("Admin session verified!");
                             isAdminLoggedIn = true;
+
                             document.getElementById("authPage").classList.remove("active");
                             document.getElementById("authPage").classList.add("hidden");
                             document.getElementById("mainContent").classList.add("hidden");
                             document.getElementById("adminPanel").classList.add("active");
                             document.getElementById("navbar").classList.add("nav-hidden");
                             document.getElementById("syncIndicator").style.display = "none";
-                            // Render with defaults immediately
+
                             updateAdminStats();
                             renderAdminTables();
+                            loadCouponsFromFirebase();
                             renderCouponsList();
-                            showToast("Admin session restored!", "success");
+                            loadApkFromFirebase();
+                            loadManualKeysFromFirebase();
 
-                            // Verify credentials and load Firebase data in background
-                            db.ref("keys").once("value")
-                                .then((snapshot) => {
-                                    const data = snapshot.val();
-                                    if (data && data.username === parsed.username && data.password === parsed.password) {
-                                        // Valid - load Firebase data
-                                        loadCouponsFromFirebase();
-                                        loadApkFromFirebase();
-                                        loadManualKeysFromFirebase();
-                                        loadRazorpayKeyFromFirebase().then(() => {
-                                            const keyDisplay = document.getElementById("currentRazorpayKey");
-                                            const statusEl = document.getElementById("razorpayStatus");
-                                            if (RAZORPAY_KEY_ID) {
-                                                keyDisplay.textContent = RAZORPAY_KEY_ID.substring(0, 8) + "****" + RAZORPAY_KEY_ID.substring(RAZORPAY_KEY_ID.length - 4);
-                                                statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Active';
-                                                statusEl.style.cssText = "background: rgba(22, 163, 74, 0.1); color: var(--success); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
-                                            } else {
-                                                keyDisplay.textContent = "Not configured";
-                                                statusEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Missing';
-                                                statusEl.style.cssText = "background: rgba(217, 119, 6, 0.1); color: var(--warning); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
-                                            }
-                                        });
-                                    } else {
-                                        // Invalid session
-                                        localStorage.removeItem("kityAdminSession");
-                                        isAdminLoggedIn = false;
-                                        logoutAdmin();
-                                    }
-                                })
-                                .catch(() => {
-                                    localStorage.removeItem("kityAdminSession");
-                                    isAdminLoggedIn = false;
-                                    logoutAdmin();
-                                });
-                            return; // Admin shown immediately, Firebase loads in background
+                            loadRazorpayKeyFromFirebase().then(() => {
+                                const keyDisplay = document.getElementById("currentRazorpayKey");
+                                const statusEl = document.getElementById("razorpayStatus");
+                                if (RAZORPAY_KEY_ID) {
+                                    keyDisplay.textContent = RAZORPAY_KEY_ID.substring(0, 8) + "****" + RAZORPAY_KEY_ID.substring(RAZORPAY_KEY_ID.length - 4);
+                                    statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Active';
+                                    statusEl.style.cssText = "background: rgba(22, 163, 74, 0.1); color: var(--success); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
+                                } else {
+                                    keyDisplay.textContent = "Not configured";
+                                    statusEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Missing';
+                                    statusEl.style.cssText = "background: rgba(217, 119, 6, 0.1); color: var(--warning); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
+                                }
+                            });
+
+                            showToast("Admin session restored!", "success");
+                        } else {
+                            console.log("Session credentials mismatch - clearing session");
+                            console.log("Stored:", storedUsername, "| Session:", parsed.username);
+                            localStorage.removeItem("kityAdminSession");
+                            isAdminLoggedIn = false;
                         }
-                    }
-                } catch (e) {
-                    console.error("Session parse error:", e);
-                    localStorage.removeItem("kityAdminSession");
-                }
+                    })
+                    .catch((err) => {
+                        console.error("Session verification error:", err);
+                        localStorage.removeItem("kityAdminSession");
+                        isAdminLoggedIn = false;
+                    });
+            } catch (e) {
+                console.error("Session parse error:", e);
+                localStorage.removeItem("kityAdminSession");
+                isAdminLoggedIn = false;
             }
-            // NOT an admin session - DO NOT show auth page here
-            // The Firebase auth state listener will automatically:
-            // - Call showMainContent() if user is logged in
-            // - Call showAuthPage() if user is NOT logged in
-            // So we do NOTHING here for regular users!
         }
 
         function showAuthPage() {
+            console.log("Showing auth page");
+            isAdminLoggedIn = false;
+
             document.getElementById("authPage").classList.add("active");
             document.getElementById("authPage").classList.remove("hidden");
             document.getElementById("mainContent").classList.add("hidden");
             document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("navbar").classList.add("nav-hidden");
             document.getElementById("syncIndicator").style.display = "none";
+
             const navLinks = document.getElementById("navLinks");
             if (navLinks) {
                 const existingUserItems = navLinks.querySelectorAll('.user-nav-item');
@@ -1468,19 +1490,23 @@ function updateRazorpayKey() {
         }
 
         function showMainContent() {
+            console.log("Showing main content");
+            isAdminLoggedIn = false;
+
             document.getElementById("authPage").classList.remove("active");
             document.getElementById("authPage").classList.add("hidden");
             document.getElementById("mainContent").classList.remove("hidden");
             document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("navbar").classList.remove("nav-hidden");
             document.getElementById("syncIndicator").style.display = "none";
+
             const navLinks = document.getElementById("navLinks");
             if (navLinks) {
                 const mainItems = navLinks.querySelectorAll('.main-nav-item');
                 mainItems.forEach(el => el.style.display = '');
             }
             setTimeout(() => { addUserMenuToNav(); }, 100);
-            // Show products immediately with defaults, then update from Firebase
+
             renderProducts();
             loadProductsFromFirebase();
             loadOrdersFromFirebase();
@@ -2357,43 +2383,73 @@ function updateRazorpayKey() {
         function loginAdmin() {
             const username = document.getElementById("adminUsername").value.trim();
             const password = document.getElementById("adminPassword").value;
+
             if (!username || !password) {
                 showToast("Please enter username and password!", "error");
                 return;
             }
+
             const loginBtn = document.querySelector("#adminLoginModal .btn-primary");
             const originalText = loginBtn.innerHTML;
             loginBtn.innerHTML = '<div class="loading"></div> Verifying...';
             loginBtn.disabled = true;
+
             if (!firebaseInitialized) {
                 showToast("Firebase not connected! Cannot verify login.", "error");
                 loginBtn.innerHTML = originalText;
                 loginBtn.disabled = false;
                 return;
             }
+
+            // Try to get admin credentials from Firebase
             db.ref("keys").once("value")
                 .then((snapshot) => {
                     const data = snapshot.val();
-                    if (data && data.username === username && data.password === password) {
-                        // Save admin session to localStorage
+                    console.log("Admin login - Firebase data:", data);
+
+                    if (!data) {
+                        showToast("No admin credentials found in Firebase!", "error");
+                        return;
+                    }
+
+                    // Check credentials with exact match
+                    const storedUsername = data.username || "";
+                    const storedPassword = data.password || "";
+
+                    console.log("Stored username:", storedUsername, "| Entered:", username);
+                    console.log("Password match:", storedPassword === password);
+
+                    if (storedUsername === username && storedPassword === password) {
+                        // SUCCESS - Save session
                         localStorage.setItem("kityAdminSession", JSON.stringify({
                             username: username,
                             password: password,
                             loginTime: new Date().toISOString()
                         }));
+
                         isAdminLoggedIn = true;
+
+                        // Hide all other views
                         document.getElementById("adminLoginModal").classList.remove("active");
                         document.getElementById("mainContent").classList.add("hidden");
+                        document.getElementById("authPage").classList.remove("active");
                         document.getElementById("authPage").classList.add("hidden");
                         document.getElementById("adminPanel").classList.add("active");
+                        document.getElementById("navbar").classList.add("nav-hidden");
+                        document.getElementById("syncIndicator").style.display = "none";
+
+                        // Clear form
                         document.getElementById("adminUsername").value = "";
                         document.getElementById("adminPassword").value = "";
+
+                        // Load admin data
                         updateAdminStats();
                         renderAdminTables();
                         loadCouponsFromFirebase();
                         renderCouponsList();
                         loadApkFromFirebase();
                         loadManualKeysFromFirebase();
+
                         loadRazorpayKeyFromFirebase().then(() => {
                             const keyDisplay = document.getElementById("currentRazorpayKey");
                             const statusEl = document.getElementById("razorpayStatus");
@@ -2407,30 +2463,21 @@ function updateRazorpayKey() {
                                 statusEl.style.cssText = "background: rgba(217, 119, 6, 0.1); color: var(--warning); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;";
                             }
                         });
+
                         showToast("Welcome to Admin Panel!", "success");
-                        // Check manual keys status in Firebase
-                        setTimeout(() => {
-                            checkManualKeysInFirebase().then((exists) => {
-                                if (!exists) {
-                                    console.log("💡 No manualKeys found in Firebase. Add stock with custom keys to create it.");
-                                }
-                            });
-                        }, 1000);
                     } else {
-                        if (!data) {
-                            showToast("No login data found in Firebase!", "error");
-                        } else if (data.username !== username) {
-                            showToast("Invalid username!", "error");
-                        } else if (data.password !== password) {
+                        if (storedUsername !== username) {
+                            showToast("Invalid username! Stored: '" + storedUsername + "' | Entered: '" + username + "'", "error");
+                        } else if (storedPassword !== password) {
                             showToast("Invalid password!", "error");
                         } else {
-                            showToast("Invalid username or password!", "error");
+                            showToast("Invalid credentials!", "error");
                         }
                     }
                 })
                 .catch((error) => {
                     console.error("Login verification failed:", error);
-                    showToast("Login verification failed!", "error");
+                    showToast("Login verification failed: " + error.message, "error");
                 })
                 .finally(() => {
                     loginBtn.innerHTML = originalText;
@@ -2439,16 +2486,23 @@ function updateRazorpayKey() {
         }
 
         function logoutAdmin() {
+            console.log("Admin logout called");
             localStorage.removeItem("kityAdminSession");
             isAdminLoggedIn = false;
+
             document.getElementById("adminPanel").classList.remove("active");
             document.getElementById("syncIndicator").style.display = "none";
-            if (currentUser) {
+
+            // Check if regular user is logged in
+            if (currentUser && firebaseInitialized) {
+                console.log("Regular user still logged in, showing main content");
                 showMainContent();
             } else {
+                console.log("No user logged in, showing auth page");
                 showAuthPage();
             }
-            showToast("Logged out successfully", "info");
+
+            showToast("Admin logged out successfully", "info");
         }
 
         function updateAdminStats() {
