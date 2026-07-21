@@ -1760,12 +1760,13 @@ function updateRazorpayKey() {
         }
 
         function saveProductsToFirebase() {
-            if (!firebaseInitialized) return;
+            if (!firebaseInitialized) return Promise.resolve();
             setSyncing(true);
-            const productsRef = db.ref("products");
             const dataToSave = {};
             products.forEach(p => { dataToSave[p.id] = { price: p.price, stock: p.stock }; });
-            productsRef.set(dataToSave).then(() => { setSyncing(false); }).catch(err => { console.error("Error saving products:", err); setSyncing(false); });
+            return db.ref("products").set(dataToSave)
+                .then(() => { setSyncing(false); })
+                .catch(err => { console.error("Error saving products:", err); setSyncing(false); throw err; });
         }
 
         function loadKeysFromFirebase() {
@@ -1776,75 +1777,71 @@ function updateRazorpayKey() {
                 if (data) {
                     Object.keys(data).forEach(productId => {
                         if (productId === "username" || productId === "password") return;
-                        // Only load if it's a valid product and has actual keys
                         if (keys[productId] !== undefined && Array.isArray(data[productId])) {
                             keys[productId] = data[productId];
                         }
                     });
                 }
-                // Do NOT auto-generate local keys - only use Firebase keys
-                // If stock > keys count, just update the stock to match available keys
+                // Sync stock with actual available keys
                 products.forEach(p => {
                     keys[p.id] = keys[p.id] || [];
                     const current = keys[p.id].length;
                     if (current !== p.stock) {
-                        p.stock = current; // Sync stock with actual available keys
+                        p.stock = current;
                     }
                 });
-                // Save updated stock counts back to Firebase
                 saveProductsToFirebase();
             });
-            // Also load manual keys
+            // Also load manual keys (this will also sync stock)
             loadManualKeysFromFirebase();
         }
 
         function saveKeysToFirebase() {
-            if (!firebaseInitialized) return;
-            db.ref("keys").once("value").then((snapshot) => {
+            if (!firebaseInitialized) return Promise.resolve();
+            return db.ref("keys").once("value").then((snapshot) => {
                 const existingData = snapshot.val() || {};
-                // Build clean keys object - only product key arrays
                 const dataToSave = {};
                 Object.keys(keys).forEach(key => {
                     if (key !== "username" && key !== "password" && Array.isArray(keys[key])) {
                         dataToSave[key] = keys[key];
                     }
                 });
-                // Preserve admin credentials
                 if (existingData.username) dataToSave.username = existingData.username;
                 if (existingData.password) dataToSave.password = existingData.password;
                 return db.ref("keys").set(dataToSave);
-            }).catch(err => { console.error("Error saving keys:", err); });
+            }).catch(err => { console.error("Error saving keys:", err); throw err; });
         }
 
         function saveManualKeysToFirebase() {
             if (!firebaseInitialized) {
                 console.warn("Firebase not initialized, cannot save manual keys");
-                return;
+                return Promise.reject("No Firebase");
             }
             const dataToSave = {};
             Object.keys(manualKeys).forEach(key => {
-                if (Array.isArray(manualKeys[key])) {
+                if (Array.isArray(manualKeys[key]) && manualKeys[key].length > 0) {
                     dataToSave[key] = manualKeys[key];
                 }
             });
             console.log("Saving manual keys to Firebase:", dataToSave);
-            db.ref("manualKeys").set(dataToSave)
+            return db.ref("manualKeys").set(dataToSave)
                 .then(() => {
                     console.log("✅ Manual keys saved to Firebase successfully");
                 })
                 .catch(err => {
                     console.error("❌ Error saving manual keys:", err);
                     showToast("Failed to save manual keys to Firebase!", "error");
+                    throw err;
                 });
         }
 
         function loadManualKeysFromFirebase() {
             if (!firebaseInitialized) {
                 console.warn("Firebase not initialized, cannot load manual keys");
-                return;
+                return Promise.resolve();
             }
             console.log("Loading manual keys from Firebase...");
-            db.ref("manualKeys").once("value")
+            return db.ref("manualKeys").once("value")
                 .then((snapshot) => {
                     const data = snapshot.val();
                     if (data) {
@@ -1852,6 +1849,8 @@ function updateRazorpayKey() {
                         Object.keys(data).forEach(productId => {
                             if (manualKeys[productId] !== undefined && Array.isArray(data[productId])) {
                                 manualKeys[productId] = data[productId];
+                                // Also sync to keys array
+                                keys[productId] = data[productId];
                                 // Sync product stock with actual manual keys count
                                 const product = products.find(p => p.id === productId);
                                 if (product) {
@@ -1861,8 +1860,11 @@ function updateRazorpayKey() {
                             }
                         });
                         // Save synced stock to Firebase
-                        saveProductsToFirebase();
-                        renderProducts();
+                        return saveProductsToFirebase().then(() => {
+                            renderProducts();
+                            updateAdminStats();
+                            renderAdminTables();
+                        });
                     } else {
                         console.log("ℹ️ No manual keys found in Firebase (this is OK for first time)");
                     }
@@ -2304,10 +2306,38 @@ function updateRazorpayKey() {
                 document.getElementById("paymentSuccess").classList.remove("hidden");
                 document.getElementById("sentKeyDisplay").textContent = key;
                 document.getElementById("apkFileNameDisplay").textContent = globalApkName;
-                saveManualKeysToFirebase();
-                saveKeysToFirebase();
-                saveProductsToFirebase();
-                saveOrderToFirebase(order);
+                // Build and save all data
+                const manualKeysData = {};
+                Object.keys(manualKeys).forEach(key => {
+                    if (Array.isArray(manualKeys[key]) && manualKeys[key].length > 0) {
+                        manualKeysData[key] = manualKeys[key];
+                    }
+                });
+
+                const productsData = {};
+                products.forEach(p => {
+                    productsData[p.id] = { price: p.price, stock: p.stock };
+                });
+
+                const keysData = {};
+                Object.keys(keys).forEach(key => {
+                    if (key !== "username" && key !== "password" && Array.isArray(keys[key])) {
+                        keysData[key] = keys[key];
+                    }
+                });
+
+                Promise.all([
+                    db.ref("manualKeys").set(manualKeysData),
+                    db.ref("products").set(productsData),
+                    db.ref("keys").set(keysData),
+                    db.ref("orders/" + order.id).set(order)
+                ])
+                .then(() => {
+                    console.log("✅ Order saved, stock updated");
+                })
+                .catch(err => {
+                    console.error("Save error:", err);
+                });
                 if (currentUser && firebaseInitialized) {
                     db.ref("userOrders/" + currentUser.uid + "/" + order.id).set(order);
                 }
@@ -2796,18 +2826,44 @@ function updateRazorpayKey() {
             const actualStock = (manualKeys[duration] || []).length;
             product.stock = actualStock;
 
-            // Save everything to Firebase
-            saveManualKeysToFirebase();
-            saveProductsToFirebase();
-            saveKeysToFirebase();
+            // Build save data
+            const manualKeysData = {};
+            Object.keys(manualKeys).forEach(key => {
+                if (Array.isArray(manualKeys[key]) && manualKeys[key].length > 0) {
+                    manualKeysData[key] = manualKeys[key];
+                }
+            });
 
-            renderProducts();
-            updateAdminStats();
-            renderAdminTables();
-            closeModal("deleteStockModal");
+            const productsData = {};
+            products.forEach(p => {
+                productsData[p.id] = { price: p.price, stock: p.stock };
+            });
 
-            document.getElementById("deleteStockKey").value = "";
-            showToast("Key '" + keyToDelete + "' deleted! Stock synced to " + actualStock, "success");
+            const keysData = {};
+            Object.keys(keys).forEach(key => {
+                if (key !== "username" && key !== "password" && Array.isArray(keys[key])) {
+                    keysData[key] = keys[key];
+                }
+            });
+
+            // Save everything to Firebase with Promise.all
+            Promise.all([
+                db.ref("manualKeys").set(manualKeysData),
+                db.ref("products").set(productsData),
+                db.ref("keys").set(keysData)
+            ])
+            .then(() => {
+                renderProducts();
+                updateAdminStats();
+                renderAdminTables();
+                closeModal("deleteStockModal");
+                document.getElementById("deleteStockKey").value = "";
+                showToast("Key '" + keyToDelete + "' deleted! Stock synced to " + actualStock, "success");
+            })
+            .catch((err) => {
+                console.error("Delete save failed:", err);
+                showToast("Delete failed: " + err.message, "error");
+            });
         }
 
         function showToast(message, type) {
