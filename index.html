@@ -377,7 +377,6 @@
         .auth-method-switch { text-align: center; margin: 0.5rem 0; font-size: 0.78rem; color: var(--text-muted); }
         .auth-method-switch a { color: var(--blue); font-weight: 600; cursor: pointer; text-decoration: none; }
         .auth-method-switch a:hover { text-decoration: underline; }
-        #recaptcha-container-phone { margin: 0.5rem 0; min-height: 0; }
         .phone-verified-badge { 
             display: inline-flex; 
             align-items: center; 
@@ -601,7 +600,6 @@
                             <i class="fas fa-info-circle" style="color: var(--blue);"></i> Enter number without country code
                         </div>
                     </div>
-                    <div id="recaptcha-container-phone"></div>
                     <button type="button" class="btn-primary" id="sendOtpBtn" onclick="sendPhoneOTP()">
                         <i class="fas fa-paper-plane"></i> Send OTP
                     </button>
@@ -1491,21 +1489,13 @@ function updateRazorpayKey() {
         });
 
         // ========== PHONE AUTHENTICATION ==========
-        let phoneRecaptchaVerifier = null;
         let phoneConfirmationResult = null;
         let phoneResendTimer = null;
         let phoneResendCountdown = 60;
 
         function initPhoneRecaptcha() {
-            if (!firebaseInitialized) return;
-            if (phoneRecaptchaVerifier) return;
-            try {
-                phoneRecaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container-phone', {
-                    'size': 'invisible',
-                    'callback': function(response) { console.log('reCAPTCHA verified'); },
-                    'expired-callback': function() { phoneRecaptchaVerifier = null; }
-                });
-            } catch (e) { console.error('reCAPTCHA init error:', e); }
+            // reCAPTCHA removed - using direct verification
+            console.log('Phone auth ready (no reCAPTCHA)');
         }
 
         function resetPhoneAuth() {
@@ -1519,7 +1509,6 @@ function updateRazorpayKey() {
             if (phoneResendTimer) { clearInterval(phoneResendTimer); phoneResendTimer = null; }
             phoneResendCountdown = 60;
             document.getElementById('resendTimer').innerHTML = 'Resend OTP in <span id="timerCount">60</span>s';
-            if (phoneRecaptchaVerifier) { try { phoneRecaptchaVerifier.clear(); } catch(e) {} phoneRecaptchaVerifier = null; }
         }
 
         function showPhoneAuthError(message) {
@@ -1541,9 +1530,8 @@ function updateRazorpayKey() {
             const fullPhoneNumber = countryCode + phoneNumber;
             const btn = document.getElementById('sendOtpBtn');
             if (!phoneNumber || phoneNumber.length < 6) { showPhoneAuthError("Please enter a valid phone number!"); return; }
-            if (!phoneRecaptchaVerifier) initPhoneRecaptcha();
             btn.disabled = true; btn.innerHTML = '<div class="loading"></div> Sending...';
-            auth.signInWithPhoneNumber(fullPhoneNumber, phoneRecaptchaVerifier)
+            auth.signInWithPhoneNumber(fullPhoneNumber)
                 .then((confirmationResult) => {
                     phoneConfirmationResult = confirmationResult;
                     document.getElementById('phoneStep1').classList.remove('active');
@@ -1558,15 +1546,12 @@ function updateRazorpayKey() {
                     let msg = "Failed to send OTP. Please try again.";
                     if (error.code === "auth/invalid-phone-number") msg = "Invalid phone number format!";
                     else if (error.code === "auth/too-many-requests") msg = "Too many requests. Please try later.";
-                    else if (error.code === "auth/captcha-check-failed") msg = "reCAPTCHA failed. Please refresh and try again.";
                     else if (error.code === "auth/quota-exceeded") msg = "SMS quota exceeded. Contact admin.";
                     else if (error.code === "auth/operation-not-allowed") {
                         showPhoneSetupGuide();
                         btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send OTP'; return;
                     }
                     showPhoneAuthError(msg);
-                    if (phoneRecaptchaVerifier) { try { phoneRecaptchaVerifier.clear(); } catch(e) {} phoneRecaptchaVerifier = null; }
-                    initPhoneRecaptcha();
                 })
                 .finally(() => { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send OTP'; });
         }
@@ -1587,7 +1572,6 @@ function updateRazorpayKey() {
         }
 
         function resendPhoneOTP() {
-            if (!phoneRecaptchaVerifier) initPhoneRecaptcha();
             sendPhoneOTP();
         }
 
