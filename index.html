@@ -344,97 +344,7 @@
             .coupon-btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; }
         }
 
-
-        /* Phone Auth Styles */
-        .phone-auth-step { display: none; }
-        .phone-auth-step.active { display: block; animation: fadeInUp 0.4s ease; }
-        .phone-input-wrap { display: flex; gap: 0.5rem; align-items: center; }
-        .phone-input-wrap select { 
-            width: 80px; 
-            padding: 0.5rem 0.3rem; 
-            font-size: 0.85rem; 
-            background: var(--cream); 
-            border: 2px solid var(--border); 
-            border-radius: 10px; 
-            color: var(--text); 
-            font-family: 'Inter', sans-serif;
-            flex-shrink: 0;
-        }
-        .phone-input-wrap input { flex: 1; }
-        .otp-input-wrap { display: flex; gap: 0.5rem; justify-content: center; margin: 1rem 0; }
-        .otp-input-wrap input { 
-            width: 45px; 
-            height: 50px; 
-            text-align: center; 
-            font-size: 1.2rem; 
-            font-weight: 700; 
-            padding: 0; 
-            border-radius: 12px; 
-        }
-        .resend-timer { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem; }
-        .resend-timer a { color: var(--blue); font-weight: 600; cursor: pointer; text-decoration: none; }
-        .resend-timer a.disabled { color: var(--text-muted); pointer-events: none; opacity: 0.5; }
-        .auth-method-switch { text-align: center; margin: 0.5rem 0; font-size: 0.78rem; color: var(--text-muted); }
-        .auth-method-switch a { color: var(--blue); font-weight: 600; cursor: pointer; text-decoration: none; }
-        .auth-method-switch a:hover { text-decoration: underline; }
-        .phone-verified-badge { 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 0.3rem; 
-            background: rgba(22, 163, 74, 0.1); 
-            color: var(--success); 
-            padding: 0.2rem 0.6rem; 
-            border-radius: 50px; 
-            font-size: 0.7rem; 
-            font-weight: 600; 
-            border: 1px solid rgba(22, 163, 74, 0.3);
-        }
-        .setup-guide-box {
-            background: linear-gradient(135deg, rgba(39,77,245,0.06), rgba(91,127,255,0.04));
-            border: 2px dashed var(--blue-light);
-            border-radius: 16px;
-            padding: 1.2rem;
-            margin-top: 1rem;
-            text-align: left;
-        }
-        .setup-guide-box h4 {
-            color: var(--blue-darker);
-            font-size: 0.9rem;
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-        .setup-guide-box ol {
-            margin: 0;
-            padding-left: 1.2rem;
-            font-size: 0.8rem;
-            color: var(--text);
-            line-height: 1.8;
-        }
-        .setup-guide-box ol li {
-            margin-bottom: 0.3rem;
-        }
-        .setup-guide-box ol li strong {
-            color: var(--blue-dark);
-        }
-        .setup-guide-box .note {
-            background: rgba(217,119,6,0.08);
-            border: 1px solid rgba(217,119,6,0.2);
-            border-radius: 8px;
-            padding: 0.6rem;
-            margin-top: 0.8rem;
-            font-size: 0.75rem;
-            color: var(--warning);
-        }
-        @media (max-width: 768px) {
-            .otp-input-wrap input { width: 40px; height: 45px; font-size: 1rem; }
-            .phone-input-wrap select { width: 70px; font-size: 0.75rem; }
-        }
-
     </style>
-<base target="_blank">
-<base target="_blank">
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
@@ -487,7 +397,6 @@
             <div class="auth-tabs">
                 <button class="auth-tab active" id="tabSignIn" onclick="switchAuthTab('signin')">Sign In</button>
                 <button class="auth-tab" id="tabSignUp" onclick="switchAuthTab('signup')">Sign Up</button>
-                <button class="auth-tab" id="tabPhone" onclick="switchAuthTab('phone')">Phone</button>
             </div>
             <form class="auth-form" id="signInForm" onsubmit="handleSignIn(event)">
                 <div class="auth-error" id="signInError"><i class="fas fa-exclamation-circle"></i> <span></span></div>
@@ -572,110 +481,13 @@
                     </div>
                 </div>
             </form>
-
-            <!-- PHONE AUTH FORM -->
-            <form class="auth-form hidden" id="phoneAuthForm">
-                <div class="auth-error" id="phoneAuthError"><i class="fas fa-exclamation-circle"></i> <span></span></div>
-
-                <!-- Step 1: Enter Phone Number -->
-                <div class="phone-auth-step active" id="phoneStep1">
-                    <div class="form-group">
-                        <label><i class="fas fa-mobile-alt" style="color: var(--blue);"></i> Phone Number</label>
-                        <div class="phone-input-wrap">
-                            <select id="phoneCountryCode">
-                                <option value="+91">🇮🇳 +91</option>
-                                <option value="+1">🇺🇸 +1</option>
-                                <option value="+44">🇬🇧 +44</option>
-                                <option value="+61">🇦🇺 +61</option>
-                                <option value="+65">🇸🇬 +65</option>
-                                <option value="+971">🇦🇪 +971</option>
-                                <option value="+92">🇵🇰 +92</option>
-                                <option value="+94">🇱🇰 +94</option>
-                                <option value="+880">🇧🇩 +880</option>
-                                <option value="+977">🇳🇵 +977</option>
-                            </select>
-                            <input type="tel" id="phoneNumberInput" placeholder="9876543210" maxlength="15" required style="padding-left: 0.75rem;">
-                        </div>
-                        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.3rem;">
-                            <i class="fas fa-info-circle" style="color: var(--blue);"></i> Enter number without country code
-                        </div>
-                    </div>
-                    <button type="button" class="btn-primary" id="sendOtpBtn" onclick="sendPhoneOTP()">
-                        <i class="fas fa-paper-plane"></i> Send OTP
-                    </button>
-                    <div class="auth-method-switch" style="margin-top: 0.8rem;">
-                        <a onclick="switchAuthTab('signin')"><i class="fas fa-envelope"></i> Sign in with Email instead</a>
-                    </div>
-                </div>
-
-                <!-- Step 2: Enter OTP -->
-                <div class="phone-auth-step" id="phoneStep2">
-                    <div style="text-align: center; margin-bottom: 0.8rem;">
-                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.3rem;">
-                            <i class="fas fa-sms" style="color: var(--blue);"></i> OTP sent to
-                        </div>
-                        <div style="font-weight: 700; color: var(--blue-darker); font-size: 0.95rem;" id="phoneDisplayNumber"></div>
-                        <button type="button" onclick="changePhoneNumber()" style="background: none; border: none; color: var(--blue); font-size: 0.7rem; cursor: pointer; margin-top: 0.2rem; font-weight: 500;">
-                            <i class="fas fa-edit"></i> Change number
-                        </button>
-                    </div>
-                    <div class="form-group">
-                        <label style="text-align: center; display: block;"><i class="fas fa-shield-alt" style="color: var(--blue);"></i> Enter 6-digit OTP</label>
-                        <div class="otp-input-wrap">
-                            <input type="text" maxlength="1" class="otp-digit" data-index="0" oninput="handleOtpInput(this, 0)" onkeydown="handleOtpKeydown(event, 0)">
-                            <input type="text" maxlength="1" class="otp-digit" data-index="1" oninput="handleOtpInput(this, 1)" onkeydown="handleOtpKeydown(event, 1)">
-                            <input type="text" maxlength="1" class="otp-digit" data-index="2" oninput="handleOtpInput(this, 2)" onkeydown="handleOtpKeydown(event, 2)">
-                            <input type="text" maxlength="1" class="otp-digit" data-index="3" oninput="handleOtpInput(this, 3)" onkeydown="handleOtpKeydown(event, 3)">
-                            <input type="text" maxlength="1" class="otp-digit" data-index="4" oninput="handleOtpInput(this, 4)" onkeydown="handleOtpKeydown(event, 4)">
-                            <input type="text" maxlength="1" class="otp-digit" data-index="5" oninput="handleOtpInput(this, 5)" onkeydown="handleOtpKeydown(event, 5)">
-                        </div>
-                        <input type="hidden" id="fullOtpCode" value="">
-                    </div>
-                    <button type="button" class="btn-primary" id="verifyOtpBtn" onclick="verifyPhoneOTP()">
-                        <i class="fas fa-check-circle"></i> Verify & Sign In
-                    </button>
-                    <div class="resend-timer" id="resendTimer">
-                        Resend OTP in <span id="timerCount">60</span>s
-                    </div>
-                    <div class="auth-method-switch" style="margin-top: 0.5rem;">
-                        <a onclick="switchAuthTab('signin')"><i class="fas fa-envelope"></i> Use Email instead</a>
-                    </div>
-                </div>
-
-                <!-- Setup Guide (shown when phone auth not enabled) -->
-                <div class="phone-auth-step" id="phoneSetupGuide" style="display: none;">
-                    <div style="text-align: center; margin-bottom: 1rem;">
-                        <i class="fas fa-cogs" style="font-size: 2.5rem; color: var(--blue); margin-bottom: 0.5rem;"></i>
-                        <h3 style="font-size: 1rem; color: var(--blue-darker);">Setup Required</h3>
-                        <p style="font-size: 0.8rem; color: var(--text-muted);">Phone authentication needs to be enabled in Firebase Console</p>
-                    </div>
-                    <div class="setup-guide-box">
-                        <h4><i class="fas fa-list-ol"></i> How to Enable Phone Auth:</h4>
-                        <ol>
-                            <li>Go to <strong>Firebase Console</strong> → Your Project</li>
-                            <li>Click <strong>Build</strong> → <strong>Authentication</strong></li>
-                            <li>Go to <strong>Sign-in method</strong> tab</li>
-                            <li>Find <strong>Phone</strong> and click <strong>Edit</strong> (pencil)</li>
-                            <li>Toggle <strong>Enable</strong> to <strong>ON</strong></li>
-                            <li>Click <strong>Save</strong></li>
-                            <li>Add your domain to <strong>Authorized domains</strong></li>
-                        </ol>
-                        <div class="note">
-                            <i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Add test phone numbers in Firebase Console to avoid SMS charges during development.
-                        </div>
-                    </div>
-                    <button type="button" class="btn-primary" style="margin-top: 1rem; width: 100%; justify-content: center;" onclick="switchAuthTab('signin')">
-                        <i class="fas fa-arrow-left"></i> Back to Sign In
-                    </button>
-                </div>
-            </form>
             <div class="auth-divider" id="authDivider">or</div>
             <button class="google-btn" id="googleBtn" onclick="signInWithGoogle()">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
                 Continue with Google
             </button>
             <div class="auth-footer" id="authFooter">
-                Don't have an account? <a onclick="switchAuthTab('signup')">Sign Up</a> or <a onclick="switchAuthTab('phone')">Use Phone</a>
+                Don't have an account? <a onclick="switchAuthTab('signup')">Sign Up</a>
             </div>
         </div>
     </div>
@@ -1488,201 +1300,38 @@ function updateRazorpayKey() {
             manualKeys[p.id] = [];
         });
 
-        // ========== PHONE AUTHENTICATION ==========
-        let phoneConfirmationResult = null;
-        let phoneResendTimer = null;
-        let phoneResendCountdown = 60;
-
-        function initPhoneRecaptcha() {
-            // reCAPTCHA removed - using direct verification
-            console.log('Phone auth ready (no reCAPTCHA)');
-        }
-
-        function resetPhoneAuth() {
-            document.getElementById('phoneStep1').classList.add('active');
-            document.getElementById('phoneStep2').classList.remove('active');
-            document.getElementById('phoneSetupGuide').style.display = 'none';
-            document.getElementById('phoneNumberInput').value = '';
-            document.getElementById('fullOtpCode').value = '';
-            document.querySelectorAll('.otp-digit').forEach(input => input.value = '');
-            document.getElementById('phoneAuthError').classList.remove('show');
-            if (phoneResendTimer) { clearInterval(phoneResendTimer); phoneResendTimer = null; }
-            phoneResendCountdown = 60;
-            document.getElementById('resendTimer').innerHTML = 'Resend OTP in <span id="timerCount">60</span>s';
-        }
-
-        function showPhoneAuthError(message) {
-            const el = document.getElementById("phoneAuthError");
-            el.querySelector("span").textContent = message;
-            el.classList.add("show");
-        }
-
-        function showPhoneSetupGuide() {
-            document.getElementById('phoneStep1').classList.remove('active');
-            document.getElementById('phoneStep2').classList.remove('active');
-            document.getElementById('phoneSetupGuide').style.display = 'block';
-        }
-
-        function sendPhoneOTP() {
-            if (!firebaseInitialized) { showPhoneAuthError("Firebase not connected!"); return; }
-            const countryCode = document.getElementById('phoneCountryCode').value;
-            const phoneNumber = document.getElementById('phoneNumberInput').value.trim();
-            const fullPhoneNumber = countryCode + phoneNumber;
-            const btn = document.getElementById('sendOtpBtn');
-            if (!phoneNumber || phoneNumber.length < 6) { showPhoneAuthError("Please enter a valid phone number!"); return; }
-            btn.disabled = true; btn.innerHTML = '<div class="loading"></div> Sending...';
-            auth.signInWithPhoneNumber(fullPhoneNumber)
-                .then((confirmationResult) => {
-                    phoneConfirmationResult = confirmationResult;
-                    document.getElementById('phoneStep1').classList.remove('active');
-                    document.getElementById('phoneStep2').classList.add('active');
-                    document.getElementById('phoneDisplayNumber').textContent = fullPhoneNumber;
-                    startResendTimer();
-                    setTimeout(() => document.querySelector('.otp-digit[data-index="0"]').focus(), 300);
-                    showToast("OTP sent to " + fullPhoneNumber, "success");
-                })
-                .catch((error) => {
-                    console.error("Phone auth error:", error);
-                    let msg = "Failed to send OTP. Please try again.";
-                    if (error.code === "auth/invalid-phone-number") msg = "Invalid phone number format!";
-                    else if (error.code === "auth/too-many-requests") msg = "Too many requests. Please try later.";
-                    else if (error.code === "auth/quota-exceeded") msg = "SMS quota exceeded. Contact admin.";
-                    else if (error.code === "auth/operation-not-allowed") {
-                        showPhoneSetupGuide();
-                        btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send OTP'; return;
-                    }
-                    showPhoneAuthError(msg);
-                })
-                .finally(() => { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send OTP'; });
-        }
-
-        function startResendTimer() {
-            phoneResendCountdown = 60;
-            const timerEl = document.getElementById('timerCount');
-            const resendEl = document.getElementById('resendTimer');
-            if (phoneResendTimer) clearInterval(phoneResendTimer);
-            phoneResendTimer = setInterval(() => {
-                phoneResendCountdown--;
-                if (timerEl) timerEl.textContent = phoneResendCountdown;
-                if (phoneResendCountdown <= 0) {
-                    clearInterval(phoneResendTimer); phoneResendTimer = null;
-                    resendEl.innerHTML = '<a onclick="resendPhoneOTP()" style="color: var(--blue); font-weight: 600; cursor: pointer; text-decoration: none;"><i class="fas fa-redo"></i> Resend OTP</a>';
-                }
-            }, 1000);
-        }
-
-        function resendPhoneOTP() {
-            sendPhoneOTP();
-        }
-
-        function handleOtpInput(input, index) {
-            input.value = input.value.replace(/\D/g, '');
-            if (input.value.length === 1 && index < 5) document.querySelector('.otp-digit[data-index="' + (index + 1) + '"]').focus();
-            updateFullOtp();
-        }
-
-        function handleOtpKeydown(event, index) {
-            if (event.key === 'Backspace' && event.target.value === '' && index > 0) document.querySelector('.otp-digit[data-index="' + (index - 1) + '"]').focus();
-            updateFullOtp();
-        }
-
-        function updateFullOtp() {
-            let otp = '';
-            document.querySelectorAll('.otp-digit').forEach(input => { otp += input.value; });
-            document.getElementById('fullOtpCode').value = otp;
-        }
-
-        function verifyPhoneOTP() {
-            const otpCode = document.getElementById('fullOtpCode').value;
-            const btn = document.getElementById('verifyOtpBtn');
-            if (otpCode.length !== 6) { showPhoneAuthError("Please enter the complete 6-digit OTP!"); return; }
-            if (!phoneConfirmationResult) { showPhoneAuthError("Session expired. Please request a new OTP."); return; }
-            btn.disabled = true; btn.innerHTML = '<div class="loading"></div> Verifying...';
-            phoneConfirmationResult.confirm(otpCode)
-                .then((result) => {
-                    currentUser = result.user;
-                    const phoneNumber = currentUser.phoneNumber;
-                    db.ref("users/" + currentUser.uid).once("value").then((snapshot) => {
-                        if (!snapshot.exists()) {
-                            return db.ref("users/" + currentUser.uid).set({
-                                name: "Phone User", phone: phoneNumber, email: "", createdAt: new Date().toISOString()
-                            });
-                        }
-                    });
-                    showToast("Phone verified! Welcome to KITY SHOP.", "success");
-                    resetPhoneAuth();
-                })
-                .catch((error) => {
-                    console.error("OTP verification error:", error);
-                    let msg = "Invalid OTP. Please try again.";
-                    if (error.code === "auth/invalid-verification-code") msg = "Invalid OTP code!";
-                    else if (error.code === "auth/code-expired") msg = "OTP expired. Please request a new one.";
-                    else if (error.code === "auth/session-expired") msg = "Session expired. Please request a new OTP.";
-                    showPhoneAuthError(msg);
-                    btn.disabled = false; btn.innerHTML = '<i class="fas fa-check-circle"></i> Verify & Sign In';
-                });
-        }
-
-        function changePhoneNumber() {
-            resetPhoneAuth();
-            document.getElementById('phoneStep1').classList.add('active');
-            document.getElementById('phoneStep2').classList.remove('active');
-        }
-        // ========== PHONE AUTHENTICATION END ==========
-
         function switchAuthTab(tab) {
             const signInForm = document.getElementById("signInForm");
             const signUpForm = document.getElementById("signUpForm");
             const forgotForm = document.getElementById("forgotForm");
-            const phoneAuthForm = document.getElementById("phoneAuthForm");
             const tabSignIn = document.getElementById("tabSignIn");
             const tabSignUp = document.getElementById("tabSignUp");
-            const tabPhone = document.getElementById("tabPhone");
             const authDivider = document.getElementById("authDivider");
             const googleBtn = document.getElementById("googleBtn");
             const authFooter = document.getElementById("authFooter");
             document.getElementById("signInError").classList.remove("show");
             document.getElementById("signUpError").classList.remove("show");
             document.getElementById("forgotError").classList.remove("show");
-            document.getElementById("phoneAuthError").classList.remove("show");
-            if (tab !== "phone") resetPhoneAuth();
             if (tab === "signin") {
                 signInForm.classList.remove("hidden");
                 signUpForm.classList.add("hidden");
                 forgotForm.classList.add("hidden");
-                phoneAuthForm.classList.add("hidden");
                 tabSignIn.classList.add("active");
                 tabSignUp.classList.remove("active");
-                tabPhone.classList.remove("active");
                 authDivider.style.display = "flex";
                 googleBtn.style.display = "flex";
-                authFooter.innerHTML = "Don't have an account? <a onclick=\"switchAuthTab('signup')\">Sign Up</a> or <a onclick=\"switchAuthTab('phone')\">Use Phone</a>";
+                authFooter.innerHTML = "Don't have an account? <a onclick=\"switchAuthTab('signup')\">Sign Up</a>";
                 authFooter.style.display = "block";
             } else if (tab === "signup") {
                 signInForm.classList.add("hidden");
                 signUpForm.classList.remove("hidden");
                 forgotForm.classList.add("hidden");
-                phoneAuthForm.classList.add("hidden");
                 tabSignIn.classList.remove("active");
                 tabSignUp.classList.add("active");
-                tabPhone.classList.remove("active");
                 authDivider.style.display = "flex";
                 googleBtn.style.display = "flex";
                 authFooter.innerHTML = "Already have an account? <a onclick=\"switchAuthTab('signin')\">Sign In</a>";
                 authFooter.style.display = "block";
-            } else if (tab === "phone") {
-                signInForm.classList.add("hidden");
-                signUpForm.classList.add("hidden");
-                forgotForm.classList.add("hidden");
-                phoneAuthForm.classList.remove("hidden");
-                tabSignIn.classList.remove("active");
-                tabSignUp.classList.remove("active");
-                tabPhone.classList.add("active");
-                authDivider.style.display = "none";
-                googleBtn.style.display = "none";
-                authFooter.innerHTML = "<a onclick=\"switchAuthTab('signin')\"><i class='fas fa-envelope'></i> Sign in with Email</a> | <a onclick=\"switchAuthTab('signup')\">Create Account</a>";
-                authFooter.style.display = "block";
-                setTimeout(() => initPhoneRecaptcha(), 100);
             }
         }
 
@@ -1848,13 +1497,18 @@ function updateRazorpayKey() {
             auth.onAuthStateChanged((user) => {
                 if (user) {
                     currentUser = user;
-                    const identifier = user.email || user.phoneNumber || "User";
-                    console.log("User signed in:", identifier);
-                    if (!isAdminLoggedIn) showMainContent();
+                    console.log("User signed in:", user.email);
+                    // Only show main content if not in admin panel
+                    if (!isAdminLoggedIn) {
+                        showMainContent();
+                    }
                 } else {
                     currentUser = null;
                     console.log("User signed out");
-                    if (!isAdminLoggedIn && adminCheckComplete) showAuthPage();
+                    // Only show auth page if admin is not logged in AND admin check is complete
+                    if (!isAdminLoggedIn && adminCheckComplete) {
+                        showAuthPage();
+                    }
                 }
             });
         }
@@ -1945,7 +1599,6 @@ function updateRazorpayKey() {
                 const mainItems = navLinks.querySelectorAll('.main-nav-item');
                 mainItems.forEach(el => el.style.display = 'none');
             }
-            switchAuthTab('signin');
             closeMobileMenu();
         }
 
@@ -1974,25 +1627,25 @@ function updateRazorpayKey() {
             if (!navLinks) return;
             const existingUserItems = navLinks.querySelectorAll('.user-nav-item');
             existingUserItems.forEach(el => el.remove());
-            let userIdentifier = "User", userIcon = "fa-envelope";
-            if (currentUser) {
-                if (currentUser.email) { userIdentifier = currentUser.email; userIcon = "fa-envelope"; }
-                else if (currentUser.phoneNumber) { userIdentifier = currentUser.phoneNumber; userIcon = "fa-mobile-alt"; }
-            }
+            const userEmail = currentUser ? currentUser.email : "User";
+
             const myOrdersLink = document.createElement("button");
             myOrdersLink.className = "nav-link user-nav-item";
             myOrdersLink.innerHTML = 'My Orders';
             myOrdersLink.onclick = function() { showMyOrders(); closeMobileMenu(); };
             navLinks.appendChild(myOrdersLink);
+
             const myKeysLink = document.createElement("button");
             myKeysLink.className = "nav-link user-nav-item";
             myKeysLink.innerHTML = 'My Keys';
             myKeysLink.onclick = function() { showMyKeys(); closeMobileMenu(); };
             navLinks.appendChild(myKeysLink);
+
             const emailDisplay = document.createElement("span");
             emailDisplay.className = "nav-user-email user-nav-item";
-            emailDisplay.innerHTML = '<i class="fas ' + userIcon + '"></i> ' + userIdentifier;
+            emailDisplay.innerHTML = '<i class="fas fa-envelope"></i> ' + userEmail;
             navLinks.appendChild(emailDisplay);
+
             const logoutBtn = document.createElement("button");
             logoutBtn.className = "nav-logout-btn user-nav-item";
             logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
@@ -2005,7 +1658,6 @@ function updateRazorpayKey() {
                 showToast("Please sign in to view orders!", "error");
                 return;
             }
-            // Phone users can also view orders
             const modal = document.createElement("div");
             modal.className = "modal-overlay active";
             modal.id = "myOrdersModal";
@@ -2085,7 +1737,6 @@ function updateRazorpayKey() {
                 showToast("Please sign in to view keys!", "error");
                 return;
             }
-            // Phone users can also view keys
             const modal = document.createElement("div");
             modal.className = "modal-overlay active";
             modal.id = "myKeysModal";
@@ -2414,7 +2065,7 @@ function updateRazorpayKey() {
             ordersRef.set(order).catch(err => { console.error("Error saving order:", err); });
         }
 
-        // Manual cleanup only - NOT auto-executed
+        // Auto-delete orders older than 24 hours
         function cleanupOldOrders() {
             if (!firebaseInitialized) return;
             const now = Date.now();
@@ -2446,7 +2097,7 @@ function updateRazorpayKey() {
             }).catch(err => console.error("Order cleanup error:", err));
         }
 
-        // Manual cleanup only - NOT auto-executed
+        // Also cleanup userOrders older than 24 hours
         function cleanupOldUserOrders() {
             if (!firebaseInitialized) return;
             const now = Date.now();
@@ -2473,11 +2124,14 @@ function updateRazorpayKey() {
             }).catch(err => console.error("User orders cleanup error:", err));
         }
 
-        // Auto-cleanup DISABLED - orders and revenue persist permanently
+        // Run cleanup every hour
         function startOrderCleanupTimer() {
-            // Cleanup disabled as per admin request
-            // Orders, revenue, and today sold stats now persist properly
-            console.log("Auto-cleanup disabled. Orders persist permanently.");
+            cleanupOldOrders();
+            cleanupOldUserOrders();
+            setInterval(() => {
+                cleanupOldOrders();
+                cleanupOldUserOrders();
+            }, 60 * 60 * 1000); // Every 1 hour
         }
 
         function setupRealtimeListeners() {
@@ -3360,7 +3014,7 @@ function updateRazorpayKey() {
 
         setupRealtimeListeners();
         loadCouponsFromFirebase();
-        // Auto-cleanup disabled - orders persist permanently
+        startOrderCleanupTimer();
 
         // Debug: verify Razorpay key on load
         setTimeout(() => {
