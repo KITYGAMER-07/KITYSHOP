@@ -366,6 +366,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -2065,7 +2066,7 @@ function updateRazorpayKey() {
             ordersRef.set(order).catch(err => { console.error("Error saving order:", err); });
         }
 
-        // Auto-delete orders older than 24 hours
+        // Manual cleanup only - NOT auto-executed
         function cleanupOldOrders() {
             if (!firebaseInitialized) return;
             const now = Date.now();
@@ -2097,7 +2098,7 @@ function updateRazorpayKey() {
             }).catch(err => console.error("Order cleanup error:", err));
         }
 
-        // Also cleanup userOrders older than 24 hours
+        // Manual cleanup only - NOT auto-executed
         function cleanupOldUserOrders() {
             if (!firebaseInitialized) return;
             const now = Date.now();
@@ -2124,14 +2125,11 @@ function updateRazorpayKey() {
             }).catch(err => console.error("User orders cleanup error:", err));
         }
 
-        // Run cleanup every hour
+        // Auto-cleanup DISABLED - orders and revenue persist permanently
         function startOrderCleanupTimer() {
-            cleanupOldOrders();
-            cleanupOldUserOrders();
-            setInterval(() => {
-                cleanupOldOrders();
-                cleanupOldUserOrders();
-            }, 60 * 60 * 1000); // Every 1 hour
+            // Cleanup disabled as per admin request
+            // Orders, revenue, and today sold stats now persist properly
+            console.log("Auto-cleanup disabled. Orders persist permanently.");
         }
 
         function setupRealtimeListeners() {
@@ -3014,7 +3012,7 @@ function updateRazorpayKey() {
 
         setupRealtimeListeners();
         loadCouponsFromFirebase();
-        startOrderCleanupTimer();
+        // Auto-cleanup disabled - orders persist permanently
 
         // Debug: verify Razorpay key on load
         setTimeout(() => {
