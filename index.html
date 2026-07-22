@@ -363,6 +363,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -768,11 +769,63 @@
                 <div style="background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.3); border-radius: 6px; padding: 0.3rem; margin: 0.3rem 0; color: var(--success); font-size: 0.7rem;">
                     <i class="fas fa-shield-alt"></i> <b>Keep this key safe!</b>
                 </div>
-                <button class="btn-secondary" onclick="closeModal('buyModal'); resetBuyModal();" style="margin-top: 0.5rem; padding: 0.6rem 1rem; font-size: 0.85rem; width: 100%; justify-content: center; border: 2px solid var(--border); color: var(--text-muted);">
-                    <i class="fas fa-forward"></i> Skip
+                <button class="btn-secondary" onclick="showRulesCard()" style="margin-top: 0.5rem; padding: 0.6rem 1rem; font-size: 0.85rem; width: 100%; justify-content: center; border: 2px solid var(--warning); color: var(--warning); background: rgba(217, 119, 6, 0.06);">
+                    <i class="fas fa-exclamation-triangle"></i> Rules
                 </button>
             </div>
-        </div>
+
+            <div id="rulesCard" class="hidden" style="text-align: left;">
+                <div style="background: linear-gradient(135deg, rgba(220,38,38,0.08), rgba(217,119,6,0.04)); padding: 1rem; border-radius: 16px; border: 2px dashed var(--danger); margin-bottom: 0.5rem;">
+                    <div style="text-align: center; margin-bottom: 0.8rem;">
+                        <div style="font-size: 1.1rem; font-weight: 800; color: var(--danger); margin-bottom: 0.3rem;">
+                            <i class="fas fa-bullhorn"></i> Flag Ban Safety
+                        </div>
+                        <div style="font-size: 0.75rem; color: var(--danger); font-weight: 600; background: rgba(220,38,38,0.1); padding: 0.3rem 0.8rem; border-radius: 50px; display: inline-block;">
+                            <i class="fas fa-exclamation-circle"></i> IMPORTANT NOTICE – Follow These Rules
+                        </div>
+                    </div>
+
+                    <div style="font-size: 0.82rem; color: var(--text); line-height: 1.7; margin-bottom: 0.6rem;">
+                        <div style="font-weight: 700; color: var(--danger); margin-bottom: 0.3rem;"><i class="fas fa-user-friends"></i> Guys, please follow these rules strictly</div>
+
+                        <div style="background: rgba(39,77,245,0.06); padding: 0.5rem; border-radius: 10px; margin-bottom: 0.4rem; border-left: 3px solid var(--blue);">
+                            <div style="font-weight: 700; color: var(--blue);"><i class="fas fa-fire"></i> Aimbot is very powerful</div>
+                            <div style="color: var(--text-muted);">So don't misuse it and don't play like a hacker.</div>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.4rem;">
+                            <div style="display: flex; align-items: center; gap: 0.4rem; color: var(--danger); font-weight: 600;">
+                                <i class="fas fa-skull"></i> Don't play aggressive
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.4rem; color: var(--danger); font-weight: 600;">
+                                <i class="fas fa-skull"></i> Don't kill Rank Pushers
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.4rem; color: var(--danger); font-weight: 600;">
+                                <i class="fas fa-skull"></i> Don't show off
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(22,163,74,0.08); padding: 0.5rem; border-radius: 10px; margin-bottom: 0.4rem; border-left: 3px solid var(--success);">
+                            <div style="font-weight: 700; color: var(--success);"><i class="fas fa-bullseye"></i> Kill Limit: 7–8 only</div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.3rem;">
+                                <span style="background: white; padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.75rem; border: 1px solid var(--border);"><i class="fas fa-flag-usa"></i> Play safe</span>
+                                <span style="background: white; padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.75rem; border: 1px solid var(--border);"><i class="fas fa-map-marker-alt"></i> Maintain distance</span>
+                                <span style="background: white; padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.75rem; border: 1px solid var(--border);"><i class="fas fa-chart-line"></i> Avoid reports at any cost</span>
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(220,38,38,0.08); padding: 0.5rem; border-radius: 10px; text-align: center; border: 1px solid rgba(220,38,38,0.2);">
+                            <div style="font-weight: 700; color: var(--danger); margin-bottom: 0.2rem;"><i class="fas fa-brain"></i> Remember:</div>
+                            <div style="font-weight: 700; color: var(--success);">Play smart = Safe ID <span style="color: var(--text-muted);">|</span> Show off = Flag Ban <span style="color: var(--danger);">❌</span></div>
+                            <div style="margin-top: 0.3rem; font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Stay low. Stay safe 🖕</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-secondary" onclick="skipToMainContent()" style="width: 100%; padding: 0.6rem 1rem; font-size: 0.85rem; justify-content: center; border: 2px solid var(--border); color: var(--text-muted);">
+                    <i class="fas fa-forward"></i> Skip
+                </button>
+            </div>        </div>
     </div>
 
     <div class="modal-overlay" id="adminLoginModal">
@@ -2965,7 +3018,20 @@ function updateRazorpayKey() {
             });
         }, 2000);
 
-        // ========== APK FUNCTIONS ==========
+        
+function showRulesCard() {
+    document.getElementById("paymentSuccess").classList.add("hidden");
+    document.getElementById("rulesCard").classList.remove("hidden");
+}
+
+function skipToMainContent() {
+    closeModal('buyModal');
+    resetBuyModal();
+    document.getElementById("rulesCard").classList.add("hidden");
+    smoothScrollTo('mainContent');
+}
+
+// ========== APK FUNCTIONS ==========
 
         function downloadApk() {
             if (!globalApkUrl) {
