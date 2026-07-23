@@ -73,6 +73,23 @@
         .section-header p { color: var(--text-muted); font-size: 1.1rem; }
         .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
         .product-card { background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border); transition: all 0.4s; position: relative; overflow: hidden; opacity: 0; transform: translateY(30px); box-shadow: 0 4px 20px var(--card-shadow); }
+        .product-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('spider.jpg') center center / cover no-repeat;
+            opacity: 0.05;
+            z-index: 0;
+            pointer-events: none;
+            border-radius: 20px;
+        }
+        .product-card > * {
+            position: relative;
+            z-index: 1;
+        }
         .product-card.visible { opacity: 1; transform: translateY(0); }
         .product-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--blue-light), var(--blue)); transform: scaleX(0); transition: transform 0.4s; }
         .product-card:hover::before { transform: scaleX(1); }
@@ -105,7 +122,8 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .modal { background: var(--white); border-radius: 20px; padding: 1.5rem; max-width: 420px; width: 92%; border: 1px solid var(--border); animation: slideUp 0.4s ease; box-shadow: 0 20px 60px rgba(8, 20, 74, 0.15); max-height: calc(100vh - 2rem); overflow-y: auto; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
-        .modal::-webkit-scrollbar, #myKeysModal .modal::-webkit-scrollbar, #myOrdersModal .modal::-webkit-scrollbar { display: none; }
+        .modal::-webkit-scrollbar, #myKeysModal .modal::-webkit-scrollbar, #myOrdersModal .modal::-webkit-scrollbar, #rulesCard::-webkit-scrollbar { display: none; }
+        #rulesCard { -ms-overflow-style: none; scrollbar-width: none; }
         .modal, #myKeysModal .modal, #myOrdersModal .modal { -ms-overflow-style: none; scrollbar-width: none; }
         #myKeysContent::-webkit-scrollbar, #myOrdersContent::-webkit-scrollbar { display: none; }
         #myKeysContent, #myOrdersContent { -ms-overflow-style: none; scrollbar-width: none; }
@@ -327,6 +345,8 @@
         }
 
     </style>
+<base target="_blank">
+<base target="_blank">
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
@@ -751,7 +771,64 @@
                 <div style="background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.3); border-radius: 6px; padding: 0.3rem; margin: 0.3rem 0; color: var(--success); font-size: 0.7rem;">
                     <i class="fas fa-shield-alt"></i> <b>Keep this key safe!</b>
                 </div>
-                <button class="btn-secondary" onclick="closeModal('buyModal'); resetBuyModal();" style="margin-top: 0.5rem; padding: 0.6rem 1rem; font-size: 0.85rem; width: 100%; justify-content: center; border: 2px solid var(--border); color: var(--text-muted);">
+                <button class="btn-secondary" onclick="showRulesCard()" style="margin-top: 0.5rem; padding: 0.6rem 1rem; font-size: 0.85rem; width: 100%; justify-content: center; border: 2px solid var(--warning); color: var(--warning); background: rgba(217, 119, 6, 0.06);">
+                    <i class="fas fa-exclamation-triangle"></i> Rules
+                </button>
+            </div>
+            <div id="rulesCard" class="hidden" style="text-align: left; max-height: 420px; overflow-y: auto; scrollbar-width: none; padding: 0;">
+                <div style="text-align: center; margin-bottom: 0.8rem;">
+                    <h2 style="font-size: 1.1rem; font-weight: 800; color: var(--danger); display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <i class="fas fa-exclamation-triangle"></i> Follow Rules
+                    </h2>
+                </div>
+                <div style="background: linear-gradient(135deg, rgba(220,38,38,0.06), rgba(217,119,6,0.03)); padding: 1rem; border-radius: 20px; border: 2px dashed var(--danger); margin-bottom: 0.6rem;">
+                    <div style="text-align: center; margin-bottom: 0.5rem;">
+                        <div style="font-size: 0.9rem; font-weight: 800; color: var(--danger); margin-bottom: 0.2rem;">
+                            <i class="fas fa-bullhorn"></i> Flag Ban Safety
+                        </div>
+                        <div style="font-size: 0.65rem; color: var(--danger); font-weight: 600; background: rgba(220,38,38,0.1); padding: 0.2rem 0.6rem; border-radius: 50px; display: inline-block;">
+                            <i class="fas fa-exclamation-circle"></i> Follow These Rules
+                        </div>
+                    </div>
+
+                    <div style="font-size: 0.72rem; color: var(--text); line-height: 1.5;">
+                        <div style="font-weight: 700; color: var(--danger); margin-bottom: 0.2rem; font-size: 0.7rem;"><i class="fas fa-user-friends"></i> Guys, follow strictly</div>
+
+                        <div style="background: rgba(39,77,245,0.05); padding: 0.4rem; border-radius: 12px; margin-bottom: 0.3rem; border-left: 2px solid var(--blue);">
+                            <div style="font-weight: 700; color: var(--blue); font-size: 0.7rem;"><i class="fas fa-fire"></i> Aimbot is very powerful</div>
+                            <div style="color: var(--text-muted); font-size: 0.68rem;">Don't misuse. Don't play like hacker.</div>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 0.15rem; margin-bottom: 0.3rem;">
+                            <div style="display: flex; align-items: center; gap: 0.3rem; color: var(--danger); font-weight: 600; font-size: 0.7rem;">
+                                <i class="fas fa-skull" style="font-size: 0.6rem;"></i> Don't play aggressive
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.3rem; color: var(--danger); font-weight: 600; font-size: 0.7rem;">
+                                <i class="fas fa-skull" style="font-size: 0.6rem;"></i> Don't kill Rank Pushers
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.3rem; color: var(--danger); font-weight: 600; font-size: 0.7rem;">
+                                <i class="fas fa-skull" style="font-size: 0.6rem;"></i> Don't show off
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(22,163,74,0.06); padding: 0.4rem; border-radius: 12px; margin-bottom: 0.3rem; border-left: 2px solid var(--success);">
+                            <div style="font-weight: 700; color: var(--success); font-size: 0.7rem;"><i class="fas fa-bullseye"></i> Kill Limit: 7–8 only</div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.2rem;">
+                                <span style="background: white; padding: 0.15rem 0.4rem; border-radius: 8px; font-size: 0.65rem; border: 1px solid var(--border);"><i class="fas fa-flag-usa"></i> Play safe</span>
+                                <span style="background: white; padding: 0.15rem 0.4rem; border-radius: 8px; font-size: 0.65rem; border: 1px solid var(--border);"><i class="fas fa-map-marker-alt"></i> Distance</span>
+                                <span style="background: white; padding: 0.15rem 0.4rem; border-radius: 8px; font-size: 0.65rem; border: 1px solid var(--border);"><i class="fas fa-chart-line"></i> Avoid reports</span>
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(220,38,38,0.06); padding: 0.4rem; border-radius: 12px; text-align: center; border: 1px solid rgba(220,38,38,0.15);">
+                            <div style="font-weight: 700; color: var(--danger); margin-bottom: 0.1rem; font-size: 0.7rem;"><i class="fas fa-brain"></i> Remember:</div>
+                            <div style="font-weight: 700; color: var(--success); font-size: 0.7rem;">Play smart = Safe ID <span style="color: var(--text-muted);">|</span> Show off = Ban <span style="color: var(--danger);">❌</span></div>
+                            <div style="margin-top: 0.15rem; font-size: 0.68rem; color: var(--text-muted); font-weight: 600;">Stay low. Stay safe 🖕</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-secondary" onclick="skipToMainContent()" style="width: 100%; padding: 0.6rem; font-size: 0.85rem; justify-content: center; border: 2px solid var(--border); color: var(--text-muted); border-radius: 12px; margin-top: 0.5rem;">
                     <i class="fas fa-forward"></i> Skip
                 </button>
             </div>
@@ -2948,7 +3025,19 @@ function updateRazorpayKey() {
             });
         }, 2000);
 
-        // ========== APK FUNCTIONS ==========
+        function showRulesCard() {
+    document.getElementById("paymentSuccess").classList.add("hidden");
+    document.getElementById("rulesCard").classList.remove("hidden");
+}
+
+function skipToMainContent() {
+    closeModal('buyModal');
+    resetBuyModal();
+    document.getElementById("rulesCard").classList.add("hidden");
+    smoothScrollTo('mainContent');
+}
+
+// ========== APK FUNCTIONS ==========
 
         function downloadApk() {
             if (!globalApkUrl) {
