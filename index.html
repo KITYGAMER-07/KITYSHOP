@@ -402,8 +402,8 @@
             <form class="auth-form" id="signInForm" onsubmit="handleSignIn(event)">
                 <div class="auth-error" id="signInError"><i class="fas fa-exclamation-circle"></i> <span></span></div>
                 <div class="form-group">
-                    <label><i class="fas fa-user" style="color: var(--blue);"></i> Username</label>
-                    <input type="text" id="signInUsername" placeholder="Enter username" required style="text-transform: lowercase;">
+                    <label><i class="fas fa-envelope" style="color: var(--blue);"></i> Email</label>
+                    <input type="email" id="signInEmail" placeholder="your@email.com" required>
                 </div>
                 <div class="form-group">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
@@ -427,8 +427,12 @@
             <form class="auth-form hidden" id="signUpForm" onsubmit="handleSignUp(event)">
                 <div class="auth-error" id="signUpError"><i class="fas fa-exclamation-circle"></i> <span></span></div>
                 <div class="form-group">
-                    <label><i class="fas fa-user" style="color: var(--blue);"></i> Username</label>
-                    <input type="text" id="signUpUsername" placeholder="Choose a username" required style="text-transform: lowercase;">
+                    <label><i class="fas fa-user" style="color: var(--blue);"></i> Full Name</label>
+                    <input type="text" id="signUpName" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope" style="color: var(--blue);"></i> Email</label>
+                    <input type="email" id="signUpEmail" placeholder="your@email.com" required>
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-lock" style="color: var(--blue);"></i> Password</label>
@@ -464,8 +468,8 @@
                 </div>
                 <div id="forgotFields">
                     <div class="form-group">
-                        <label><i class="fas fa-user" style="color: var(--blue);"></i> Username</label>
-                        <input type="text" id="forgotUsername" placeholder="Enter username" required style="text-transform: lowercase;">
+                        <label><i class="fas fa-envelope" style="color: var(--blue);"></i> Email</label>
+                        <input type="email" id="forgotEmail" placeholder="your@email.com" required>
                     </div>
                     <button type="submit" class="btn-primary" id="forgotBtn">
                         <i class="fas fa-paper-plane"></i> Send Reset Link
@@ -1365,27 +1369,25 @@ function updateRazorpayKey() {
             el.classList.add("show");
         }
 
-        function usernameToEmail(username) {
-            return username.toLowerCase().trim() + "@kityshop.app";
-        }
-
         function handleSignIn(e) {
             e.preventDefault();
             if (!firebaseInitialized) { showAuthError("signInError", "Firebase not connected!"); return; }
-            const username = document.getElementById("signInUsername").value.trim().toLowerCase();
+            const email = document.getElementById("signInEmail").value.trim();
             const password = document.getElementById("signInPassword").value;
             const btn = document.getElementById("signInBtn");
-            if (!username) { showAuthError("signInError", "Please enter your username."); return; }
             btn.disabled = true;
             btn.innerHTML = '<div class="loading"></div> Signing in...';
-            const email = usernameToEmail(username);
             auth.signInWithEmailAndPassword(email, password)
                 .then((userCredential) => { currentUser = userCredential.user; showToast("Welcome back!", "success"); })
                 .catch((error) => {
-                    let msg = "Invalid username or password.";
-                    if (error.code === "auth/user-not-found") msg = "No account found with this username.";
+                    let msg = error.message;
+                    if (error.code === "auth/user-not-found") msg = "No account found with this email.";
                     else if (error.code === "auth/wrong-password") msg = "Incorrect password.";
+                    else if (error.code === "auth/invalid-email") msg = "Invalid email address.";
                     else if (error.code === "auth/too-many-requests") msg = "Too many attempts. Try later.";
+                    else if (error.code === "auth/invalid-credential") msg = "Invalid password. Please check your password and try again.";
+                    else if (error.code === "auth/invalid-login-credentials") msg = "Invalid password. Please check your password and try again.";
+                    else msg = "Invalid password. Please check your credentials and try again.";
                     showAuthError("signInError", msg);
                 })
                 .finally(() => { btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In'; });
@@ -1394,23 +1396,20 @@ function updateRazorpayKey() {
         function handleSignUp(e) {
             e.preventDefault();
             if (!firebaseInitialized) { showAuthError("signUpError", "Firebase not connected!"); return; }
-            const username = document.getElementById("signUpUsername").value.trim().toLowerCase();
+            const name = document.getElementById("signUpName").value.trim();
+            const email = document.getElementById("signUpEmail").value.trim();
             const password = document.getElementById("signUpPassword").value;
             const confirm = document.getElementById("signUpConfirm").value;
             const btn = document.getElementById("signUpBtn");
-            if (!username) { showAuthError("signUpError", "Please enter a username."); return; }
-            if (username.length < 3) { showAuthError("signUpError", "Username must be at least 3 characters."); return; }
-            if (!/^[a-z0-9_]+$/.test(username)) { showAuthError("signUpError", "Username can only contain letters, numbers, and underscores."); return; }
             if (password !== confirm) { showAuthError("signUpError", "Passwords do not match!"); return; }
             if (password.length < 6) { showAuthError("signUpError", "Password must be at least 6 characters."); return; }
             btn.disabled = true;
             btn.innerHTML = '<div class="loading"></div> Creating account...';
-            const email = usernameToEmail(username);
             auth.createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     currentUser = userCredential.user;
                     return db.ref("users/" + currentUser.uid).set({
-                        username: username,
+                        name: name,
                         email: email,
                         createdAt: new Date().toISOString()
                     });
@@ -1418,7 +1417,8 @@ function updateRazorpayKey() {
                 .then(() => { showToast("Account created! Welcome to KITY SHOP.", "success"); })
                 .catch((error) => {
                     let msg = error.message;
-                    if (error.code === "auth/email-already-in-use") msg = "Username already taken.";
+                    if (error.code === "auth/email-already-in-use") msg = "Email already registered.";
+                    else if (error.code === "auth/invalid-email") msg = "Invalid email address.";
                     else if (error.code === "auth/weak-password") msg = "Password is too weak.";
                     showAuthError("signUpError", msg);
                 })
@@ -1428,21 +1428,19 @@ function updateRazorpayKey() {
         function handleForgotPassword(e) {
             e.preventDefault();
             if (!firebaseInitialized) { showAuthError("forgotError", "Firebase not connected!"); return; }
-            const username = document.getElementById("forgotUsername").value.trim().toLowerCase();
+            const email = document.getElementById("forgotEmail").value.trim();
             const btn = document.getElementById("forgotBtn");
-            if (!username) { showAuthError("forgotError", "Please enter your username."); return; }
             btn.disabled = true;
             btn.innerHTML = '<div class="loading"></div> Sending...';
-            const email = usernameToEmail(username);
             auth.sendPasswordResetEmail(email)
                 .then(() => {
                     document.getElementById("forgotFields").style.display = "none";
                     document.getElementById("resetSent").classList.add("show");
-                    showToast("Reset link sent! Check your email (spam folder too).", "success");
+                    showToast("Reset link sent to your email!", "success");
                 })
                 .catch((error) => {
                     let msg = error.message;
-                    if (error.code === "auth/user-not-found") msg = "No account with this username.";
+                    if (error.code === "auth/user-not-found") msg = "No account with this email.";
                     showAuthError("forgotError", msg);
                 })
                 .finally(() => { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Reset Link'; });
@@ -1457,11 +1455,9 @@ function updateRazorpayKey() {
             auth.signInWithPopup(provider)
                 .then((result) => {
                     currentUser = result.user;
-                    const googleUsername = currentUser.displayName ? currentUser.displayName.replace(/\s/g, "_").toLowerCase() : currentUser.email.split("@")[0];
                     db.ref("users/" + currentUser.uid).once("value").then((snapshot) => {
                         if (!snapshot.exists()) {
                             db.ref("users/" + currentUser.uid).set({
-                                username: googleUsername,
                                 name: currentUser.displayName || "User",
                                 email: currentUser.email,
                                 createdAt: new Date().toISOString()
@@ -1502,19 +1498,15 @@ function updateRazorpayKey() {
             auth.onAuthStateChanged((user) => {
                 if (user) {
                     currentUser = user;
-                    db.ref("users/" + user.uid + "/username").once("value")
-                        .then((snap) => {
-                            currentUser.displayUsername = snap.val() || user.email.split("@")[0];
-                            console.log("User signed in:", currentUser.displayUsername);
-                            if (!isAdminLoggedIn) { showMainContent(); }
-                        })
-                        .catch(() => {
-                            currentUser.displayUsername = user.email.split("@")[0];
-                            if (!isAdminLoggedIn) { showMainContent(); }
-                        });
+                    console.log("User signed in:", user.email);
+                    // Only show main content if not in admin panel
+                    if (!isAdminLoggedIn) {
+                        showMainContent();
+                    }
                 } else {
                     currentUser = null;
                     console.log("User signed out");
+                    // Only show auth page if admin is not logged in AND admin check is complete
                     if (!isAdminLoggedIn && adminCheckComplete) {
                         showAuthPage();
                     }
@@ -1640,7 +1632,7 @@ function updateRazorpayKey() {
             if (!navLinks) return;
             const existingUserItems = navLinks.querySelectorAll('.user-nav-item');
             existingUserItems.forEach(el => el.remove());
-            const displayName = currentUser && currentUser.displayUsername ? currentUser.displayUsername : (currentUser ? currentUser.email.split("@")[0] : "User");
+            const userEmail = currentUser ? currentUser.email : "User";
 
             const myOrdersLink = document.createElement("button");
             myOrdersLink.className = "nav-link user-nav-item";
@@ -1654,10 +1646,10 @@ function updateRazorpayKey() {
             myKeysLink.onclick = function() { showMyKeys(); closeMobileMenu(); };
             navLinks.appendChild(myKeysLink);
 
-            const userDisplay = document.createElement("span");
-            userDisplay.className = "nav-user-email user-nav-item";
-            userDisplay.innerHTML = '<i class="fas fa-user"></i> ' + displayName;
-            navLinks.appendChild(userDisplay);
+            const emailDisplay = document.createElement("span");
+            emailDisplay.className = "nav-user-email user-nav-item";
+            emailDisplay.innerHTML = '<i class="fas fa-envelope"></i> ' + userEmail;
+            navLinks.appendChild(emailDisplay);
 
             const logoutBtn = document.createElement("button");
             logoutBtn.className = "nav-logout-btn user-nav-item";
