@@ -86,55 +86,69 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 2rem 0;
+}
+.products-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    min-height: 500px;
+    margin: 0 auto;
 }
 .product-card {
     width: 100%;
-    max-width: 340px;
+    max-width: 380px;
     position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translateX(180px) scale(0.85);
     opacity: 0;
-    transform: translateX(100px) scale(0.9);
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
     visibility: hidden;
+    padding: 2.5rem;
 }
 .product-card.active-card {
     opacity: 1;
-    transform: translateX(0) scale(1);
+    transform: translate(-50%, -50%) translateX(0) scale(1);
     pointer-events: auto;
     visibility: visible;
     z-index: 10;
 }
 .product-card.prev-card {
-    opacity: 0.3;
-    transform: translateX(-120px) scale(0.85);
+    opacity: 0.25;
+    transform: translate(-50%, -50%) translateX(-200px) scale(0.8);
     pointer-events: none;
     visibility: visible;
     z-index: 5;
-    filter: blur(2px);
+    filter: blur(3px);
 }
 .product-card.next-card {
-    opacity: 0.3;
-    transform: translateX(120px) scale(0.85);
+    opacity: 0.25;
+    transform: translate(-50%, -50%) translateX(200px) scale(0.8);
     pointer-events: none;
     visibility: visible;
     z-index: 5;
-    filter: blur(2px);
+    filter: blur(3px);
 }
 .carousel-nav {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1.5rem;
-    margin-top: 1.5rem;
+    gap: 2rem;
+    margin-top: 2rem;
 }
 .carousel-btn {
-    width: 50px;
-    height: 50px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     border: 2px solid var(--border);
     background: var(--white);
     color: var(--blue-dark);
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     cursor: pointer;
     transition: all 0.3s;
     display: flex;
@@ -156,12 +170,12 @@
 }
 .carousel-dots {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.6rem;
     align-items: center;
 }
 .carousel-dot {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     background: var(--border);
     border: none;
@@ -170,16 +184,16 @@
 }
 .carousel-dot.active {
     background: linear-gradient(135deg, var(--blue), var(--blue-dark));
-    width: 28px;
-    border-radius: 5px;
+    width: 32px;
+    border-radius: 6px;
 }
 .carousel-dot:hover {
     background: var(--blue-light);
 }
 .carousel-counter {
     text-align: center;
-    margin-top: 0.8rem;
-    font-size: 0.9rem;
+    margin-top: 1rem;
+    font-size: 1rem;
     color: var(--text-muted);
     font-weight: 500;
 }
@@ -188,11 +202,12 @@
     font-weight: 700;
 }
 @media (max-width: 768px) {
-    .products-grid { max-width: 320px; min-height: 400px; }
-    .product-card { max-width: 280px; }
-    .product-card.prev-card { transform: translateX(-80px) scale(0.85); }
-    .product-card.next-card { transform: translateX(80px) scale(0.85); }
-    .carousel-btn { width: 44px; height: 44px; font-size: 1rem; }
+    .products-grid { max-width: 340px; min-height: 480px; }
+    .product-card { max-width: 320px; padding: 2rem; }
+    .product-card.prev-card { transform: translate(-50%, -50%) translateX(-140px) scale(0.8); }
+    .product-card.next-card { transform: translate(-50%, -50%) translateX(140px) scale(0.8); }
+    .carousel-btn { width: 48px; height: 48px; font-size: 1.1rem; }
+    .carousel-nav { gap: 1.2rem; }
 }
         .product-card { background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border); transition: all 0.4s; position: relative; overflow: hidden; box-shadow: 0 4px 20px var(--card-shadow); }
         .product-card::after {
@@ -216,15 +231,15 @@
         .product-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--blue-light), var(--blue)); transform: scaleX(0); transition: transform 0.4s; }
         .product-card:hover::before { transform: scaleX(1); }
         .product-card:hover { transform: translateY(-10px); border-color: var(--blue-light); box-shadow: 0 20px 50px rgba(39, 77, 245, 0.12); }
-        .product-icon { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; overflow: hidden; }
-        .product-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--blue-darker); }
-        .product-card .duration { color: var(--blue); font-weight: 600; font-size: 0.95rem; margin-bottom: 1rem; }
-        .product-card .price { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--blue-dark), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
-        .stock-status { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem; }
+        .product-icon { width: 80px; height: 80px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; overflow: hidden; box-shadow: 0 8px 25px rgba(39, 77, 245, 0.15); }
+        .product-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--blue-darker); text-align: center; }
+        .product-card .duration { color: var(--blue); font-weight: 600; font-size: 1rem; margin-bottom: 1rem; text-align: center; }
+        .product-card .price { font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, var(--blue-dark), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; text-align: center; }
+        .stock-status { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.9rem; font-weight: 600; margin: 0 auto 1.5rem; }
         .stock-status.in-stock { background: rgba(22, 163, 74, 0.1); color: var(--success); border: 1px solid rgba(22, 163, 74, 0.3); }
         .stock-status.out-stock { background: rgba(220, 38, 38, 0.1); color: var(--danger); border: 1px solid rgba(220, 38, 38, 0.3); }
         .stock-status.low-stock { background: rgba(217, 119, 6, 0.1); color: var(--warning); border: 1px solid rgba(217, 119, 6, 0.3); }
-        .buy-btn { width: 100%; padding: 1rem; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 1rem; }
+        .buy-btn { width: 100%; padding: 1.1rem; border-radius: 14px; border: none; font-weight: 700; cursor: pointer; transition: all 0.3s; font-size: 1.05rem; letter-spacing: 0.5px; }
         .buy-btn.available { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; }
         .buy-btn.available:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(39, 77, 245, 0.3); }
         .buy-btn.unavailable { background: #eef2ff; color: var(--text-muted); cursor: not-allowed; }
