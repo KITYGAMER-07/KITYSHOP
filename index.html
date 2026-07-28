@@ -71,145 +71,8 @@
         .section-header { text-align: center; margin-bottom: 4rem; }
         .section-header h2 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 1rem; color: var(--blue-darker); }
         .section-header p { color: var(--text-muted); font-size: 1.1rem; }
-        .products-grid { 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    position: relative; 
-    max-width: 400px; 
-    margin: 0 auto; 
-    min-height: 420px;
-}
-.products-carousel-wrapper {
-    position: relative;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem 0;
-}
-.products-grid {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    width: 100%;
-    max-width: 420px;
-    min-height: 500px;
-    margin: 0 auto;
-}
-.product-card {
-    width: 100%;
-    max-width: 380px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) translateX(180px) scale(0.85);
-    opacity: 0;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-    visibility: hidden;
-    padding: 2.5rem;
-}
-.product-card.active-card {
-    opacity: 1;
-    transform: translate(-50%, -50%) translateX(0) scale(1);
-    pointer-events: auto;
-    visibility: visible;
-    z-index: 10;
-}
-.product-card.prev-card {
-    opacity: 0.25;
-    transform: translate(-50%, -50%) translateX(-200px) scale(0.8);
-    pointer-events: none;
-    visibility: visible;
-    z-index: 5;
-    filter: blur(3px);
-}
-.product-card.next-card {
-    opacity: 0.25;
-    transform: translate(-50%, -50%) translateX(200px) scale(0.8);
-    pointer-events: none;
-    visibility: visible;
-    z-index: 5;
-    filter: blur(3px);
-}
-.carousel-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    margin-top: 2rem;
-}
-.carousel-btn {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    background: var(--white);
-    color: var(--blue-dark);
-    font-size: 1.3rem;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 15px rgba(39, 77, 245, 0.1);
-}
-.carousel-btn:hover {
-    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
-    color: white;
-    border-color: var(--blue);
-    transform: scale(1.1);
-    box-shadow: 0 8px 25px rgba(39, 77, 245, 0.3);
-}
-.carousel-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-    transform: none;
-}
-.carousel-dots {
-    display: flex;
-    gap: 0.6rem;
-    align-items: center;
-}
-.carousel-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--border);
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-.carousel-dot.active {
-    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
-    width: 32px;
-    border-radius: 6px;
-}
-.carousel-dot:hover {
-    background: var(--blue-light);
-}
-.carousel-counter {
-    text-align: center;
-    margin-top: 1rem;
-    font-size: 1rem;
-    color: var(--text-muted);
-    font-weight: 500;
-}
-.carousel-counter span {
-    color: var(--blue);
-    font-weight: 700;
-}
-@media (max-width: 768px) {
-    .products-grid { max-width: 340px; min-height: 480px; }
-    .product-card { max-width: 320px; padding: 2rem; }
-    .product-card.prev-card { transform: translate(-50%, -50%) translateX(-140px) scale(0.8); }
-    .product-card.next-card { transform: translate(-50%, -50%) translateX(140px) scale(0.8); }
-    .carousel-btn { width: 48px; height: 48px; font-size: 1.1rem; }
-    .carousel-nav { gap: 1.2rem; }
-}
-        .product-card { background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border); transition: all 0.4s; position: relative; overflow: hidden; box-shadow: 0 4px 20px var(--card-shadow); }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .product-card { background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border); transition: all 0.4s; position: relative; overflow: hidden; opacity: 0; transform: translateY(30px); box-shadow: 0 4px 20px var(--card-shadow); }
         .product-card::after {
             content: '';
             position: absolute;
@@ -227,19 +90,19 @@
             position: relative;
             z-index: 1;
         }
-        /* .product-card.visible removed - using .active-card instead for carousel */
+        .product-card.visible { opacity: 1; transform: translateY(0); }
         .product-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--blue-light), var(--blue)); transform: scaleX(0); transition: transform 0.4s; }
         .product-card:hover::before { transform: scaleX(1); }
         .product-card:hover { transform: translateY(-10px); border-color: var(--blue-light); box-shadow: 0 20px 50px rgba(39, 77, 245, 0.12); }
-        .product-icon { width: 80px; height: 80px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; overflow: hidden; box-shadow: 0 8px 25px rgba(39, 77, 245, 0.15); }
-        .product-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--blue-darker); text-align: center; }
-        .product-card .duration { color: var(--blue); font-weight: 600; font-size: 1rem; margin-bottom: 1rem; text-align: center; }
-        .product-card .price { font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, var(--blue-dark), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; text-align: center; }
-        .stock-status { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.9rem; font-weight: 600; margin: 0 auto 1.5rem; }
+        .product-icon { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; overflow: hidden; }
+        .product-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--blue-darker); }
+        .product-card .duration { color: var(--blue); font-weight: 600; font-size: 0.95rem; margin-bottom: 1rem; }
+        .product-card .price { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--blue-dark), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        .stock-status { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem; }
         .stock-status.in-stock { background: rgba(22, 163, 74, 0.1); color: var(--success); border: 1px solid rgba(22, 163, 74, 0.3); }
         .stock-status.out-stock { background: rgba(220, 38, 38, 0.1); color: var(--danger); border: 1px solid rgba(220, 38, 38, 0.3); }
         .stock-status.low-stock { background: rgba(217, 119, 6, 0.1); color: var(--warning); border: 1px solid rgba(217, 119, 6, 0.3); }
-        .buy-btn { width: 100%; padding: 1.1rem; border-radius: 14px; border: none; font-weight: 700; cursor: pointer; transition: all 0.3s; font-size: 1.05rem; letter-spacing: 0.5px; }
+        .buy-btn { width: 100%; padding: 1rem; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 1rem; }
         .buy-btn.available { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; }
         .buy-btn.available:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(39, 77, 245, 0.3); }
         .buy-btn.unavailable { background: #eef2ff; color: var(--text-muted); cursor: not-allowed; }
@@ -504,7 +367,6 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
-<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -647,25 +509,11 @@
                 <h2>Choose Your Plan</h2>
                 <p>Select the duration that fits your needs. All keys are instantly delivered.</p>
             </div>
-            <div class="products-carousel-wrapper">
-                <div class="products-grid" id="productsGrid">
-                    <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
-                        <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
-                        <p>Loading products from Firebase...</p>
-                    </div>
+            <div class="products-grid" id="productsGrid">
+                <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted);">
+                    <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
+                    <p>Loading products from Firebase...</p>
                 </div>
-            </div>
-            <div class="carousel-nav" id="carouselNav" style="display: none;">
-                <button class="carousel-btn" id="prevBtn" onclick="prevProduct()" title="Previous">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <div class="carousel-dots" id="carouselDots"></div>
-                <button class="carousel-btn" id="nextBtn" onclick="nextProduct()" title="Next">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-            <div class="carousel-counter" id="carouselCounter" style="display: none;">
-                <span id="currentSlide">1</span> / <span id="totalSlides">7</span>
             </div>
         </section>
         <section class="features-section" id="features">
@@ -2283,39 +2131,13 @@ function updateRazorpayKey() {
             return key;
         }
 
-        let currentProductIndex = 0;
-
         function renderProducts() {
             const grid = document.getElementById("productsGrid");
-            const nav = document.getElementById("carouselNav");
-            const counter = document.getElementById("carouselCounter");
-            const dotsContainer = document.getElementById("carouselDots");
-
-            if (products.length === 0) {
-                grid.innerHTML = `
-                    <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
-                        <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
-                        <p>No products available</p>
-                    </div>
-                `;
-                nav.style.display = "none";
-                counter.style.display = "none";
-                return;
-            }
-
-            // Ensure current index is valid
-            if (currentProductIndex >= products.length) currentProductIndex = 0;
-
-            grid.innerHTML = products.map((product, index) => {
+            grid.innerHTML = products.map(product => {
                 const btnClass = product.stock > 0 ? "available" : "unavailable";
                 const btnText = product.stock > 0 ? "Buy Now" : "Unavailable";
-                let cardClass = "product-card";
-                if (index === currentProductIndex) cardClass += " active-card";
-                else if (index === currentProductIndex - 1) cardClass += " prev-card";
-                else if (index === currentProductIndex + 1) cardClass += " next-card";
-
                 return `
-                    <div class="${cardClass}" data-index="${index}">
+                    <div class="product-card">
                         <div class="product-icon"><img src="nova.jpg" style="width:100%;height:100%;border-radius:16px;object-fit:cover;"></div>
                         <h3>${product.name}</h3>
                         <div class="duration"><i class="fas fa-hourglass-half"></i> ${product.duration}</div>
@@ -2326,60 +2148,8 @@ function updateRazorpayKey() {
                     </div>
                 `;
             }).join("");
-
-            // Build dots
-            dotsContainer.innerHTML = products.map((_, index) => {
-                return `<button class="carousel-dot ${index === currentProductIndex ? 'active' : ''}" onclick="goToProduct(${index})" title="${products[index].name}"></button>`;
-            }).join("");
-
-            // Update counter
-            document.getElementById("currentSlide").textContent = currentProductIndex + 1;
-            document.getElementById("totalSlides").textContent = products.length;
-
-            // Show navigation
-            nav.style.display = "flex";
-            counter.style.display = "block";
-
-            // Update button states
-            document.getElementById("prevBtn").disabled = currentProductIndex === 0;
-            document.getElementById("nextBtn").disabled = currentProductIndex === products.length - 1;
-
             observeProducts();
         }
-
-        function nextProduct() {
-            if (currentProductIndex < products.length - 1) {
-                currentProductIndex++;
-                renderProducts();
-            }
-        }
-
-        function prevProduct() {
-            if (currentProductIndex > 0) {
-                currentProductIndex--;
-                renderProducts();
-            }
-        }
-
-        function goToProduct(index) {
-            if (index >= 0 && index < products.length) {
-                currentProductIndex = index;
-                renderProducts();
-            }
-        }
-
-        // Keyboard navigation for carousel
-        document.addEventListener("keydown", (e) => {
-            const productsSection = document.getElementById("products");
-            if (!productsSection) return;
-            const rect = productsSection.getBoundingClientRect();
-            const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-
-            if (isVisible && document.getElementById("buyModal") && !document.getElementById("buyModal").classList.contains("active")) {
-                if (e.key === "ArrowRight") nextProduct();
-                else if (e.key === "ArrowLeft") prevProduct();
-            }
-        });
 
         function smoothScrollTo(targetId) {
             const element = document.getElementById(targetId);
@@ -3129,12 +2899,12 @@ function updateRazorpayKey() {
         }
 
         function observeProducts() {
-            // Carousel cards are already visible via active-card class
-            // No need for intersection observer in carousel mode
-            const activeCard = document.querySelector(".product-card.active-card");
-            if (activeCard) {
-                activeCard.style.animation = "fadeInUp 0.6s ease";
-            }
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add("visible");
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll(".product-card").forEach(card => observer.observe(card));
         }
 
         const featureObserver = new IntersectionObserver((entries) => {
@@ -3287,41 +3057,6 @@ function skipToMainContent() {
 
         // ========== APK FUNCTIONS END ==========
 
-        
-        // Touch/Swipe support for mobile carousel
-        let touchStartX = 0;
-        let touchEndX = 0;
-
-        document.addEventListener("touchstart", (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, false);
-
-        document.addEventListener("touchend", (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, false);
-
-        function handleSwipe() {
-            const productsSection = document.getElementById("products");
-            if (!productsSection) return;
-            const rect = productsSection.getBoundingClientRect();
-            const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-
-            if (!isVisible) return;
-            if (document.getElementById("buyModal") && document.getElementById("buyModal").classList.contains("active")) return;
-
-            const swipeThreshold = 50;
-            const diff = touchStartX - touchEndX;
-
-            if (Math.abs(diff) > swipeThreshold) {
-                if (diff > 0) {
-                    nextProduct(); // Swipe left -> next
-                } else {
-                    prevProduct(); // Swipe right -> previous
-                }
-            }
-        }
-        
         console.log("KITY SHOP with Firebase Auth loaded!");
     </script>
 </body>
