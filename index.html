@@ -367,6 +367,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -851,24 +852,34 @@
     <div class="modal-overlay" id="addStockModal">
         <div class="modal">
             <div class="modal-header">
-                <h2><i class="fas fa-plus"></i> Add Stock (Manual Keys Only)</h2>
+                <h2><i class="fas fa-plus"></i> Add Stock (Admin Keys Only)</h2>
                 <button class="close-btn" onclick="closeModal('addStockModal')">&times;</button>
             </div>
             <div class="form-group">
-                <label>Duration</label>
+                <label>Product</label>
                 <select id="stockDuration">
-                    <option value="5hours">5 Hours</option>
-                    <option value="1day">1 Day</option>
-                    <option value="3days">3 Days</option>
-                    <option value="7days">7 Days</option>
-                    <option value="14days">14 Days</option>
-                    <option value="30days">30 Days</option>
-                    <option value="60days">60 Days</option>
+                    <optgroup label="NovaEsp">
+                        <option value="novaesp_5hours">5 Hours</option>
+                        <option value="novaesp_1day">1 Day</option>
+                        <option value="novaesp_3days">3 Days</option>
+                        <option value="novaesp_7days">7 Days</option>
+                        <option value="novaesp_14days">14 Days</option>
+                        <option value="novaesp_30days">30 Days</option>
+                        <option value="novaesp_60days">60 Days</option>
+                    </optgroup>
+                    <optgroup label="Ztrax Bypass">
+                        <option value="ztrax_5hours">5 Hours</option>
+                        <option value="ztrax_1day">1 Day</option>
+                        <option value="ztrax_3days">3 Days</option>
+                        <option value="ztrax_7days">7 Days</option>
+                        <option value="ztrax_14days">14 Days</option>
+                        <option value="ztrax_30days">30 Days</option>
+                        <option value="ztrax_60days">60 Days</option>
+                    </optgroup>
                 </select>
             </div>
             <div class="form-group"><label>Price (Rs.)</label><input type="number" id="stockPrice" placeholder="199"></div>
-            <div class="form-group" style="display: none;"><label>Quantity to Add</label><input type="number" id="stockQuantity" placeholder="10" value="1"></div>
-            <div class="form-group"><label>Keys (one per line, <span style="color: var(--danger);">REQUIRED</span>)</label><textarea id="stockKeys" rows="5" placeholder="KEY-ABC-123-XYZ&#10;KEY-DEF-456-UVW&#10;KEY-GHI-789-RST" required style="border-color: var(--blue-light);"></textarea><div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;"><i class="fas fa-info-circle" style="color: var(--blue);"></i> Enter at least one key. Auto-generation is disabled.</div></div>
+            <div class="form-group"><label>Keys (one per line, <span style="color: var(--danger);">REQUIRED</span>)</label><textarea id="stockKeys" rows="5" placeholder="KEY-ABC-123-XYZ&#10;KEY-DEF-456-UVW&#10;KEY-GHI-789-RST" required style="border-color: var(--blue-light);"></textarea><div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;"><i class="fas fa-info-circle" style="color: var(--blue);"></i> Enter admin keys only. Auto-generation is disabled for all products.</div></div>
             <button class="btn-primary" onclick="addStock()"><i class="fas fa-plus"></i> Add Stock</button>
         </div>
     </div>
@@ -882,13 +893,24 @@
             <div class="form-group">
                 <label>Duration</label>
                 <select id="deleteStockDuration">
-                    <option value="5hours">5 Hours</option>
-                    <option value="1day">1 Day</option>
-                    <option value="3days">3 Days</option>
-                    <option value="7days">7 Days</option>
-                    <option value="14days">14 Days</option>
-                    <option value="30days">30 Days</option>
-                    <option value="60days">60 Days</option>
+                    <optgroup label="NovaEsp">
+                        <option value="novaesp_5hours">5 Hours</option>
+                        <option value="novaesp_1day">1 Day</option>
+                        <option value="novaesp_3days">3 Days</option>
+                        <option value="novaesp_7days">7 Days</option>
+                        <option value="novaesp_14days">14 Days</option>
+                        <option value="novaesp_30days">30 Days</option>
+                        <option value="novaesp_60days">60 Days</option>
+                    </optgroup>
+                    <optgroup label="Ztrax Bypass">
+                        <option value="ztrax_5hours">5 Hours</option>
+                        <option value="ztrax_1day">1 Day</option>
+                        <option value="ztrax_3days">3 Days</option>
+                        <option value="ztrax_7days">7 Days</option>
+                        <option value="ztrax_14days">14 Days</option>
+                        <option value="ztrax_30days">30 Days</option>
+                        <option value="ztrax_60days">60 Days</option>
+                    </optgroup>
                 </select>
             </div>
             <div class="form-group">
@@ -1043,13 +1065,22 @@ function updateRazorpayKey() {
 }
 
         const defaultProducts = [
-            { id: "5hours", name: "5 Hours Access", duration: "5 Hours", price: 49, stock: 15, icon: "fa-clock" },
-            { id: "1day", name: "1 Day Access", duration: "1 Day", price: 99, stock: 25, icon: "fa-calendar-day" },
-            { id: "3days", name: "3 Days Access", duration: "3 Days", price: 199, stock: 20, icon: "fa-calendar-day" },
-            { id: "7days", name: "7 Days Access", duration: "7 Days", price: 399, stock: 18, icon: "fa-calendar-week" },
-            { id: "14days", name: "14 Days Access", duration: "14 Days", price: 699, stock: 12, icon: "fa-calendar-alt" },
-            { id: "30days", name: "30 Days Access", duration: "30 Days", price: 1299, stock: 8, icon: "fa-calendar" },
-            { id: "60days", name: "60 Days Access", duration: "60 Days", price: 2299, stock: 5, icon: "fa-calendar" }
+            // NovaEsp Products (stock = 0, admin must add keys)
+            { id: "novaesp_5hours", name: "NovaEsp - 5 Hours", duration: "5 Hours", price: 49, stock: 0, icon: "fa-clock" },
+            { id: "novaesp_1day", name: "NovaEsp - 1 Day", duration: "1 Day", price: 99, stock: 0, icon: "fa-calendar-day" },
+            { id: "novaesp_3days", name: "NovaEsp - 3 Days", duration: "3 Days", price: 199, stock: 0, icon: "fa-calendar-day" },
+            { id: "novaesp_7days", name: "NovaEsp - 7 Days", duration: "7 Days", price: 399, stock: 0, icon: "fa-calendar-week" },
+            { id: "novaesp_14days", name: "NovaEsp - 14 Days", duration: "14 Days", price: 699, stock: 0, icon: "fa-calendar-alt" },
+            { id: "novaesp_30days", name: "NovaEsp - 30 Days", duration: "30 Days", price: 1299, stock: 0, icon: "fa-calendar" },
+            { id: "novaesp_60days", name: "NovaEsp - 60 Days", duration: "60 Days", price: 2299, stock: 0, icon: "fa-calendar" },
+            // Ztrax Bypass Products (stock = 0, admin must add keys)
+            { id: "ztrax_5hours", name: "Ztrax Bypass - 5 Hours", duration: "5 Hours", price: 79, stock: 0, icon: "fa-rocket" },
+            { id: "ztrax_1day", name: "Ztrax Bypass - 1 Day", duration: "1 Day", price: 149, stock: 0, icon: "fa-rocket" },
+            { id: "ztrax_3days", name: "Ztrax Bypass - 3 Days", duration: "3 Days", price: 349, stock: 0, icon: "fa-rocket" },
+            { id: "ztrax_7days", name: "Ztrax Bypass - 7 Days", duration: "7 Days", price: 649, stock: 0, icon: "fa-rocket" },
+            { id: "ztrax_14days", name: "Ztrax Bypass - 14 Days", duration: "14 Days", price: 1199, stock: 0, icon: "fa-rocket" },
+            { id: "ztrax_30days", name: "Ztrax Bypass - 30 Days", duration: "30 Days", price: 2199, stock: 0, icon: "fa-rocket" },
+            { id: "ztrax_60days", name: "Ztrax Bypass - 60 Days", duration: "60 Days", price: 3999, stock: 0, icon: "fa-rocket" }
         ];
 
         // GitHub Releases APK URL - Change this when you update your APK
@@ -1922,13 +1953,17 @@ function updateRazorpayKey() {
                         }
                     });
                 }
-                // Do NOT auto-generate local keys - only use Firebase keys
-                // If stock > keys count, just update the stock to match available keys
+                // ALL products: stock = available admin-uploaded keys count ONLY
+                // NO auto-generated keys for any product
                 products.forEach(p => {
                     keys[p.id] = keys[p.id] || [];
-                    const current = keys[p.id].length;
+                    // Stock = admin-uploaded keys count (manual keys)
+                    const adminKeyCount = manualKeys[p.id] ? manualKeys[p.id].length : 0;
+                    const totalKeyCount = keys[p.id].length;
+                    // Use whichever is available (keys array contains admin keys)
+                    const current = totalKeyCount;
                     if (current !== p.stock) {
-                        p.stock = current; // Sync stock with actual available keys
+                        p.stock = current;
                     }
                 });
                 // Save updated stock counts back to Firebase
@@ -2119,26 +2154,18 @@ function updateRazorpayKey() {
             });
         }
 
-        function generateKey(productId) {
-            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            let key = "KEY-";
-            for (let i = 0; i < 3; i++) {
-                for (let j = 0; j < 4; j++) {
-                    key += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-                if (i < 2) key += "-";
-            }
-            return key;
-        }
+        // generateKey function removed - admin keys only
+        // function generateKey(productId) { ... }
 
         function renderProducts() {
             const grid = document.getElementById("productsGrid");
             grid.innerHTML = products.map(product => {
                 const btnClass = product.stock > 0 ? "available" : "unavailable";
                 const btnText = product.stock > 0 ? "Buy Now" : "Unavailable";
+                const logoImg = product.id.startsWith("ztrax_") ? "ztrax.jpg" : "nova.jpg";
                 return `
                     <div class="product-card">
-                        <div class="product-icon"><img src="nova.jpg" style="width:100%;height:100%;border-radius:16px;object-fit:cover;"></div>
+                        <div class="product-icon"><img src="${logoImg}" style="width:100%;height:100%;border-radius:16px;object-fit:cover;"></div>
                         <h3>${product.name}</h3>
                         <div class="duration"><i class="fas fa-hourglass-half"></i> ${product.duration}</div>
                         <div class="price">Rs.${product.price}</div>
@@ -2307,19 +2334,23 @@ function updateRazorpayKey() {
                 products[productIndex].stock--;
                 keys[currentProduct.id] = keys[currentProduct.id] || [];
                 let key;
+
+                // ALL products: ONLY use admin-uploaded keys (manual keys)
+                // NO auto-generated keys for any product
                 if (keys[currentProduct.id].length > 0) {
-                    key = keys[currentProduct.id].shift(); // Use shift to get first key (FIFO)
-                } else {
-                    showToast("No keys available in stock!", "error");
-                    return;
-                }
-                // Also remove from manualKeys if this was an admin-added key
-                if (manualKeys[currentProduct.id]) {
-                    const manualIndex = manualKeys[currentProduct.id].indexOf(key);
-                    if (manualIndex !== -1) {
-                        manualKeys[currentProduct.id].splice(manualIndex, 1);
+                    key = keys[currentProduct.id].shift(); // Get first admin-uploaded key (FIFO)
+                    // Also remove from manualKeys if tracked separately
+                    if (manualKeys[currentProduct.id]) {
+                        const manualIndex = manualKeys[currentProduct.id].indexOf(key);
+                        if (manualIndex !== -1) {
+                            manualKeys[currentProduct.id].splice(manualIndex, 1);
+                        }
                         saveManualKeysToFirebase();
                     }
+                } else {
+                    showToast("No admin keys available! Contact admin to add stock.", "error");
+                    products[productIndex].stock++; // Restore stock
+                    return;
                 }
 
                 // Calculate final amount with coupon
@@ -2645,25 +2676,25 @@ function updateRazorpayKey() {
             `;
             document.body.appendChild(loadingModal);
 
-            // Load fresh MANUAL keys from Firebase to ensure accuracy
+            // ALL products: Load manual keys only (admin-uploaded)
             if (firebaseInitialized) {
                 db.ref("manualKeys/" + productId).once("value")
                     .then((snapshot) => {
-                        const firebaseManualKeys = snapshot.val();
-                        console.log("viewKeys - Firebase raw data for " + productId + ":", firebaseManualKeys);
-                        if (firebaseManualKeys && Array.isArray(firebaseManualKeys)) {
-                            manualKeys[productId] = firebaseManualKeys;
-                            console.log("viewKeys - Loaded " + firebaseManualKeys.length + " manual keys for " + productId);
+                        const firebaseKeys = snapshot.val();
+                        console.log("viewKeys - Firebase raw data for " + productId + ":", firebaseKeys);
+                        if (firebaseKeys && Array.isArray(firebaseKeys)) {
+                            manualKeys[productId] = firebaseKeys;
+                            // Also sync with keys array
+                            keys[productId] = firebaseKeys;
+                            console.log("viewKeys - Loaded " + firebaseKeys.length + " admin keys for " + productId);
                         } else {
-                            console.log("viewKeys - No manual keys found in Firebase for " + productId);
-                            // Also check local manualKeys
-                            console.log("viewKeys - Local manualKeys[" + productId + "]:", manualKeys[productId]);
+                            console.log("viewKeys - No admin keys found in Firebase for " + productId);
                         }
                         document.body.removeChild(loadingModal);
                         showKeysModal(productId, product);
                     })
                     .catch((err) => {
-                        console.error("viewKeys - Error loading manual keys:", err);
+                        console.error("viewKeys - Error loading keys:", err);
                         document.body.removeChild(loadingModal);
                         showKeysModal(productId, product);
                     });
@@ -2677,14 +2708,14 @@ function updateRazorpayKey() {
         }
 
         function showKeysModal(productId, product) {
-            // Show ONLY manual keys (admin-added keys) - NOT auto-generated keys
-            let productManualKeys = [];
+            // ALL products: Show ONLY admin-uploaded manual keys
+            // NO auto-generated keys for any product
+            let displayKeys = [];
             if (firebaseInitialized) {
-                productManualKeys = manualKeys[productId] || [];
+                displayKeys = manualKeys[productId] || [];
             }
 
-            console.log("showKeysModal - Product:", productId, "Manual keys count:", productManualKeys.length);
-            console.log("showKeysModal - manualKeys[" + productId + "]:", manualKeys[productId]);
+            console.log("showKeysModal - Product:", productId, "Admin keys count:", displayKeys.length);
 
             // Create modal dynamically
             const modal = document.createElement("div");
@@ -2692,22 +2723,23 @@ function updateRazorpayKey() {
             modal.id = "viewKeysModal";
             modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 20, 74, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
 
+            const emptyMessage = `<p>No admin-uploaded keys found for ${product.name}.</p><p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">Admin must add keys via "Add Stock".</p>`;
+
             let keysHtml = '';
-            if (productManualKeys.length === 0) {
+            if (displayKeys.length === 0) {
                 keysHtml = `
                     <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
                         <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
-                        <p>No admin-added keys found for this plan.</p>
-                        <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">Only keys manually entered in "Add Stock" will appear here.</p>
+                        ${emptyMessage}
                         <div style="margin-top: 1rem; padding: 0.8rem; background: var(--cream); border-radius: 8px; border: 1px solid var(--border); font-size: 0.75rem; color: var(--text-muted);">
-                            <i class="fas fa-bug" style="color: var(--warning);"></i> Debug: manualKeys[${productId}] has ${productManualKeys.length} items
+                            <i class="fas fa-info-circle" style="color: var(--blue);"></i> Stock: ${displayKeys.length} keys available
                         </div>
                     </div>
                 `;
             } else {
                 keysHtml = `
                     <div style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 400px; overflow-y: auto; padding-right: 0.5rem;">
-                        ${productManualKeys.map((key, index) => `
+                        ${displayKeys.map((key, index) => `
                             <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--cream); padding: 0.6rem 0.8rem; border-radius: 10px; border: 1px solid var(--border);">
                                 <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; min-width: 30px;">#${index + 1}</span>
                                 <span style="font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 700; color: var(--blue-darker); flex: 1; letter-spacing: 0.5px;">${key}</span>
@@ -2719,7 +2751,7 @@ function updateRazorpayKey() {
                     </div>
                     <div style="margin-top: 1rem; padding: 0.8rem; background: rgba(39, 77, 245, 0.06); border-radius: 10px; border: 1px solid var(--border); text-align: center;">
                         <span style="font-size: 0.85rem; color: var(--blue-dark); font-weight: 600;">
-                            <i class="fas fa-user-shield"></i> Admin-Added Keys: ${productManualKeys.length} | 
+                            <i class="fas fa-user-shield"></i> Admin-Uploaded Keys: ${displayKeys.length} | 
                             <i class="fas fa-box"></i> ${product.name}
                         </span>
                     </div>
@@ -2812,6 +2844,7 @@ function updateRazorpayKey() {
             saveProductsToFirebase();
             saveKeysToFirebase();
             saveManualKeysToFirebase();
+
             renderProducts();
             updateAdminStats();
             renderAdminTables();
