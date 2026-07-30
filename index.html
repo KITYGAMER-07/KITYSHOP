@@ -367,8 +367,6 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
-<base target="_blank">
-<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -853,34 +851,24 @@
     <div class="modal-overlay" id="addStockModal">
         <div class="modal">
             <div class="modal-header">
-                <h2><i class="fas fa-plus"></i> Add Stock (Admin Keys Only)</h2>
+                <h2><i class="fas fa-plus"></i> Add Stock (Manual Keys Only)</h2>
                 <button class="close-btn" onclick="closeModal('addStockModal')">&times;</button>
             </div>
             <div class="form-group">
-                <label>Product</label>
+                <label>Duration</label>
                 <select id="stockDuration">
-                    <optgroup label="NovaEsp">
-                        <option value="novaesp_5hours">5 Hours</option>
-                        <option value="novaesp_1day">1 Day</option>
-                        <option value="novaesp_3days">3 Days</option>
-                        <option value="novaesp_7days">7 Days</option>
-                        <option value="novaesp_14days">14 Days</option>
-                        <option value="novaesp_30days">30 Days</option>
-                        <option value="novaesp_60days">60 Days</option>
-                    </optgroup>
-                    <optgroup label="Ztrax Bypass">
-                        <option value="ztrax_5hours">5 Hours</option>
-                        <option value="ztrax_1day">1 Day</option>
-                        <option value="ztrax_3days">3 Days</option>
-                        <option value="ztrax_7days">7 Days</option>
-                        <option value="ztrax_14days">14 Days</option>
-                        <option value="ztrax_30days">30 Days</option>
-                        <option value="ztrax_60days">60 Days</option>
-                    </optgroup>
+                    <option value="5hours">5 Hours</option>
+                    <option value="1day">1 Day</option>
+                    <option value="3days">3 Days</option>
+                    <option value="7days">7 Days</option>
+                    <option value="14days">14 Days</option>
+                    <option value="30days">30 Days</option>
+                    <option value="60days">60 Days</option>
                 </select>
             </div>
             <div class="form-group"><label>Price (Rs.)</label><input type="number" id="stockPrice" placeholder="199"></div>
-            <div class="form-group"><label>Keys (one per line, <span style="color: var(--danger);">REQUIRED</span>)</label><textarea id="stockKeys" rows="5" placeholder="KEY-ABC-123-XYZ&#10;KEY-DEF-456-UVW&#10;KEY-GHI-789-RST" required style="border-color: var(--blue-light);"></textarea><div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;"><i class="fas fa-info-circle" style="color: var(--blue);"></i> Enter admin keys only. Auto-generation is disabled for all products.</div></div>
+            <div class="form-group" style="display: none;"><label>Quantity to Add</label><input type="number" id="stockQuantity" placeholder="10" value="1"></div>
+            <div class="form-group"><label>Keys (one per line, <span style="color: var(--danger);">REQUIRED</span>)</label><textarea id="stockKeys" rows="5" placeholder="KEY-ABC-123-XYZ&#10;KEY-DEF-456-UVW&#10;KEY-GHI-789-RST" required style="border-color: var(--blue-light);"></textarea><div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;"><i class="fas fa-info-circle" style="color: var(--blue);"></i> Enter at least one key. Auto-generation is disabled.</div></div>
             <button class="btn-primary" onclick="addStock()"><i class="fas fa-plus"></i> Add Stock</button>
         </div>
     </div>
@@ -894,24 +882,13 @@
             <div class="form-group">
                 <label>Duration</label>
                 <select id="deleteStockDuration">
-                    <optgroup label="NovaEsp">
-                        <option value="novaesp_5hours">5 Hours</option>
-                        <option value="novaesp_1day">1 Day</option>
-                        <option value="novaesp_3days">3 Days</option>
-                        <option value="novaesp_7days">7 Days</option>
-                        <option value="novaesp_14days">14 Days</option>
-                        <option value="novaesp_30days">30 Days</option>
-                        <option value="novaesp_60days">60 Days</option>
-                    </optgroup>
-                    <optgroup label="Ztrax Bypass">
-                        <option value="ztrax_5hours">5 Hours</option>
-                        <option value="ztrax_1day">1 Day</option>
-                        <option value="ztrax_3days">3 Days</option>
-                        <option value="ztrax_7days">7 Days</option>
-                        <option value="ztrax_14days">14 Days</option>
-                        <option value="ztrax_30days">30 Days</option>
-                        <option value="ztrax_60days">60 Days</option>
-                    </optgroup>
+                    <option value="5hours">5 Hours</option>
+                    <option value="1day">1 Day</option>
+                    <option value="3days">3 Days</option>
+                    <option value="7days">7 Days</option>
+                    <option value="14days">14 Days</option>
+                    <option value="30days">30 Days</option>
+                    <option value="60days">60 Days</option>
                 </select>
             </div>
             <div class="form-group">
@@ -1066,22 +1043,13 @@ function updateRazorpayKey() {
 }
 
         const defaultProducts = [
-            // NovaEsp Products (price default, stock from Firebase)
-            { id: "novaesp_5hours", name: "NovaEsp - 5 Hours", duration: "5 Hours", price: 49, stock: undefined, icon: "fa-clock" },
-            { id: "novaesp_1day", name: "NovaEsp - 1 Day", duration: "1 Day", price: 99, stock: undefined, icon: "fa-calendar-day" },
-            { id: "novaesp_3days", name: "NovaEsp - 3 Days", duration: "3 Days", price: 199, stock: undefined, icon: "fa-calendar-day" },
-            { id: "novaesp_7days", name: "NovaEsp - 7 Days", duration: "7 Days", price: 399, stock: undefined, icon: "fa-calendar-week" },
-            { id: "novaesp_14days", name: "NovaEsp - 14 Days", duration: "14 Days", price: 699, stock: undefined, icon: "fa-calendar-alt" },
-            { id: "novaesp_30days", name: "NovaEsp - 30 Days", duration: "30 Days", price: 1299, stock: undefined, icon: "fa-calendar" },
-            { id: "novaesp_60days", name: "NovaEsp - 60 Days", duration: "60 Days", price: 2299, stock: undefined, icon: "fa-calendar" },
-            // Ztrax Bypass Products (price default, stock from Firebase)
-            { id: "ztrax_5hours", name: "Ztrax Bypass - 5 Hours", duration: "5 Hours", price: 79, stock: undefined, icon: "fa-rocket" },
-            { id: "ztrax_1day", name: "Ztrax Bypass - 1 Day", duration: "1 Day", price: 149, stock: undefined, icon: "fa-rocket" },
-            { id: "ztrax_3days", name: "Ztrax Bypass - 3 Days", duration: "3 Days", price: 349, stock: undefined, icon: "fa-rocket" },
-            { id: "ztrax_7days", name: "Ztrax Bypass - 7 Days", duration: "7 Days", price: 649, stock: undefined, icon: "fa-rocket" },
-            { id: "ztrax_14days", name: "Ztrax Bypass - 14 Days", duration: "14 Days", price: 1199, stock: undefined, icon: "fa-rocket" },
-            { id: "ztrax_30days", name: "Ztrax Bypass - 30 Days", duration: "30 Days", price: 2199, stock: undefined, icon: "fa-rocket" },
-            { id: "ztrax_60days", name: "Ztrax Bypass - 60 Days", duration: "60 Days", price: 3999, stock: undefined, icon: "fa-rocket" }
+            { id: "5hours", name: "5 Hours Access", duration: "5 Hours", price: 49, stock: 15, icon: "fa-clock" },
+            { id: "1day", name: "1 Day Access", duration: "1 Day", price: 99, stock: 25, icon: "fa-calendar-day" },
+            { id: "3days", name: "3 Days Access", duration: "3 Days", price: 199, stock: 20, icon: "fa-calendar-day" },
+            { id: "7days", name: "7 Days Access", duration: "7 Days", price: 399, stock: 18, icon: "fa-calendar-week" },
+            { id: "14days", name: "14 Days Access", duration: "14 Days", price: 699, stock: 12, icon: "fa-calendar-alt" },
+            { id: "30days", name: "30 Days Access", duration: "30 Days", price: 1299, stock: 8, icon: "fa-calendar" },
+            { id: "60days", name: "60 Days Access", duration: "60 Days", price: 2299, stock: 5, icon: "fa-calendar" }
         ];
 
         // GitHub Releases APK URL - Change this when you update your APK
@@ -1652,7 +1620,8 @@ function updateRazorpayKey() {
                 mainItems.forEach(el => el.style.display = '');
             }
             setTimeout(() => { addUserMenuToNav(); }, 100);
-            // Load products from Firebase FIRST, then render
+            // Show products immediately with defaults, then update from Firebase
+            renderProducts();
             loadProductsFromFirebase();
             loadOrdersFromFirebase();
             loadApkFromFirebase();
@@ -1915,23 +1884,18 @@ function updateRazorpayKey() {
                     products = defaultProducts.map(def => {
                         const saved = data[def.id];
                         if (saved) {
-                            return { 
-                                ...def, 
-                                price: saved.price !== undefined ? saved.price : def.price, 
-                                stock: saved.stock !== undefined ? saved.stock : 0 
-                            };
+                            return { ...def, price: saved.price !== undefined ? saved.price : def.price, stock: saved.stock !== undefined ? saved.stock : def.stock };
                         }
-                        return { ...def, stock: 0 };
+                        return def;
                     });
-                } else {
-                    products = defaultProducts.map(def => ({ ...def, stock: 0 }));
                 }
                 loadKeysFromFirebase();
                 setSyncing(false);
-                renderProducts();
+                renderProducts(); // Re-render with updated data
             }, (error) => {
                 console.error("Error loading products:", error);
                 setSyncing(false);
+                // Don't re-render on error - defaults already showing
             });
         }
 
@@ -1940,123 +1904,46 @@ function updateRazorpayKey() {
             setSyncing(true);
             const productsRef = db.ref("products");
             const dataToSave = {};
-            products.forEach(p => { 
-                dataToSave[p.id] = { 
-                    price: p.price, 
-                    stock: p.stock !== undefined ? p.stock : 0 
-                }; 
-            });
-            productsRef.set(dataToSave)
-                .then(() => { 
-                    setSyncing(false); 
-                    console.log("✅ Products saved to Firebase");
-                })
-                .catch(err => { 
-                    console.error("Error saving products:", err); 
-                    setSyncing(false); 
-                });
+            products.forEach(p => { dataToSave[p.id] = { price: p.price, stock: p.stock }; });
+            productsRef.set(dataToSave).then(() => { setSyncing(false); }).catch(err => { console.error("Error saving products:", err); setSyncing(false); });
         }
 
         function loadKeysFromFirebase() {
             if (!firebaseInitialized) return;
-
-            // Load from BOTH keys/ and manualKeys/ nodes
-            Promise.all([
-                db.ref("keys").once("value"),
-                db.ref("manualKeys").once("value")
-            ]).then(([keysSnapshot, manualSnapshot]) => {
-                const keysData = keysSnapshot.val();
-                const manualData = manualSnapshot.val();
-
-                // Process keys/ node (old NovaEsp stock + admin keys)
-                if (keysData) {
-                    Object.keys(keysData).forEach(productId => {
+            const keysRef = db.ref("keys");
+            keysRef.once("value", (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    Object.keys(data).forEach(productId => {
                         if (productId === "username" || productId === "password") return;
-                        if (keys[productId] !== undefined && Array.isArray(keysData[productId])) {
-                            keys[productId] = keysData[productId];
+                        // Only load if it's a valid product and has actual keys
+                        if (keys[productId] !== undefined && Array.isArray(data[productId])) {
+                            keys[productId] = data[productId];
                         }
                     });
                 }
-
-                // Process manualKeys/ node (new admin uploads)
-                if (manualData) {
-                    Object.keys(manualData).forEach(productId => {
-                        if (manualKeys[productId] !== undefined && Array.isArray(manualData[productId])) {
-                            manualKeys[productId] = manualData[productId];
-                        }
-                    });
-                }
-
-                // Merge keys: Combine keys/ + manualKeys/ for each product
-                // Remove duplicates
+                // Do NOT auto-generate local keys - only use Firebase keys
+                // If stock > keys count, just update the stock to match available keys
                 products.forEach(p => {
-                    const productId = p.id;
-                    const keysArray = keys[productId] || [];
-                    const manualArray = manualKeys[productId] || [];
-
-                    // Merge both arrays (remove duplicates)
-                    const mergedKeys = [...new Set([...keysArray, ...manualArray])];
-
-                    // Update both arrays with merged data
-                    keys[productId] = mergedKeys;
-                    manualKeys[productId] = mergedKeys;
-                });
-
-                // SYNC stock with actual available keys count (CRITICAL FIX)
-                products.forEach(p => {
-                    const actualKeys = keys[p.id] || [];
-                    const actualCount = actualKeys.length;
-                    if (actualCount !== p.stock) {
-                        p.stock = actualCount; // Sync stock with actual keys
+                    keys[p.id] = keys[p.id] || [];
+                    const current = keys[p.id].length;
+                    if (current !== p.stock) {
+                        p.stock = current; // Sync stock with actual available keys
                     }
                 });
-
                 // Save updated stock counts back to Firebase
                 saveProductsToFirebase();
-
-                console.log("✅ Keys loaded and merged from Firebase, stock synced");
-
                 // Update admin dashboard if active
                 if (isAdminLoggedIn) {
                     updateAdminStats();
                     renderAdminTables();
                 }
-
-                renderProducts();
-            }).catch(err => {
-                console.error("❌ Error loading keys:", err);
             });
+            // Also load manual keys
+            loadManualKeysFromFirebase();
         }
 
-
-        function syncStockWithKeys() {
-            if (!products || products.length === 0) return;
-            let stockChanged = false;
-            products.forEach(p => {
-                const productId = p.id;
-                const keysArray = keys[productId] || [];
-                const manualArray = manualKeys[productId] || [];
-                const mergedKeys = [...new Set([...keysArray, ...manualArray])];
-                const actualCount = mergedKeys.length;
-                if (actualCount !== p.stock) {
-                    p.stock = actualCount;
-                    stockChanged = true;
-                }
-                // Update local arrays with merged data
-                keys[productId] = mergedKeys;
-                manualKeys[productId] = mergedKeys;
-            });
-            if (stockChanged) {
-                saveProductsToFirebase();
-                renderProducts();
-                if (isAdminLoggedIn) {
-                    updateAdminStats();
-                    renderAdminTables();
-                }
-            }
-        }
-
-function saveKeysToFirebase() {
+        function saveKeysToFirebase() {
             if (!firebaseInitialized) return;
             db.ref("keys").once("value").then((snapshot) => {
                 const existingData = snapshot.val() || {};
@@ -2071,15 +1958,6 @@ function saveKeysToFirebase() {
                 if (existingData.username) dataToSave.username = existingData.username;
                 if (existingData.password) dataToSave.password = existingData.password;
                 return db.ref("keys").set(dataToSave);
-            }).then(() => {
-                // Also sync to manualKeys for consistency
-                const manualDataToSave = {};
-                Object.keys(manualKeys).forEach(key => {
-                    if (Array.isArray(manualKeys[key])) {
-                        manualDataToSave[key] = manualKeys[key];
-                    }
-                });
-                return db.ref("manualKeys").set(manualDataToSave);
             }).catch(err => { console.error("Error saving keys:", err); });
         }
 
@@ -2098,14 +1976,6 @@ function saveKeysToFirebase() {
             db.ref("manualKeys").set(dataToSave)
                 .then(() => {
                     console.log("✅ Manual keys saved to Firebase successfully");
-                    // Also sync keys array
-                    const keysDataToSave = {};
-                    Object.keys(keys).forEach(key => {
-                        if (key !== "username" && key !== "password" && Array.isArray(keys[key])) {
-                            keysDataToSave[key] = keys[key];
-                        }
-                    });
-                    return db.ref("keys").set(keysDataToSave);
                 })
                 .catch(err => {
                     console.error("❌ Error saving manual keys:", err);
@@ -2114,8 +1984,29 @@ function saveKeysToFirebase() {
         }
 
         function loadManualKeysFromFirebase() {
-            // Now handled in loadKeysFromFirebase() - merged loading
-            console.log("Manual keys loaded via loadKeysFromFirebase()");
+            if (!firebaseInitialized) {
+                console.warn("Firebase not initialized, cannot load manual keys");
+                return;
+            }
+            console.log("Loading manual keys from Firebase...");
+            db.ref("manualKeys").once("value")
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        console.log("✅ Manual keys loaded from Firebase:", data);
+                        Object.keys(data).forEach(productId => {
+                            if (manualKeys[productId] !== undefined && Array.isArray(data[productId])) {
+                                manualKeys[productId] = data[productId];
+                                console.log(`  - ${productId}: ${data[productId].length} manual keys`);
+                            }
+                        });
+                    } else {
+                        console.log("ℹ️ No manual keys found in Firebase (this is OK for first time)");
+                    }
+                })
+                .catch((error) => {
+                    console.error("❌ Error loading manual keys:", error);
+                });
         }
 
         function checkManualKeysInFirebase() {
@@ -2142,61 +2033,27 @@ function saveKeysToFirebase() {
                 showToast("Firebase not connected!", "error");
                 return;
             }
-            showToast("Reloading all keys from Firebase...", "info");
-
-            Promise.all([
-                db.ref("keys").once("value"),
-                db.ref("manualKeys").once("value")
-            ]).then(([keysSnap, manualSnap]) => {
-                const keysData = keysSnap.val() || {};
-                const manualData = manualSnap.val() || {};
-
-                console.log("forceReloadManualKeys - keys/ node:", keysData);
-                console.log("forceReloadManualKeys - manualKeys/ node:", manualData);
-
-                let totalLoaded = 0;
-
-                // Process keys/ node
-                if (keysData) {
-                    Object.keys(keysData).forEach(productId => {
-                        if (productId === "username" || productId === "password") return;
-                        if (keys[productId] !== undefined && Array.isArray(keysData[productId])) {
-                            keys[productId] = keysData[productId];
-                            totalLoaded += keysData[productId].length;
-                        }
-                    });
-                }
-
-                // Process manualKeys/ node
-                if (manualData) {
-                    Object.keys(manualData).forEach(productId => {
-                        if (manualKeys[productId] !== undefined && Array.isArray(manualData[productId])) {
-                            manualKeys[productId] = manualData[productId];
-                            // Merge with keys array
-                            const merged = [...new Set([...(keys[productId] || []), ...manualData[productId]])];
-                            keys[productId] = merged;
-                        }
-                    });
-                }
-
-                // Update stock counts
-                products.forEach(p => {
-                    const mergedKeys = keys[p.id] || [];
-                    if (mergedKeys.length !== p.stock) {
-                        p.stock = mergedKeys.length;
+            showToast("Reloading manual keys from Firebase...", "info");
+            db.ref("manualKeys").once("value")
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    console.log("forceReloadManualKeys - Raw Firebase data:", data);
+                    if (data) {
+                        Object.keys(data).forEach(productId => {
+                            if (manualKeys[productId] !== undefined && Array.isArray(data[productId])) {
+                                manualKeys[productId] = data[productId];
+                                console.log("forceReloadManualKeys - Loaded " + data[productId].length + " keys for " + productId);
+                            }
+                        });
+                        showToast("Manual keys reloaded from Firebase!", "success");
+                    } else {
+                        showToast("No manual keys found in Firebase!", "error");
                     }
+                })
+                .catch((err) => {
+                    console.error("forceReloadManualKeys error:", err);
+                    showToast("Failed to reload manual keys!", "error");
                 });
-
-                saveProductsToFirebase();
-                renderProducts();
-                updateAdminStats();
-                renderAdminTables();
-
-                showToast("All keys reloaded from Firebase! Total: " + totalLoaded, "success");
-            }).catch((err) => {
-                console.error("forceReloadManualKeys error:", err);
-                showToast("Failed to reload keys!", "error");
-            });
         }
 
         function loadOrdersFromFirebase() {
@@ -2222,27 +2079,18 @@ function saveKeysToFirebase() {
 
         function setupRealtimeListeners() {
             if (!firebaseInitialized) return;
-
-            // Products listener - Use Firebase products data (price + stock)
             db.ref("products").on("value", (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
                     products = defaultProducts.map(def => {
                         const saved = data[def.id];
                         if (saved) {
-                            // Use Firebase price if available
-                            // For stock, we will sync with actual keys count after keys load
-                            return { 
-                                ...def, 
-                                price: saved.price !== undefined ? saved.price : def.price, 
-                                stock: saved.stock !== undefined ? saved.stock : 0 
-                            };
+                            return { ...def, price: saved.price !== undefined ? saved.price : def.price, stock: saved.stock !== undefined ? saved.stock : def.stock };
                         }
-                        // If no Firebase data, keep default price but stock = 0
-                        return { ...def, stock: 0 };
+                        return { ...def, stock: 0 }; // Default to 0 if not in Firebase
                     });
                 } else {
-                    // No products in Firebase yet
+                    // No products data in Firebase - keep stocks at 0 (don't use defaults)
                     products = defaultProducts.map(def => ({ ...def, stock: 0 }));
                 }
                 renderProducts();
@@ -2251,8 +2099,6 @@ function saveKeysToFirebase() {
                     renderAdminTables();
                 }
             });
-
-            // Orders listener
             db.ref("orders").on("value", (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
@@ -2261,39 +2107,9 @@ function saveKeysToFirebase() {
                     renderAdminTables();
                 }
             });
-
-            // Keys listener - Update local keys array AND sync stock
-            db.ref("keys").on("value", (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    Object.keys(data).forEach(productId => {
-                        if (productId === "username" || productId === "password") return;
-                        if (keys[productId] !== undefined && Array.isArray(data[productId])) {
-                            keys[productId] = data[productId];
-                        }
-                    });
-                }
-                // Sync stock with keys count
-                syncStockWithKeys();
-            });
-
-            // ManualKeys listener - Update local manualKeys array AND sync stock
-            db.ref("manualKeys").on("value", (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    Object.keys(data).forEach(productId => {
-                        if (manualKeys[productId] !== undefined && Array.isArray(data[productId])) {
-                            manualKeys[productId] = data[productId];
-                        }
-                    });
-                }
-                // Sync stock with keys count
-                syncStockWithKeys();
-            });
-
-            // Coupons listener
             db.ref("coupons").on("value", (snapshot) => {
                 const data = snapshot.val();
+                // Only update if data exists (not null) - don't override local state with defaults
                 if (data !== null && data !== undefined) {
                     coupons = data;
                     if (document.getElementById("adminPanel").classList.contains("active")) {
@@ -2302,15 +2118,27 @@ function saveKeysToFirebase() {
                 }
             });
         }
-function renderProducts() {
+
+        function generateKey(productId) {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            let key = "KEY-";
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 4; j++) {
+                    key += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                if (i < 2) key += "-";
+            }
+            return key;
+        }
+
+        function renderProducts() {
             const grid = document.getElementById("productsGrid");
             grid.innerHTML = products.map(product => {
                 const btnClass = product.stock > 0 ? "available" : "unavailable";
                 const btnText = product.stock > 0 ? "Buy Now" : "Unavailable";
-                const logoImg = product.id.startsWith("ztrax_") ? "ztrax.jpg" : "nova.jpg";
                 return `
                     <div class="product-card">
-                        <div class="product-icon"><img src="${logoImg}" style="width:100%;height:100%;border-radius:16px;object-fit:cover;"></div>
+                        <div class="product-icon"><img src="nova.jpg" style="width:100%;height:100%;border-radius:16px;object-fit:cover;"></div>
                         <h3>${product.name}</h3>
                         <div class="duration"><i class="fas fa-hourglass-half"></i> ${product.duration}</div>
                         <div class="price">Rs.${product.price}</div>
@@ -2478,22 +2306,20 @@ function renderProducts() {
             if (productIndex > -1 && products[productIndex].stock > 0) {
                 products[productIndex].stock--;
                 keys[currentProduct.id] = keys[currentProduct.id] || [];
-                manualKeys[currentProduct.id] = manualKeys[currentProduct.id] || [];
                 let key;
-
-                // ALL products: ONLY use admin-uploaded keys
-                // NO auto-generated keys for any product
                 if (keys[currentProduct.id].length > 0) {
-                    key = keys[currentProduct.id].shift(); // Get first key (FIFO)
-                    // Also remove from manualKeys (keep both arrays in sync)
+                    key = keys[currentProduct.id].shift(); // Use shift to get first key (FIFO)
+                } else {
+                    showToast("No keys available in stock!", "error");
+                    return;
+                }
+                // Also remove from manualKeys if this was an admin-added key
+                if (manualKeys[currentProduct.id]) {
                     const manualIndex = manualKeys[currentProduct.id].indexOf(key);
                     if (manualIndex !== -1) {
                         manualKeys[currentProduct.id].splice(manualIndex, 1);
+                        saveManualKeysToFirebase();
                     }
-                } else {
-                    showToast("No admin keys available! Contact admin to add stock.", "error");
-                    products[productIndex].stock++; // Restore stock
-                    return;
                 }
 
                 // Calculate final amount with coupon
@@ -2813,39 +2639,34 @@ function renderProducts() {
             loadingModal.innerHTML = `
                 <div class="modal" style="max-width: 400px; text-align: center;">
                     <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
-                    <h3 style="font-size: 1rem; color: var(--blue-darker);">Loading keys...</h3>
-                    <p style="color: var(--text-muted); font-size: 0.8rem;">Fetching from Firebase (keys/ + manualKeys/)</p>
+                    <h3 style="font-size: 1rem; color: var(--blue-darker);">Loading admin keys...</h3>
+                    <p style="color: var(--text-muted); font-size: 0.8rem;">Fetching from Firebase</p>
                 </div>
             `;
             document.body.appendChild(loadingModal);
 
-            // Load from BOTH keys/ and manualKeys/ nodes and merge
+            // Load fresh MANUAL keys from Firebase to ensure accuracy
             if (firebaseInitialized) {
-                Promise.all([
-                    db.ref("keys/" + productId).once("value"),
-                    db.ref("manualKeys/" + productId).once("value")
-                ]).then(([keysSnap, manualSnap]) => {
-                    const keysData = keysSnap.val() || [];
-                    const manualData = manualSnap.val() || [];
-
-                    // Merge both sources
-                    const mergedKeys = [...new Set([...keysData, ...manualData])];
-
-                    // Update local arrays
-                    keys[productId] = mergedKeys;
-                    manualKeys[productId] = mergedKeys;
-
-                    console.log("viewKeys - Merged " + mergedKeys.length + " keys for " + productId);
-                    console.log("  - keys/ node: " + keysData.length + " keys");
-                    console.log("  - manualKeys/ node: " + manualData.length + " keys");
-
-                    document.body.removeChild(loadingModal);
-                    showKeysModal(productId, product);
-                }).catch((err) => {
-                    console.error("viewKeys - Error loading keys:", err);
-                    document.body.removeChild(loadingModal);
-                    showKeysModal(productId, product);
-                });
+                db.ref("manualKeys/" + productId).once("value")
+                    .then((snapshot) => {
+                        const firebaseManualKeys = snapshot.val();
+                        console.log("viewKeys - Firebase raw data for " + productId + ":", firebaseManualKeys);
+                        if (firebaseManualKeys && Array.isArray(firebaseManualKeys)) {
+                            manualKeys[productId] = firebaseManualKeys;
+                            console.log("viewKeys - Loaded " + firebaseManualKeys.length + " manual keys for " + productId);
+                        } else {
+                            console.log("viewKeys - No manual keys found in Firebase for " + productId);
+                            // Also check local manualKeys
+                            console.log("viewKeys - Local manualKeys[" + productId + "]:", manualKeys[productId]);
+                        }
+                        document.body.removeChild(loadingModal);
+                        showKeysModal(productId, product);
+                    })
+                    .catch((err) => {
+                        console.error("viewKeys - Error loading manual keys:", err);
+                        document.body.removeChild(loadingModal);
+                        showKeysModal(productId, product);
+                    });
             } else {
                 console.log("viewKeys - Firebase not initialized, showing local data");
                 setTimeout(() => {
@@ -2856,15 +2677,14 @@ function renderProducts() {
         }
 
         function showKeysModal(productId, product) {
-            // ALL products: Show merged keys from keys/ + manualKeys/
-            // NO auto-generated keys for any product
-            let displayKeys = [];
+            // Show ONLY manual keys (admin-added keys) - NOT auto-generated keys
+            let productManualKeys = [];
             if (firebaseInitialized) {
-                // Use merged keys array (already loaded in viewKeys)
-                displayKeys = keys[productId] || [];
+                productManualKeys = manualKeys[productId] || [];
             }
 
-            console.log("showKeysModal - Product:", productId, "Total keys count:", displayKeys.length);
+            console.log("showKeysModal - Product:", productId, "Manual keys count:", productManualKeys.length);
+            console.log("showKeysModal - manualKeys[" + productId + "]:", manualKeys[productId]);
 
             // Create modal dynamically
             const modal = document.createElement("div");
@@ -2872,23 +2692,22 @@ function renderProducts() {
             modal.id = "viewKeysModal";
             modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 20, 74, 0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 1rem;";
 
-            const emptyMessage = `<p>No admin-uploaded keys found for ${product.name}.</p><p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">Admin must add keys via "Add Stock".</p>`;
-
             let keysHtml = '';
-            if (displayKeys.length === 0) {
+            if (productManualKeys.length === 0) {
                 keysHtml = `
                     <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
                         <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
-                        ${emptyMessage}
+                        <p>No admin-added keys found for this plan.</p>
+                        <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">Only keys manually entered in "Add Stock" will appear here.</p>
                         <div style="margin-top: 1rem; padding: 0.8rem; background: var(--cream); border-radius: 8px; border: 1px solid var(--border); font-size: 0.75rem; color: var(--text-muted);">
-                            <i class="fas fa-info-circle" style="color: var(--blue);"></i> Stock: ${displayKeys.length} keys available
+                            <i class="fas fa-bug" style="color: var(--warning);"></i> Debug: manualKeys[${productId}] has ${productManualKeys.length} items
                         </div>
                     </div>
                 `;
             } else {
                 keysHtml = `
                     <div style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 400px; overflow-y: auto; padding-right: 0.5rem;">
-                        ${displayKeys.map((key, index) => `
+                        ${productManualKeys.map((key, index) => `
                             <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--cream); padding: 0.6rem 0.8rem; border-radius: 10px; border: 1px solid var(--border);">
                                 <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; min-width: 30px;">#${index + 1}</span>
                                 <span style="font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 700; color: var(--blue-darker); flex: 1; letter-spacing: 0.5px;">${key}</span>
@@ -2900,7 +2719,7 @@ function renderProducts() {
                     </div>
                     <div style="margin-top: 1rem; padding: 0.8rem; background: rgba(39, 77, 245, 0.06); border-radius: 10px; border: 1px solid var(--border); text-align: center;">
                         <span style="font-size: 0.85rem; color: var(--blue-dark); font-weight: 600;">
-                            <i class="fas fa-user-shield"></i> Admin-Uploaded Keys: ${displayKeys.length} | 
+                            <i class="fas fa-user-shield"></i> Admin-Added Keys: ${productManualKeys.length} | 
                             <i class="fas fa-box"></i> ${product.name}
                         </span>
                     </div>
@@ -2993,7 +2812,6 @@ function renderProducts() {
             saveProductsToFirebase();
             saveKeysToFirebase();
             saveManualKeysToFirebase();
-
             renderProducts();
             updateAdminStats();
             renderAdminTables();
