@@ -1065,22 +1065,22 @@ function updateRazorpayKey() {
 }
 
         const defaultProducts = [
-            // NovaEsp Products (stock = 0, admin must add keys)
-            { id: "novaesp_5hours", name: "NovaEsp - 5 Hours", duration: "5 Hours", price: 49, stock: 0, icon: "fa-clock" },
-            { id: "novaesp_1day", name: "NovaEsp - 1 Day", duration: "1 Day", price: 99, stock: 0, icon: "fa-calendar-day" },
-            { id: "novaesp_3days", name: "NovaEsp - 3 Days", duration: "3 Days", price: 199, stock: 0, icon: "fa-calendar-day" },
-            { id: "novaesp_7days", name: "NovaEsp - 7 Days", duration: "7 Days", price: 399, stock: 0, icon: "fa-calendar-week" },
-            { id: "novaesp_14days", name: "NovaEsp - 14 Days", duration: "14 Days", price: 699, stock: 0, icon: "fa-calendar-alt" },
-            { id: "novaesp_30days", name: "NovaEsp - 30 Days", duration: "30 Days", price: 1299, stock: 0, icon: "fa-calendar" },
-            { id: "novaesp_60days", name: "NovaEsp - 60 Days", duration: "60 Days", price: 2299, stock: 0, icon: "fa-calendar" },
-            // Ztrax Bypass Products (stock = 0, admin must add keys)
-            { id: "ztrax_5hours", name: "Ztrax Bypass - 5 Hours", duration: "5 Hours", price: 79, stock: 0, icon: "fa-rocket" },
-            { id: "ztrax_1day", name: "Ztrax Bypass - 1 Day", duration: "1 Day", price: 149, stock: 0, icon: "fa-rocket" },
-            { id: "ztrax_3days", name: "Ztrax Bypass - 3 Days", duration: "3 Days", price: 349, stock: 0, icon: "fa-rocket" },
-            { id: "ztrax_7days", name: "Ztrax Bypass - 7 Days", duration: "7 Days", price: 649, stock: 0, icon: "fa-rocket" },
-            { id: "ztrax_14days", name: "Ztrax Bypass - 14 Days", duration: "14 Days", price: 1199, stock: 0, icon: "fa-rocket" },
-            { id: "ztrax_30days", name: "Ztrax Bypass - 30 Days", duration: "30 Days", price: 2199, stock: 0, icon: "fa-rocket" },
-            { id: "ztrax_60days", name: "Ztrax Bypass - 60 Days", duration: "60 Days", price: 3999, stock: 0, icon: "fa-rocket" }
+            // NovaEsp Products (price default, stock from Firebase)
+            { id: "novaesp_5hours", name: "NovaEsp - 5 Hours", duration: "5 Hours", price: 49, stock: undefined, icon: "fa-clock" },
+            { id: "novaesp_1day", name: "NovaEsp - 1 Day", duration: "1 Day", price: 99, stock: undefined, icon: "fa-calendar-day" },
+            { id: "novaesp_3days", name: "NovaEsp - 3 Days", duration: "3 Days", price: 199, stock: undefined, icon: "fa-calendar-day" },
+            { id: "novaesp_7days", name: "NovaEsp - 7 Days", duration: "7 Days", price: 399, stock: undefined, icon: "fa-calendar-week" },
+            { id: "novaesp_14days", name: "NovaEsp - 14 Days", duration: "14 Days", price: 699, stock: undefined, icon: "fa-calendar-alt" },
+            { id: "novaesp_30days", name: "NovaEsp - 30 Days", duration: "30 Days", price: 1299, stock: undefined, icon: "fa-calendar" },
+            { id: "novaesp_60days", name: "NovaEsp - 60 Days", duration: "60 Days", price: 2299, stock: undefined, icon: "fa-calendar" },
+            // Ztrax Bypass Products (price default, stock from Firebase)
+            { id: "ztrax_5hours", name: "Ztrax Bypass - 5 Hours", duration: "5 Hours", price: 79, stock: undefined, icon: "fa-rocket" },
+            { id: "ztrax_1day", name: "Ztrax Bypass - 1 Day", duration: "1 Day", price: 149, stock: undefined, icon: "fa-rocket" },
+            { id: "ztrax_3days", name: "Ztrax Bypass - 3 Days", duration: "3 Days", price: 349, stock: undefined, icon: "fa-rocket" },
+            { id: "ztrax_7days", name: "Ztrax Bypass - 7 Days", duration: "7 Days", price: 649, stock: undefined, icon: "fa-rocket" },
+            { id: "ztrax_14days", name: "Ztrax Bypass - 14 Days", duration: "14 Days", price: 1199, stock: undefined, icon: "fa-rocket" },
+            { id: "ztrax_30days", name: "Ztrax Bypass - 30 Days", duration: "30 Days", price: 2199, stock: undefined, icon: "fa-rocket" },
+            { id: "ztrax_60days", name: "Ztrax Bypass - 60 Days", duration: "60 Days", price: 3999, stock: undefined, icon: "fa-rocket" }
         ];
 
         // GitHub Releases APK URL - Change this when you update your APK
@@ -1651,8 +1651,7 @@ function updateRazorpayKey() {
                 mainItems.forEach(el => el.style.display = '');
             }
             setTimeout(() => { addUserMenuToNav(); }, 100);
-            // Show products immediately with defaults, then update from Firebase
-            renderProducts();
+            // Load products from Firebase FIRST, then render
             loadProductsFromFirebase();
             loadOrdersFromFirebase();
             loadApkFromFirebase();
@@ -1915,18 +1914,23 @@ function updateRazorpayKey() {
                     products = defaultProducts.map(def => {
                         const saved = data[def.id];
                         if (saved) {
-                            return { ...def, price: saved.price !== undefined ? saved.price : def.price, stock: saved.stock !== undefined ? saved.stock : def.stock };
+                            return { 
+                                ...def, 
+                                price: saved.price !== undefined ? saved.price : def.price, 
+                                stock: saved.stock !== undefined ? saved.stock : 0 
+                            };
                         }
-                        return def;
+                        return { ...def, stock: 0 };
                     });
+                } else {
+                    products = defaultProducts.map(def => ({ ...def, stock: 0 }));
                 }
                 loadKeysFromFirebase();
                 setSyncing(false);
-                renderProducts(); // Re-render with updated data
+                renderProducts();
             }, (error) => {
                 console.error("Error loading products:", error);
                 setSyncing(false);
-                // Don't re-render on error - defaults already showing
             });
         }
 
@@ -1935,8 +1939,21 @@ function updateRazorpayKey() {
             setSyncing(true);
             const productsRef = db.ref("products");
             const dataToSave = {};
-            products.forEach(p => { dataToSave[p.id] = { price: p.price, stock: p.stock }; });
-            productsRef.set(dataToSave).then(() => { setSyncing(false); }).catch(err => { console.error("Error saving products:", err); setSyncing(false); });
+            products.forEach(p => { 
+                dataToSave[p.id] = { 
+                    price: p.price, 
+                    stock: p.stock !== undefined ? p.stock : 0 
+                }; 
+            });
+            productsRef.set(dataToSave)
+                .then(() => { 
+                    setSyncing(false); 
+                    console.log("✅ Products saved to Firebase");
+                })
+                .catch(err => { 
+                    console.error("Error saving products:", err); 
+                    setSyncing(false); 
+                });
         }
 
         function loadKeysFromFirebase() {
@@ -1970,7 +1987,7 @@ function updateRazorpayKey() {
                 }
 
                 // Merge keys: Combine keys/ + manualKeys/ for each product
-                // Remove duplicates and update stock
+                // Remove duplicates
                 products.forEach(p => {
                     const productId = p.id;
                     const keysArray = keys[productId] || [];
@@ -1982,22 +1999,7 @@ function updateRazorpayKey() {
                     // Update both arrays with merged data
                     keys[productId] = mergedKeys;
                     manualKeys[productId] = mergedKeys;
-
-                    // Update stock = total available keys
-                    const current = mergedKeys.length;
-                    if (current !== p.stock) {
-                        p.stock = current;
-                    }
                 });
-
-                // Save updated stock counts back to Firebase
-                saveProductsToFirebase();
-
-                // Update admin dashboard if active
-                if (isAdminLoggedIn) {
-                    updateAdminStats();
-                    renderAdminTables();
-                }
 
                 console.log("✅ Keys loaded and merged from Firebase");
             }).catch(err => {
@@ -2172,18 +2174,25 @@ function updateRazorpayKey() {
         function setupRealtimeListeners() {
             if (!firebaseInitialized) return;
 
-            // Products listener
+            // Products listener - Use Firebase products data (price + stock)
             db.ref("products").on("value", (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
                     products = defaultProducts.map(def => {
                         const saved = data[def.id];
                         if (saved) {
-                            return { ...def, price: saved.price !== undefined ? saved.price : def.price, stock: saved.stock !== undefined ? saved.stock : def.stock };
+                            // Use Firebase price and stock if available
+                            return { 
+                                ...def, 
+                                price: saved.price !== undefined ? saved.price : def.price, 
+                                stock: saved.stock !== undefined ? saved.stock : 0 
+                            };
                         }
-                        return { ...def, stock: 0 }; // Default to 0 if not in Firebase
+                        // If no Firebase data, keep default price but stock = 0
+                        return { ...def, stock: 0 };
                     });
                 } else {
+                    // No products in Firebase yet
                     products = defaultProducts.map(def => ({ ...def, stock: 0 }));
                 }
                 renderProducts();
@@ -2203,7 +2212,7 @@ function updateRazorpayKey() {
                 }
             });
 
-            // Keys listener (for real-time stock updates)
+            // Keys listener - Update local keys array but DON'T override product stock
             db.ref("keys").on("value", (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
@@ -2211,43 +2220,20 @@ function updateRazorpayKey() {
                         if (productId === "username" || productId === "password") return;
                         if (keys[productId] !== undefined && Array.isArray(data[productId])) {
                             keys[productId] = data[productId];
-                            // Update stock
-                            const product = products.find(p => p.id === productId);
-                            if (product && data[productId].length !== product.stock) {
-                                product.stock = data[productId].length;
-                            }
                         }
                     });
-                    renderProducts();
-                    if (isAdminLoggedIn) {
-                        updateAdminStats();
-                        renderAdminTables();
-                    }
                 }
             });
 
-            // ManualKeys listener (for real-time stock updates)
+            // ManualKeys listener - Update local manualKeys array but DON'T override product stock
             db.ref("manualKeys").on("value", (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
                     Object.keys(data).forEach(productId => {
                         if (manualKeys[productId] !== undefined && Array.isArray(data[productId])) {
                             manualKeys[productId] = data[productId];
-                            // Merge with keys array
-                            const merged = [...new Set([...(keys[productId] || []), ...data[productId]])];
-                            keys[productId] = merged;
-                            // Update stock
-                            const product = products.find(p => p.id === productId);
-                            if (product && merged.length !== product.stock) {
-                                product.stock = merged.length;
-                            }
                         }
                     });
-                    renderProducts();
-                    if (isAdminLoggedIn) {
-                        updateAdminStats();
-                        renderAdminTables();
-                    }
                 }
             });
 
@@ -2454,7 +2440,6 @@ function updateRazorpayKey() {
                     if (manualIndex !== -1) {
                         manualKeys[currentProduct.id].splice(manualIndex, 1);
                     }
-                    saveKeysToFirebase(); // Saves both keys/ and manualKeys/
                 } else {
                     showToast("No admin keys available! Contact admin to add stock.", "error");
                     products[productIndex].stock++; // Restore stock
