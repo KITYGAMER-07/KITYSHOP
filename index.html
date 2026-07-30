@@ -1941,41 +1941,68 @@ function updateRazorpayKey() {
 
         function loadKeysFromFirebase() {
             if (!firebaseInitialized) return;
-            const keysRef = db.ref("keys");
-            keysRef.once("value", (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    Object.keys(data).forEach(productId => {
+
+            // Load from BOTH keys/ and manualKeys/ nodes
+            Promise.all([
+                db.ref("keys").once("value"),
+                db.ref("manualKeys").once("value")
+            ]).then(([keysSnapshot, manualSnapshot]) => {
+                const keysData = keysSnapshot.val();
+                const manualData = manualSnapshot.val();
+
+                // Process keys/ node (old NovaEsp stock + admin keys)
+                if (keysData) {
+                    Object.keys(keysData).forEach(productId => {
                         if (productId === "username" || productId === "password") return;
-                        // Only load if it's a valid product and has actual keys
-                        if (keys[productId] !== undefined && Array.isArray(data[productId])) {
-                            keys[productId] = data[productId];
+                        if (keys[productId] !== undefined && Array.isArray(keysData[productId])) {
+                            keys[productId] = keysData[productId];
                         }
                     });
                 }
-                // ALL products: stock = available admin-uploaded keys count ONLY
-                // NO auto-generated keys for any product
+
+                // Process manualKeys/ node (new admin uploads)
+                if (manualData) {
+                    Object.keys(manualData).forEach(productId => {
+                        if (manualKeys[productId] !== undefined && Array.isArray(manualData[productId])) {
+                            manualKeys[productId] = manualData[productId];
+                        }
+                    });
+                }
+
+                // Merge keys: Combine keys/ + manualKeys/ for each product
+                // Remove duplicates and update stock
                 products.forEach(p => {
-                    keys[p.id] = keys[p.id] || [];
-                    // Stock = admin-uploaded keys count (manual keys)
-                    const adminKeyCount = manualKeys[p.id] ? manualKeys[p.id].length : 0;
-                    const totalKeyCount = keys[p.id].length;
-                    // Use whichever is available (keys array contains admin keys)
-                    const current = totalKeyCount;
+                    const productId = p.id;
+                    const keysArray = keys[productId] || [];
+                    const manualArray = manualKeys[productId] || [];
+
+                    // Merge both arrays (remove duplicates)
+                    const mergedKeys = [...new Set([...keysArray, ...manualArray])];
+
+                    // Update both arrays with merged data
+                    keys[productId] = mergedKeys;
+                    manualKeys[productId] = mergedKeys;
+
+                    // Update stock = total available keys
+                    const current = mergedKeys.length;
                     if (current !== p.stock) {
                         p.stock = current;
                     }
                 });
+
                 // Save updated stock counts back to Firebase
                 saveProductsToFirebase();
+
                 // Update admin dashboard if active
                 if (isAdminLoggedIn) {
                     updateAdminStats();
                     renderAdminTables();
                 }
+
+                console.log("✅ Keys loaded and merged from Firebase");
+            }).catch(err => {
+                console.error("❌ Error loading keys:", err);
             });
-            // Also load manual keys
-            loadManualKeysFromFirebase();
         }
 
         function saveKeysToFirebase() {
@@ -1993,6 +2020,15 @@ function updateRazorpayKey() {
                 if (existingData.username) dataToSave.username = existingData.username;
                 if (existingData.password) dataToSave.password = existingData.password;
                 return db.ref("keys").set(dataToSave);
+            }).then(() => {
+                // Also sync to manualKeys for consistency
+                const manualDataToSave = {};
+                Object.keys(manualKeys).forEach(key => {
+                    if (Array.isArray(manualKeys[key])) {
+                        manualDataToSave[key] = manualKeys[key];
+                    }
+                });
+                return db.ref("manualKeys").set(manualDataToSave);
             }).catch(err => { console.error("Error saving keys:", err); });
         }
 
@@ -2011,6 +2047,14 @@ function updateRazorpayKey() {
             db.ref("manualKeys").set(dataToSave)
                 .then(() => {
                     console.log("✅ Manual keys saved to Firebase successfully");
+                    // Also sync keys array
+                    const keysDataToSave = {};
+                    Object.keys(keys).forEach(key => {
+                        if (key !== "username" && key !== "password" && Array.isArray(keys[key])) {
+                            keysDataToSave[key] = keys[key];
+                        }
+                    });
+                    return db.ref("keys").set(keysDataToSave);
                 })
                 .catch(err => {
                     console.error("❌ Error saving manual keys:", err);
@@ -2019,29 +2063,8 @@ function updateRazorpayKey() {
         }
 
         function loadManualKeysFromFirebase() {
-            if (!firebaseInitialized) {
-                console.warn("Firebase not initialized, cannot load manual keys");
-                return;
-            }
-            console.log("Loading manual keys from Firebase...");
-            db.ref("manualKeys").once("value")
-                .then((snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        console.log("✅ Manual keys loaded from Firebase:", data);
-                        Object.keys(data).forEach(productId => {
-                            if (manualKeys[productId] !== undefined && Array.isArray(data[productId])) {
-                                manualKeys[productId] = data[productId];
-                                console.log(`  - ${productId}: ${data[productId].length} manual keys`);
-                            }
-                        });
-                    } else {
-                        console.log("ℹ️ No manual keys found in Firebase (this is OK for first time)");
-                    }
-                })
-                .catch((error) => {
-                    console.error("❌ Error loading manual keys:", error);
-                });
+            // Now handled in loadKeysFromFirebase() - merged loading
+            console.log("Manual keys loaded via loadKeysFromFirebase()");
         }
 
         function checkManualKeysInFirebase() {
@@ -2068,27 +2091,61 @@ function updateRazorpayKey() {
                 showToast("Firebase not connected!", "error");
                 return;
             }
-            showToast("Reloading manual keys from Firebase...", "info");
-            db.ref("manualKeys").once("value")
-                .then((snapshot) => {
-                    const data = snapshot.val();
-                    console.log("forceReloadManualKeys - Raw Firebase data:", data);
-                    if (data) {
-                        Object.keys(data).forEach(productId => {
-                            if (manualKeys[productId] !== undefined && Array.isArray(data[productId])) {
-                                manualKeys[productId] = data[productId];
-                                console.log("forceReloadManualKeys - Loaded " + data[productId].length + " keys for " + productId);
-                            }
-                        });
-                        showToast("Manual keys reloaded from Firebase!", "success");
-                    } else {
-                        showToast("No manual keys found in Firebase!", "error");
+            showToast("Reloading all keys from Firebase...", "info");
+
+            Promise.all([
+                db.ref("keys").once("value"),
+                db.ref("manualKeys").once("value")
+            ]).then(([keysSnap, manualSnap]) => {
+                const keysData = keysSnap.val() || {};
+                const manualData = manualSnap.val() || {};
+
+                console.log("forceReloadManualKeys - keys/ node:", keysData);
+                console.log("forceReloadManualKeys - manualKeys/ node:", manualData);
+
+                let totalLoaded = 0;
+
+                // Process keys/ node
+                if (keysData) {
+                    Object.keys(keysData).forEach(productId => {
+                        if (productId === "username" || productId === "password") return;
+                        if (keys[productId] !== undefined && Array.isArray(keysData[productId])) {
+                            keys[productId] = keysData[productId];
+                            totalLoaded += keysData[productId].length;
+                        }
+                    });
+                }
+
+                // Process manualKeys/ node
+                if (manualData) {
+                    Object.keys(manualData).forEach(productId => {
+                        if (manualKeys[productId] !== undefined && Array.isArray(manualData[productId])) {
+                            manualKeys[productId] = manualData[productId];
+                            // Merge with keys array
+                            const merged = [...new Set([...(keys[productId] || []), ...manualData[productId]])];
+                            keys[productId] = merged;
+                        }
+                    });
+                }
+
+                // Update stock counts
+                products.forEach(p => {
+                    const mergedKeys = keys[p.id] || [];
+                    if (mergedKeys.length !== p.stock) {
+                        p.stock = mergedKeys.length;
                     }
-                })
-                .catch((err) => {
-                    console.error("forceReloadManualKeys error:", err);
-                    showToast("Failed to reload manual keys!", "error");
                 });
+
+                saveProductsToFirebase();
+                renderProducts();
+                updateAdminStats();
+                renderAdminTables();
+
+                showToast("All keys reloaded from Firebase! Total: " + totalLoaded, "success");
+            }).catch((err) => {
+                console.error("forceReloadManualKeys error:", err);
+                showToast("Failed to reload keys!", "error");
+            });
         }
 
         function loadOrdersFromFirebase() {
@@ -2114,6 +2171,8 @@ function updateRazorpayKey() {
 
         function setupRealtimeListeners() {
             if (!firebaseInitialized) return;
+
+            // Products listener
             db.ref("products").on("value", (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
@@ -2125,7 +2184,6 @@ function updateRazorpayKey() {
                         return { ...def, stock: 0 }; // Default to 0 if not in Firebase
                     });
                 } else {
-                    // No products data in Firebase - keep stocks at 0 (don't use defaults)
                     products = defaultProducts.map(def => ({ ...def, stock: 0 }));
                 }
                 renderProducts();
@@ -2134,6 +2192,8 @@ function updateRazorpayKey() {
                     renderAdminTables();
                 }
             });
+
+            // Orders listener
             db.ref("orders").on("value", (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
@@ -2142,9 +2202,58 @@ function updateRazorpayKey() {
                     renderAdminTables();
                 }
             });
+
+            // Keys listener (for real-time stock updates)
+            db.ref("keys").on("value", (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    Object.keys(data).forEach(productId => {
+                        if (productId === "username" || productId === "password") return;
+                        if (keys[productId] !== undefined && Array.isArray(data[productId])) {
+                            keys[productId] = data[productId];
+                            // Update stock
+                            const product = products.find(p => p.id === productId);
+                            if (product && data[productId].length !== product.stock) {
+                                product.stock = data[productId].length;
+                            }
+                        }
+                    });
+                    renderProducts();
+                    if (isAdminLoggedIn) {
+                        updateAdminStats();
+                        renderAdminTables();
+                    }
+                }
+            });
+
+            // ManualKeys listener (for real-time stock updates)
+            db.ref("manualKeys").on("value", (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    Object.keys(data).forEach(productId => {
+                        if (manualKeys[productId] !== undefined && Array.isArray(data[productId])) {
+                            manualKeys[productId] = data[productId];
+                            // Merge with keys array
+                            const merged = [...new Set([...(keys[productId] || []), ...data[productId]])];
+                            keys[productId] = merged;
+                            // Update stock
+                            const product = products.find(p => p.id === productId);
+                            if (product && merged.length !== product.stock) {
+                                product.stock = merged.length;
+                            }
+                        }
+                    });
+                    renderProducts();
+                    if (isAdminLoggedIn) {
+                        updateAdminStats();
+                        renderAdminTables();
+                    }
+                }
+            });
+
+            // Coupons listener
             db.ref("coupons").on("value", (snapshot) => {
                 const data = snapshot.val();
-                // Only update if data exists (not null) - don't override local state with defaults
                 if (data !== null && data !== undefined) {
                     coupons = data;
                     if (document.getElementById("adminPanel").classList.contains("active")) {
@@ -2333,20 +2442,19 @@ function updateRazorpayKey() {
             if (productIndex > -1 && products[productIndex].stock > 0) {
                 products[productIndex].stock--;
                 keys[currentProduct.id] = keys[currentProduct.id] || [];
+                manualKeys[currentProduct.id] = manualKeys[currentProduct.id] || [];
                 let key;
 
-                // ALL products: ONLY use admin-uploaded keys (manual keys)
+                // ALL products: ONLY use admin-uploaded keys
                 // NO auto-generated keys for any product
                 if (keys[currentProduct.id].length > 0) {
-                    key = keys[currentProduct.id].shift(); // Get first admin-uploaded key (FIFO)
-                    // Also remove from manualKeys if tracked separately
-                    if (manualKeys[currentProduct.id]) {
-                        const manualIndex = manualKeys[currentProduct.id].indexOf(key);
-                        if (manualIndex !== -1) {
-                            manualKeys[currentProduct.id].splice(manualIndex, 1);
-                        }
-                        saveManualKeysToFirebase();
+                    key = keys[currentProduct.id].shift(); // Get first key (FIFO)
+                    // Also remove from manualKeys (keep both arrays in sync)
+                    const manualIndex = manualKeys[currentProduct.id].indexOf(key);
+                    if (manualIndex !== -1) {
+                        manualKeys[currentProduct.id].splice(manualIndex, 1);
                     }
+                    saveKeysToFirebase(); // Saves both keys/ and manualKeys/
                 } else {
                     showToast("No admin keys available! Contact admin to add stock.", "error");
                     products[productIndex].stock++; // Restore stock
@@ -2670,34 +2778,39 @@ function updateRazorpayKey() {
             loadingModal.innerHTML = `
                 <div class="modal" style="max-width: 400px; text-align: center;">
                     <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
-                    <h3 style="font-size: 1rem; color: var(--blue-darker);">Loading admin keys...</h3>
-                    <p style="color: var(--text-muted); font-size: 0.8rem;">Fetching from Firebase</p>
+                    <h3 style="font-size: 1rem; color: var(--blue-darker);">Loading keys...</h3>
+                    <p style="color: var(--text-muted); font-size: 0.8rem;">Fetching from Firebase (keys/ + manualKeys/)</p>
                 </div>
             `;
             document.body.appendChild(loadingModal);
 
-            // ALL products: Load manual keys only (admin-uploaded)
+            // Load from BOTH keys/ and manualKeys/ nodes and merge
             if (firebaseInitialized) {
-                db.ref("manualKeys/" + productId).once("value")
-                    .then((snapshot) => {
-                        const firebaseKeys = snapshot.val();
-                        console.log("viewKeys - Firebase raw data for " + productId + ":", firebaseKeys);
-                        if (firebaseKeys && Array.isArray(firebaseKeys)) {
-                            manualKeys[productId] = firebaseKeys;
-                            // Also sync with keys array
-                            keys[productId] = firebaseKeys;
-                            console.log("viewKeys - Loaded " + firebaseKeys.length + " admin keys for " + productId);
-                        } else {
-                            console.log("viewKeys - No admin keys found in Firebase for " + productId);
-                        }
-                        document.body.removeChild(loadingModal);
-                        showKeysModal(productId, product);
-                    })
-                    .catch((err) => {
-                        console.error("viewKeys - Error loading keys:", err);
-                        document.body.removeChild(loadingModal);
-                        showKeysModal(productId, product);
-                    });
+                Promise.all([
+                    db.ref("keys/" + productId).once("value"),
+                    db.ref("manualKeys/" + productId).once("value")
+                ]).then(([keysSnap, manualSnap]) => {
+                    const keysData = keysSnap.val() || [];
+                    const manualData = manualSnap.val() || [];
+
+                    // Merge both sources
+                    const mergedKeys = [...new Set([...keysData, ...manualData])];
+
+                    // Update local arrays
+                    keys[productId] = mergedKeys;
+                    manualKeys[productId] = mergedKeys;
+
+                    console.log("viewKeys - Merged " + mergedKeys.length + " keys for " + productId);
+                    console.log("  - keys/ node: " + keysData.length + " keys");
+                    console.log("  - manualKeys/ node: " + manualData.length + " keys");
+
+                    document.body.removeChild(loadingModal);
+                    showKeysModal(productId, product);
+                }).catch((err) => {
+                    console.error("viewKeys - Error loading keys:", err);
+                    document.body.removeChild(loadingModal);
+                    showKeysModal(productId, product);
+                });
             } else {
                 console.log("viewKeys - Firebase not initialized, showing local data");
                 setTimeout(() => {
@@ -2708,14 +2821,15 @@ function updateRazorpayKey() {
         }
 
         function showKeysModal(productId, product) {
-            // ALL products: Show ONLY admin-uploaded manual keys
+            // ALL products: Show merged keys from keys/ + manualKeys/
             // NO auto-generated keys for any product
             let displayKeys = [];
             if (firebaseInitialized) {
-                displayKeys = manualKeys[productId] || [];
+                // Use merged keys array (already loaded in viewKeys)
+                displayKeys = keys[productId] || [];
             }
 
-            console.log("showKeysModal - Product:", productId, "Admin keys count:", displayKeys.length);
+            console.log("showKeysModal - Product:", productId, "Total keys count:", displayKeys.length);
 
             // Create modal dynamically
             const modal = document.createElement("div");
