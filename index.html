@@ -367,6 +367,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
@@ -657,44 +658,49 @@
         </div>
 
         <!-- APK URL MANAGEMENT -->
-        <h3 style="margin: 2rem 0 1rem;"><i class="fab fa-github"></i> APK Download Link</h3>
-        <div style="background: var(--white); border-radius: 16px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 20px var(--card-shadow);">
-            <div style="display: flex; align-items: center; gap: 1rem; background: linear-gradient(135deg, rgba(22,163,74,0.08), rgba(22,163,74,0.03)); border: 2px solid rgba(22,163,74,0.3); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem;">
-                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--success), #15803d); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; flex-shrink: 0;">
-                    <i class="fab fa-android"></i>
+        <h3 style="margin: 2rem 0 1rem;"><i class="fab fa-github"></i> APK Download Links</h3>
+
+        <!-- NovaESP APK -->
+        <div style="background: var(--white); border-radius: 16px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 20px var(--card-shadow);">
+            <div style="display: flex; align-items: center; gap: 1rem; background: linear-gradient(135deg, rgba(39,77,245,0.08), rgba(91,127,255,0.03)); border: 2px solid rgba(39,77,245,0.3); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem;">
+                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--blue), var(--blue-dark)); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; flex-shrink: 0;">
+                    <i class="fas fa-bolt"></i>
                 </div>
                 <div style="flex: 1; min-width: 0;">
-                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Current APK File</div>
-                    <div style="font-size: 1rem; font-weight: 700; color: var(--blue-darker); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="currentApkName">NovaEsp_50.0.2.apk</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">NovaESP APK</div>
+                    <div style="font-size: 1rem; font-weight: 700; color: var(--blue-darker); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="currentNovaespApkName">NovaEsp_50.0.2.apk</div>
                     <div style="font-size: 0.75rem; color: var(--success); font-weight: 600; margin-top: 0.2rem;"><i class="fas fa-check-circle"></i> Active</div>
                 </div>
             </div>
-
-            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 500;"><i class="fas fa-link" style="color: var(--blue);"></i> Update APK Download URL:</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 500;"><i class="fas fa-link" style="color: var(--blue);"></i> Update NovaESP APK URL:</div>
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                <input type="url" id="apkUrlInput" placeholder="https://github.com/.../app.apk" 
+                <input type="url" id="novaespApkUrlInput" placeholder="https://github.com/.../NovaEsp.apk" 
                     style="flex: 1; min-width: 250px; padding: 0.7rem 1rem; background: var(--cream); border: 2px solid var(--border); border-radius: 12px; font-size: 0.9rem; color: var(--text); transition: all 0.3s; font-family: 'Inter', sans-serif;">
-                <button onclick="updateApkUrl()" style="background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap; box-shadow: 0 4px 15px rgba(39,77,245,0.25);">
+                <button onclick="updateNovaespApkUrl()" style="background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap; box-shadow: 0 4px 15px rgba(39,77,245,0.25);">
                     <i class="fas fa-save"></i> Update
                 </button>
             </div>
+        </div>
 
-            <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                <button onclick="testApkDownload()" style="flex: 1; min-width: 140px; background: var(--white); color: var(--blue-dark); border: 2px solid var(--border); padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
-                    <i class="fas fa-download"></i> Test Download
-                </button>
-                <button onclick="openGithubReleases()" style="flex: 1; min-width: 140px; background: var(--white); color: var(--text); border: 2px solid var(--border); padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
-                    <i class="fab fa-github"></i> GitHub Releases
-                </button>
-            </div>
-
-            <div style="margin-top: 1rem; padding: 0.8rem; background: var(--cream); border-radius: 10px; border: 1px solid var(--border);">
-                <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.6;">
-                    <i class="fas fa-lightbulb" style="color: var(--warning);"></i> <b>How to update APK:</b><br>
-                    1. Upload new APK to <a href="https://github.com/KITYGAMER-07/KITYSHOP/releases" target="_blank" style="color: var(--blue); font-weight: 600;">GitHub Releases</a><br>
-                    2. Copy the direct download link<br>
-                    3. Paste it above and click "Update"
+        <!-- Ztrax APK -->
+        <div style="background: var(--white); border-radius: 16px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 20px var(--card-shadow);">
+            <div style="display: flex; align-items: center; gap: 1rem; background: linear-gradient(135deg, rgba(220,38,38,0.08), rgba(220,38,38,0.03)); border: 2px solid rgba(220,38,38,0.3); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem;">
+                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #dc2626, #b91c1c); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; flex-shrink: 0;">
+                    <i class="fas fa-shield-alt"></i>
                 </div>
+                <div style="flex: 1; min-width: 0;">
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Ztrax Bypass APK</div>
+                    <div style="font-size: 1rem; font-weight: 700; color: var(--blue-darker); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="currentZtraxApkName">ZtraxBypass.apk</div>
+                    <div style="font-size: 0.75rem; color: var(--success); font-weight: 600; margin-top: 0.2rem;"><i class="fas fa-check-circle"></i> Active</div>
+                </div>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 500;"><i class="fas fa-link" style="color: var(--blue);"></i> Update Ztrax APK URL:</div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <input type="url" id="ztraxApkUrlInput" placeholder="https://github.com/.../ZtraxBypass.apk" 
+                    style="flex: 1; min-width: 250px; padding: 0.7rem 1rem; background: var(--cream); border: 2px solid var(--border); border-radius: 12px; font-size: 0.9rem; color: var(--text); transition: all 0.3s; font-family: 'Inter', sans-serif;">
+                <button onclick="updateZtraxApkUrl()" style="background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap; box-shadow: 0 4px 15px rgba(220,38,38,0.25);">
+                    <i class="fas fa-save"></i> Update
+                </button>
             </div>
         </div>
     </div>
@@ -753,7 +759,7 @@
                     </button>
                 </div>
 
-                <div style="background: linear-gradient(135deg, rgba(22,163,74,0.08), rgba(22,163,74,0.03)); padding: 0.7rem; border-radius: 12px; margin: 0.4rem 0; border: 2px dashed var(--success);">
+                <div id="apkDownloadSection" style="background: linear-gradient(135deg, rgba(22,163,74,0.08), rgba(22,163,74,0.03)); padding: 0.7rem; border-radius: 12px; margin: 0.4rem 0; border: 2px dashed var(--success);">
                     <div style="font-size: 0.7rem; color: var(--success); margin-bottom: 0.3rem; font-weight: 600;"><i class="fas fa-mobile-alt"></i> DOWNLOAD APP</div>
                     <div style="display: flex; align-items: center; gap: 0.6rem; background: white; padding: 0.5rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 0.4rem; text-align: left;">
                         <div style="width: 32px; height: 32px; background: linear-gradient(135deg, var(--success), #15803d); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem; flex-shrink: 0;">
@@ -761,7 +767,7 @@
                         </div>
                         <div style="flex: 1; min-width: 0;">
                             <div style="font-weight: 700; color: var(--blue-darker); font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="apkFileNameDisplay">NovaEsp_50.0.2.apk</div>
-                            <div style="font-size: 0.65rem; color: var(--text-muted);">Android Package</div>
+                            <div style="font-size: 0.65rem; color: var(--text-muted);" id="apkProductType">Android Package</div>
                         </div>
                     </div>
                     <button onclick="downloadApk()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.3rem; background: linear-gradient(135deg, var(--success), #15803d); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(22,163,74,0.3);">
@@ -855,15 +861,22 @@
                 <button class="close-btn" onclick="closeModal('addStockModal')">&times;</button>
             </div>
             <div class="form-group">
-                <label>Duration</label>
+                <label>Product</label>
                 <select id="stockDuration">
-                    <option value="5hours">5 Hours</option>
-                    <option value="1day">1 Day</option>
-                    <option value="3days">3 Days</option>
-                    <option value="7days">7 Days</option>
-                    <option value="14days">14 Days</option>
-                    <option value="30days">30 Days</option>
-                    <option value="60days">60 Days</option>
+                    <optgroup label="NovaESP">
+                        <option value="5hours">5 Hours</option>
+                        <option value="1day">1 Day</option>
+                        <option value="3days">3 Days</option>
+                        <option value="7days">7 Days</option>
+                        <option value="14days">14 Days</option>
+                        <option value="30days">30 Days</option>
+                        <option value="60days">60 Days</option>
+                    </optgroup>
+                    <optgroup label="Ztrax Bypass">
+                        <option value="ztrax1day">Ztrax 1 Day</option>
+                        <option value="ztrax7days">Ztrax 7 Days</option>
+                        <option value="ztrax30days">Ztrax 30 Days</option>
+                    </optgroup>
                 </select>
             </div>
             <div class="form-group"><label>Price (Rs.)</label><input type="number" id="stockPrice" placeholder="199"></div>
@@ -880,15 +893,22 @@
                 <button class="close-btn" onclick="closeModal('deleteStockModal')">&times;</button>
             </div>
             <div class="form-group">
-                <label>Duration</label>
+                <label>Product</label>
                 <select id="deleteStockDuration">
-                    <option value="5hours">5 Hours</option>
-                    <option value="1day">1 Day</option>
-                    <option value="3days">3 Days</option>
-                    <option value="7days">7 Days</option>
-                    <option value="14days">14 Days</option>
-                    <option value="30days">30 Days</option>
-                    <option value="60days">60 Days</option>
+                    <optgroup label="NovaESP">
+                        <option value="5hours">5 Hours</option>
+                        <option value="1day">1 Day</option>
+                        <option value="3days">3 Days</option>
+                        <option value="7days">7 Days</option>
+                        <option value="14days">14 Days</option>
+                        <option value="30days">30 Days</option>
+                        <option value="60days">60 Days</option>
+                    </optgroup>
+                    <optgroup label="Ztrax Bypass">
+                        <option value="ztrax1day">Ztrax 1 Day</option>
+                        <option value="ztrax7days">Ztrax 7 Days</option>
+                        <option value="ztrax30days">Ztrax 30 Days</option>
+                    </optgroup>
                 </select>
             </div>
             <div class="form-group">
@@ -1043,18 +1063,27 @@ function updateRazorpayKey() {
 }
 
         const defaultProducts = [
-            { id: "5hours", name: "5 Hours Access", duration: "5 Hours", price: 49, stock: 15, icon: "fa-clock" },
-            { id: "1day", name: "1 Day Access", duration: "1 Day", price: 99, stock: 25, icon: "fa-calendar-day" },
-            { id: "3days", name: "3 Days Access", duration: "3 Days", price: 199, stock: 20, icon: "fa-calendar-day" },
-            { id: "7days", name: "7 Days Access", duration: "7 Days", price: 399, stock: 18, icon: "fa-calendar-week" },
-            { id: "14days", name: "14 Days Access", duration: "14 Days", price: 699, stock: 12, icon: "fa-calendar-alt" },
-            { id: "30days", name: "30 Days Access", duration: "30 Days", price: 1299, stock: 8, icon: "fa-calendar" },
-            { id: "60days", name: "60 Days Access", duration: "60 Days", price: 2299, stock: 5, icon: "fa-calendar" }
+            { id: "5hours", name: "5 Hours Access", duration: "5 Hours", price: 49, stock: 15, icon: "fa-clock", type: "novaesp" },
+            { id: "1day", name: "1 Day Access", duration: "1 Day", price: 99, stock: 25, icon: "fa-calendar-day", type: "novaesp" },
+            { id: "3days", name: "3 Days Access", duration: "3 Days", price: 199, stock: 20, icon: "fa-calendar-day", type: "novaesp" },
+            { id: "7days", name: "7 Days Access", duration: "7 Days", price: 399, stock: 18, icon: "fa-calendar-week", type: "novaesp" },
+            { id: "14days", name: "14 Days Access", duration: "14 Days", price: 699, stock: 12, icon: "fa-calendar-alt", type: "novaesp" },
+            { id: "30days", name: "30 Days Access", duration: "30 Days", price: 1299, stock: 8, icon: "fa-calendar", type: "novaesp" },
+            { id: "60days", name: "60 Days Access", duration: "60 Days", price: 2299, stock: 5, icon: "fa-calendar", type: "novaesp" },
+            { id: "ztrax1day", name: "Ztrax Bypass 1 Day", duration: "1 Day", price: 149, stock: 10, icon: "fa-shield-alt", type: "ztrax" },
+            { id: "ztrax7days", name: "Ztrax Bypass 7 Days", duration: "7 Days", price: 599, stock: 8, icon: "fa-shield-alt", type: "ztrax" },
+            { id: "ztrax30days", name: "Ztrax Bypass 30 Days", duration: "30 Days", price: 1799, stock: 5, icon: "fa-shield-alt", type: "ztrax" }
         ];
 
-        // GitHub Releases APK URL - Change this when you update your APK
-        let globalApkUrl = "https://github.com/KITYGAMER-07/KITYSHOP/releases/download/v1.0.0/NovaEsp_50.0.2.apk";
-        let globalApkName = "NovaEsp_50.0.2.apk";
+        // Separate APK URLs for each product type
+        let novaespApkUrl = "https://github.com/KITYGAMER-07/KITYSHOP/releases/download/v1.0.0/NovaEsp_50.0.2.apk";
+        let novaespApkName = "NovaEsp_50.0.2.apk";
+        let ztraxApkUrl = "https://github.com/KITYGAMER-07/KITYSHOP/releases/download/ztrax/v1.0.0/ZtraxBypass.apk";
+        let ztraxApkName = "ZtraxBypass.apk";
+
+        // Legacy global variables (kept for compatibility)
+        let globalApkUrl = novaespApkUrl;
+        let globalApkName = novaespApkName;
 
         let products = JSON.parse(JSON.stringify(defaultProducts));
         let keys = {};
@@ -1299,6 +1328,11 @@ function updateRazorpayKey() {
         products.forEach(p => {
             keys[p.id] = [];
             manualKeys[p.id] = [];
+        });
+        // Ensure Ztrax products have key arrays initialized
+        ["ztrax1day", "ztrax7days", "ztrax30days"].forEach(id => {
+            if (!keys[id]) keys[id] = [];
+            if (!manualKeys[id]) manualKeys[id] = [];
         });
 
         function switchAuthTab(tab) {
@@ -1718,7 +1752,7 @@ function updateRazorpayKey() {
                                             <td style="padding: 0.8rem; font-size: 0.8rem; font-family: monospace; color: var(--blue-dark); background: rgba(39,77,245,0.06); border-radius: 6px;">${o.key}</td>
                                             <td style="padding: 0.8rem; font-size: 0.75rem; color: var(--text-muted);">${o.time}</td>
                                         <td style="padding: 0.8rem;">
-                                            ${o.apkUrl ? `<button onclick="window.open('${o.apkUrl}', '_blank')" style="background: linear-gradient(135deg, var(--success), #15803d); color: white; border: none; padding: 0.3rem 0.7rem; border-radius: 50px; font-size: 0.7rem; font-weight: 600; cursor: pointer;"><i class="fas fa-download"></i> APK</button>` : '-'}
+                                            ${o.apkUrl ? `<button onclick="window.open('${o.apkUrl}', '_blank')" style="background: linear-gradient(135deg, var(--success), #15803d); color: white; border: none; padding: 0.3rem 0.7rem; border-radius: 50px; font-size: 0.7rem; font-weight: 600; cursor: pointer; white-space: nowrap;"><i class="fas fa-download"></i> ${o.productType === 'ztrax' ? 'Ztrax' : 'NovaESP'}</button>` : '-'}
                                         </td>
                                     </tr>
                                     `).join("")}
@@ -1782,7 +1816,10 @@ function updateRazorpayKey() {
                                     <div style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(180deg, var(--blue), var(--blue-dark));"></div>
                                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
                                         <div>
-                                            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.2rem;">${o.product}</div>
+                                            <div style="display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.2rem;">
+                                                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">${o.product}</div>
+                                                <span style="background: ${o.productType === 'ztrax' ? 'linear-gradient(135deg,#dc2626,#b91c1c)' : 'linear-gradient(135deg,var(--blue),var(--blue-dark))'}; color: white; padding: 0.15rem 0.5rem; border-radius: 50px; font-size: 0.65rem; font-weight: 700;">${o.productType === 'ztrax' ? 'ZTRAX' : 'NOVA'}</span>
+                                            </div>
                                             <div style="font-size: 0.85rem; color: var(--text-muted);">Order: ${o.id}</div>
                                             ${o.couponCode ? '<div style="font-size: 0.75rem; color: var(--blue); font-weight: 600; margin-top: 0.2rem;"><i class="fas fa-ticket-alt"></i> ' + o.couponCode + ' (-' + o.discountPercent + '%)</div>' : ''}
                                         </div>
@@ -1808,7 +1845,7 @@ function updateRazorpayKey() {
                                     ${o.apkUrl ? `
                                     <div style="margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid var(--border);">
                                         <button onclick="window.open('${o.apkUrl}', '_blank')" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.4rem; background: linear-gradient(135deg, var(--success), #15803d); color: white; border: none; padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s; box-shadow: 0 4px 12px rgba(22,163,74,0.25);">
-                                            <i class="fas fa-download"></i> Download APK
+                                            <i class="fas fa-download"></i> Download ${o.productType === 'ztrax' ? 'Ztrax' : 'NovaESP'} APK
                                         </button>
                                     </div>
                                     ` : ''}
@@ -1886,9 +1923,17 @@ function updateRazorpayKey() {
                         if (saved) {
                             return { ...def, price: saved.price !== undefined ? saved.price : def.price, stock: saved.stock !== undefined ? saved.stock : def.stock };
                         }
-                        return def;
+                        return { ...def, stock: 0 }; // Default to 0 if not in Firebase
                     });
+                } else {
+                    // No products data in Firebase - keep stocks at 0 (don't use defaults)
+                    products = defaultProducts.map(def => ({ ...def, stock: 0 }));
                 }
+                // Ensure key arrays exist for all products
+                products.forEach(p => {
+                    if (!keys[p.id]) keys[p.id] = [];
+                    if (!manualKeys[p.id]) manualKeys[p.id] = [];
+                });
                 loadKeysFromFirebase();
                 setSyncing(false);
                 renderProducts(); // Re-render with updated data
@@ -1904,7 +1949,7 @@ function updateRazorpayKey() {
             setSyncing(true);
             const productsRef = db.ref("products");
             const dataToSave = {};
-            products.forEach(p => { dataToSave[p.id] = { price: p.price, stock: p.stock }; });
+            products.forEach(p => { dataToSave[p.id] = { price: p.price, stock: p.stock, type: p.type }; });
             productsRef.set(dataToSave).then(() => { setSyncing(false); }).catch(err => { console.error("Error saving products:", err); setSyncing(false); });
         }
 
@@ -1913,6 +1958,10 @@ function updateRazorpayKey() {
             const keysRef = db.ref("keys");
             keysRef.once("value", (snapshot) => {
                 const data = snapshot.val();
+                // Ensure all products have key arrays initialized
+                products.forEach(p => {
+                    if (!keys[p.id]) keys[p.id] = [];
+                });
                 if (data) {
                     Object.keys(data).forEach(productId => {
                         if (productId === "username" || productId === "password") return;
@@ -2136,9 +2185,14 @@ function updateRazorpayKey() {
             grid.innerHTML = products.map(product => {
                 const btnClass = product.stock > 0 ? "available" : "unavailable";
                 const btnText = product.stock > 0 ? "Buy Now" : "Unavailable";
+                const productImage = product.type === "ztrax" ? "ztrax.jpg" : "nova.jpg";
+                const productBadge = product.type === "ztrax" 
+                    ? '<div style="position:absolute;top:10px;right:10px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:white;padding:0.3rem 0.8rem;border-radius:50px;font-size:0.75rem;font-weight:700;z-index:2;box-shadow:0 4px 15px rgba(220,38,38,0.3);"><i class="fas fa-shield-alt"></i> ZTRAX</div>' 
+                    : '<div style="position:absolute;top:10px;right:10px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:white;padding:0.3rem 0.8rem;border-radius:50px;font-size:0.75rem;font-weight:700;z-index:2;box-shadow:0 4px 15px rgba(39,77,245,0.3);"><i class="fas fa-bolt"></i> NOVA</div>';
                 return `
-                    <div class="product-card">
-                        <div class="product-icon"><img src="nova.jpg" style="width:100%;height:100%;border-radius:16px;object-fit:cover;"></div>
+                    <div class="product-card" style="position:relative;">
+                        ${productBadge}
+                        <div class="product-icon"><img src="${productImage}" style="width:100%;height:100%;border-radius:16px;object-fit:cover;"></div>
                         <h3>${product.name}</h3>
                         <div class="duration"><i class="fas fa-hourglass-half"></i> ${product.duration}</div>
                         <div class="price">Rs.${product.price}</div>
@@ -2172,6 +2226,8 @@ function updateRazorpayKey() {
             });
         }
 
+        let currentProductType = "novaesp";
+
         function openBuyModal(productId) {
             if (!currentUser) {
                 showToast("Please sign in to purchase!", "error");
@@ -2184,6 +2240,7 @@ function updateRazorpayKey() {
                 return;
             }
             currentProduct = product;
+            currentProductType = product.type || "novaesp";
             document.getElementById("selectedPlan").value = product.name + " - Rs." + product.price;
             document.getElementById("buyModal").classList.add("active");
             document.getElementById("buyModalContent").classList.remove("hidden");
@@ -2322,6 +2379,11 @@ function updateRazorpayKey() {
                     }
                 }
 
+                // Determine product-specific APK URL
+                const isZtrax = currentProductType === "ztrax";
+                const productApkUrl = isZtrax ? ztraxApkUrl : novaespApkUrl;
+                const productApkName = isZtrax ? ztraxApkName : novaespApkName;
+
                 // Calculate final amount with coupon
                 const finalAmount = (appliedCoupon && discountedPrice > 0) ? discountedPrice : currentProduct.price;
                 const discountAmount = appliedCoupon ? (currentProduct.price - discountedPrice) : 0;
@@ -2338,8 +2400,9 @@ function updateRazorpayKey() {
                     couponCode: appliedCoupon ? appliedCoupon.code : null,
                     discountPercent: appliedCoupon ? appliedCoupon.discount : 0,
                     key: key,
-                    apkUrl: globalApkUrl,
-                    apkName: globalApkName,
+                    apkUrl: productApkUrl,
+                    apkName: productApkName,
+                    productType: currentProductType,
                     paymentId: response.razorpay_payment_id,
                     status: "Delivered",
                     time: new Date().toLocaleString()
@@ -2353,7 +2416,13 @@ function updateRazorpayKey() {
                 document.getElementById("buyModalContent").classList.add("hidden");
                 document.getElementById("paymentSuccess").classList.remove("hidden");
                 document.getElementById("sentKeyDisplay").textContent = key;
-                document.getElementById("apkFileNameDisplay").textContent = globalApkName;
+
+                // Set product-specific APK info
+                const isZtraxProduct = currentProductType === "ztrax";
+                const displayApkName = isZtraxProduct ? ztraxApkName : novaespApkName;
+                const displayProductType = isZtraxProduct ? "Ztrax Bypass" : "NovaESP";
+                document.getElementById("apkFileNameDisplay").textContent = displayApkName;
+                document.getElementById("apkProductType").textContent = displayProductType + " Android Package";
                 saveProductsToFirebase();
                 saveKeysToFirebase();
                 saveOrderToFirebase(order);
@@ -2478,6 +2547,8 @@ function updateRazorpayKey() {
         }
 
         function updateAdminStats() {
+            const novaespProducts = products.filter(p => p.type === "novaesp" || !p.type);
+            const ztraxProducts = products.filter(p => p.type === "ztrax");
             const total = products.reduce((sum, p) => sum + p.stock, 0);
             const available = products.filter(p => p.stock > 0).length;
             const todayOrders = orders.filter(o => {
@@ -2500,7 +2571,12 @@ function updateRazorpayKey() {
                     '<span style="color: var(--danger);"><i class="fas fa-times-circle"></i> Out of Stock</span>';
                 return `
                     <tr>
-                        <td>${p.name}</td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 0.4rem;">
+                                ${p.name}
+                                <span style="background: ${p.type === 'ztrax' ? 'linear-gradient(135deg,#dc2626,#b91c1c)' : 'linear-gradient(135deg,var(--blue),var(--blue-dark))'}; color: white; padding: 0.1rem 0.4rem; border-radius: 50px; font-size: 0.65rem; font-weight: 700;">${p.type === 'ztrax' ? 'ZTRAX' : 'NOVA'}</span>
+                            </div>
+                        </td>
                         <td>Rs.${p.price}</td>
                         <td><span style="font-weight: 700; color: var(--blue);">${p.stock}</span></td>
                         <td>${status}</td>
