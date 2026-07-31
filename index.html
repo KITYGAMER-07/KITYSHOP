@@ -915,7 +915,7 @@
             </div>
             <div class="form-group">
                 <label>Key to Delete</label>
-                <input type="text" id="deleteStockKey" placeholder="Enter exact key to delete (e.g., KEY-ABCD-EFGH-IJKL)" style="font-family: 'Courier New', monospace; text-transform: uppercase;">
+                <input type="text" id="deleteStockKey" placeholder="Enter exact key to delete (e.g., KEY-ABCD-EFGH-IJKL)" style="font-family: 'Courier New', monospace;">
             </div>
             <div style="background: rgba(220,38,38,0.06); border: 1px solid rgba(220,38,38,0.2); border-radius: 10px; padding: 0.8rem; margin-bottom: 1rem; font-size: 0.85rem; color: var(--danger);">
                 <i class="fas fa-exclamation-triangle"></i> This will permanently delete the specified admin-added key from stock.
@@ -2845,7 +2845,7 @@ function updateRazorpayKey() {
 
         function deleteStock() {
             const duration = document.getElementById("deleteStockDuration").value;
-            const keyToDelete = document.getElementById("deleteStockKey").value.trim().toUpperCase();
+            const keyToDelete = document.getElementById("deleteStockKey").value.trim();
 
             if (!keyToDelete) {
                 showToast("Please enter a key to delete!", "error");
@@ -2867,12 +2867,22 @@ function updateRazorpayKey() {
             if (!keys[duration]) keys[duration] = [];
             if (!manualKeys[duration]) manualKeys[duration] = [];
 
-            // Check if key exists in keys or manualKeys
-            const keyIndex = keys[duration].indexOf(keyToDelete);
-            const manualKeyIndex = manualKeys[duration].indexOf(keyToDelete);
+            // Try exact match first (case-sensitive as stored)
+            let keyIndex = keys[duration].indexOf(keyToDelete);
+            let manualKeyIndex = manualKeys[duration].indexOf(keyToDelete);
+
+            // If not found, try case-insensitive match
+            if (keyIndex === -1) {
+                keyIndex = keys[duration].findIndex(k => k.toUpperCase() === keyToDelete.toUpperCase());
+            }
+            if (manualKeyIndex === -1) {
+                manualKeyIndex = manualKeys[duration].findIndex(k => k.toUpperCase() === keyToDelete.toUpperCase());
+            }
 
             if (keyIndex === -1 && manualKeyIndex === -1) {
-                showToast("Key not found! Please check the key and try again.", "error");
+                showToast("Key not found! Available keys: " + keys[duration].length + ", Manual keys: " + manualKeys[duration].length, "error");
+                console.log("Delete failed. keys[" + duration + "]:", keys[duration]);
+                console.log("Delete failed. manualKeys[" + duration + "]:", manualKeys[duration]);
                 return;
             }
 
@@ -2886,7 +2896,7 @@ function updateRazorpayKey() {
                 manualKeys[duration].splice(manualKeyIndex, 1);
             }
 
-            product.stock -= 1;
+            product.stock = Math.max(0, keys[duration].length);
 
             saveProductsToFirebase();
             saveKeysToFirebase();
@@ -2897,7 +2907,7 @@ function updateRazorpayKey() {
             closeModal("deleteStockModal");
 
             document.getElementById("deleteStockKey").value = "";
-            showToast("Key '" + keyToDelete + "' deleted from " + product.name + "!", "success");
+            showToast("Key deleted from " + product.name + "!", "success");
         }
 
         function showToast(message, type) {
