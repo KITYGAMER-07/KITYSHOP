@@ -873,6 +873,7 @@
                         <option value="60days">60 Days</option>
                     </optgroup>
                     <optgroup label="Ztrax Bypass">
+                        <option value="ztrax5hours">Ztrax 5 Hours</option>
                         <option value="ztrax1day">Ztrax 1 Day</option>
                         <option value="ztrax7days">Ztrax 7 Days</option>
                         <option value="ztrax30days">Ztrax 30 Days</option>
@@ -905,6 +906,7 @@
                         <option value="60days">60 Days</option>
                     </optgroup>
                     <optgroup label="Ztrax Bypass">
+                        <option value="ztrax5hours">Ztrax 5 Hours</option>
                         <option value="ztrax1day">Ztrax 1 Day</option>
                         <option value="ztrax7days">Ztrax 7 Days</option>
                         <option value="ztrax30days">Ztrax 30 Days</option>
@@ -1070,6 +1072,7 @@ function updateRazorpayKey() {
             { id: "14days", name: "14 Days Access", duration: "14 Days", price: 699, stock: 12, icon: "fa-calendar-alt", type: "novaesp" },
             { id: "30days", name: "30 Days Access", duration: "30 Days", price: 1299, stock: 8, icon: "fa-calendar", type: "novaesp" },
             { id: "60days", name: "60 Days Access", duration: "60 Days", price: 2299, stock: 5, icon: "fa-calendar", type: "novaesp" },
+            { id: "ztrax5hours", name: "Ztrax Bypass 5 Hours", duration: "5 Hours", price: 79, stock: 10, icon: "fa-shield-alt", type: "ztrax" },
             { id: "ztrax1day", name: "Ztrax Bypass 1 Day", duration: "1 Day", price: 149, stock: 10, icon: "fa-shield-alt", type: "ztrax" },
             { id: "ztrax7days", name: "Ztrax Bypass 7 Days", duration: "7 Days", price: 599, stock: 8, icon: "fa-shield-alt", type: "ztrax" },
             { id: "ztrax30days", name: "Ztrax Bypass 30 Days", duration: "30 Days", price: 1799, stock: 5, icon: "fa-shield-alt", type: "ztrax" }
@@ -1330,7 +1333,7 @@ function updateRazorpayKey() {
             manualKeys[p.id] = [];
         });
         // Ensure Ztrax products have key arrays initialized
-        ["ztrax1day", "ztrax7days", "ztrax30days"].forEach(id => {
+        ["ztrax5hours", "ztrax1day", "ztrax7days", "ztrax30days"].forEach(id => {
             if (!keys[id]) keys[id] = [];
             if (!manualKeys[id]) manualKeys[id] = [];
         });
@@ -3059,22 +3062,24 @@ function skipToMainContent() {
 // ========== APK FUNCTIONS ==========
 
         function downloadApk() {
-            if (!globalApkUrl) {
+            const url = currentProductType === "ztrax" ? ztraxApkUrl : novaespApkUrl;
+            const name = currentProductType === "ztrax" ? ztraxApkName : novaespApkName;
+            if (!url) {
                 showToast("APK not available! Contact admin.", "error");
                 return;
             }
             const link = document.createElement("a");
-            link.href = globalApkUrl;
-            link.download = globalApkName;
+            link.href = url;
+            link.download = name;
             link.target = "_blank";
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            showToast("APK download started!", "success");
+            showToast(name + " download started!", "success");
         }
 
-        function updateApkUrl() {
-            const url = document.getElementById("apkUrlInput").value.trim();
+        function updateNovaespApkUrl() {
+            const url = document.getElementById("novaespApkUrlInput").value.trim();
             if (!url) {
                 showToast("Please enter a valid URL!", "error");
                 return;
@@ -3083,29 +3088,71 @@ function skipToMainContent() {
                 showToast("URL must start with http:// or https://", "error");
                 return;
             }
-            globalApkUrl = url;
-            globalApkName = url.split("/").pop() || "app.apk";
-            document.getElementById("currentApkName").textContent = globalApkName;
-            document.getElementById("apkUrlInput").value = "";
+            novaespApkUrl = url;
+            novaespApkName = url.split("/").pop() || "NovaEsp.apk";
+            globalApkUrl = novaespApkUrl;
+            globalApkName = novaespApkName;
+
+            const nameEl = document.getElementById("currentNovaespApkName");
+            if (nameEl) nameEl.textContent = novaespApkName;
+
+            const inputEl = document.getElementById("novaespApkUrlInput");
+            if (inputEl) inputEl.value = "";
 
             if (firebaseInitialized) {
-                db.ref("settings/apk").set({
-                    url: globalApkUrl,
-                    name: globalApkName,
+                db.ref("settings/apk/novaesp").set({
+                    url: novaespApkUrl,
+                    name: novaespApkName,
                     updatedAt: new Date().toISOString()
                 }).then(() => {
-                    showToast("APK URL updated!", "success");
+                    showToast("NovaESP APK URL updated!", "success");
                 }).catch(err => {
                     showToast("Saved locally!", "success");
                 });
             } else {
-                showToast("APK URL updated!", "success");
+                showToast("NovaESP APK URL updated!", "success");
+            }
+        }
+
+        function updateZtraxApkUrl() {
+            const url = document.getElementById("ztraxApkUrlInput").value.trim();
+            if (!url) {
+                showToast("Please enter a valid URL!", "error");
+                return;
+            }
+            if (!url.startsWith("http")) {
+                showToast("URL must start with http:// or https://", "error");
+                return;
+            }
+            ztraxApkUrl = url;
+            ztraxApkName = url.split("/").pop() || "ZtraxBypass.apk";
+
+            const nameEl = document.getElementById("currentZtraxApkName");
+            if (nameEl) nameEl.textContent = ztraxApkName;
+
+            const inputEl = document.getElementById("ztraxApkUrlInput");
+            if (inputEl) inputEl.value = "";
+
+            if (firebaseInitialized) {
+                db.ref("settings/apk/ztrax").set({
+                    url: ztraxApkUrl,
+                    name: ztraxApkName,
+                    updatedAt: new Date().toISOString()
+                }).then(() => {
+                    showToast("Ztrax APK URL updated!", "success");
+                }).catch(err => {
+                    showToast("Saved locally!", "success");
+                });
+            } else {
+                showToast("Ztrax APK URL updated!", "success");
             }
         }
 
         function testApkDownload() {
-            if (globalApkUrl) {
-                window.open(globalApkUrl, "_blank");
+            if (currentProductType === "ztrax" && ztraxApkUrl) {
+                window.open(ztraxApkUrl, "_blank");
+            } else if (novaespApkUrl) {
+                window.open(novaespApkUrl, "_blank");
             } else {
                 showToast("No APK URL set!", "error");
             }
@@ -3120,11 +3167,29 @@ function skipToMainContent() {
             return db.ref("settings/apk").once("value")
                 .then((snapshot) => {
                     const data = snapshot.val();
-                    if (data && data.url) {
-                        globalApkUrl = data.url;
-                        globalApkName = data.name || data.url.split("/").pop();
-                        if (document.getElementById("currentApkName")) {
-                            document.getElementById("currentApkName").textContent = globalApkName;
+                    if (data) {
+                        if (data.novaesp && data.novaesp.url) {
+                            novaespApkUrl = data.novaesp.url;
+                            novaespApkName = data.novaesp.name || data.novaesp.url.split("/").pop();
+                            globalApkUrl = novaespApkUrl;
+                            globalApkName = novaespApkName;
+                            const el = document.getElementById("currentNovaespApkName");
+                            if (el) el.textContent = novaespApkName;
+                        }
+                        if (data.ztrax && data.ztrax.url) {
+                            ztraxApkUrl = data.ztrax.url;
+                            ztraxApkName = data.ztrax.name || data.ztrax.url.split("/").pop();
+                            const el = document.getElementById("currentZtraxApkName");
+                            if (el) el.textContent = ztraxApkName;
+                        }
+                        // Legacy fallback
+                        if (data.url && !data.novaesp) {
+                            novaespApkUrl = data.url;
+                            novaespApkName = data.name || data.url.split("/").pop();
+                            globalApkUrl = novaespApkUrl;
+                            globalApkName = novaespApkName;
+                            const el = document.getElementById("currentNovaespApkName");
+                            if (el) el.textContent = novaespApkName;
                         }
                     }
                 })
