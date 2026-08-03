@@ -18,7 +18,7 @@
             --dark: #0a0a0a;
             --card: #111111;
             --text: #111111;
-            --text-muted: #888888;
+            --text-muted: #aaaaaa;
             --border: #222222;
             --card-shadow: rgba(255, 0, 0, 0.15);
             --success: #16a34a;
@@ -26,7 +26,7 @@
             --warning: #ff6600;
         }
         html { scroll-behavior: smooth; }
-        body { font-family: 'Inter', sans-serif; background: #000000; color: var(--text); overflow-x: hidden; min-height: 100vh; }
+        body { font-family: 'Inter', sans-serif; background: #000000; color: #ffffff !important; overflow-x: hidden; min-height: 100vh; }
         .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #000000; }
         .bg-animation::before { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255, 0, 0, 0.12) 0%, transparent 70%); top: -200px; right: -200px; animation: float 8s ease-in-out infinite; }
         .bg-animation::after { content: ''; position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(255, 0, 0, 0.15) 0%, transparent 70%); bottom: -150px; left: -150px; animation: float 10s ease-in-out infinite reverse; }
@@ -38,24 +38,24 @@
         nav { position: fixed; top: 0; width: 100%; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 1000; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid #222222; transition: transform 0.3s ease; }
         nav.nav-hidden { transform: translateY(-100%); pointer-events: none; }
         nav:not(.nav-hidden) { transform: translateY(0); pointer-events: auto; }
-        .logo { font-size: 1.5rem; font-weight: 800; color: #ff0000; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; user-select: none; }
+        .logo { font-size: 1.5rem; font-weight: 900; color: #ff0000; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; user-select: none; }
         .nav-links { display: flex; gap: 2rem; align-items: center; position: relative; }
-        .nav-link { color: #888888; text-decoration: none; font-weight: 500; transition: all 0.3s; cursor: pointer; position: relative; padding: 0.5rem 0; background: none; border: none; font-size: 1rem; font-family: 'Inter', sans-serif; }
+        .nav-link { color: #666666; text-decoration: none; font-weight: 500; transition: all 0.3s; cursor: pointer; position: relative; padding: 0.5rem 0; background: none; border: none; font-size: 1rem; font-family: 'Inter', sans-serif; }
         .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, #ff0000, #ff0000); transition: width 0.3s; }
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
         .nav-link:hover, .nav-link.active { color: #ff0000; }
-        .nav-center-title { position: absolute; left: 50%; transform: translateX(-50%); font-size: 1.5rem; font-weight: 800; color: #ff0000; user-select: none; white-space: nowrap; }
+        .nav-center-title { position: absolute; left: 50%; transform: translateX(-50%); font-size: 1.5rem; font-weight: 900; color: #ff0000; user-select: none; white-space: nowrap; }
         @media (max-width: 768px) { .nav-center-title { font-size: 1.2rem; } }
-        .admin-btn { background: #ff0000; color: #000000; padding: 0.5rem 1.5rem; border-radius: 50px; border: none; cursor: pointer; font-weight: 600; transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 1rem; }
+        .admin-btn { background: #ff0000; color: #000000 !important; font-weight: 800; padding: 0.5rem 1.5rem; border-radius: 50px; border: none; cursor: pointer; font-weight: 600; transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 1rem; }
         .admin-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3); }
 
         .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem; position: relative; }
-        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255, 0, 0, 0.15); border: 1px solid rgba(255, 0, 0, 0.25); padding: 0.5rem 1.5rem; border-radius: 50px; font-size: 0.9rem; color: #ff0000; margin-bottom: 2rem; animation: fadeInUp 0.8s ease; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255, 0, 0, 0.15); border: 1px solid rgba(255, 0, 0, 0.25); padding: 0.5rem 1.5rem; border-radius: 50px; font-size: 1rem; color: #ff0000; font-weight: 600; margin-bottom: 2rem; animation: fadeInUp 0.8s ease; }
         .hero h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; animation: fadeInUp 0.8s ease 0.2s both; color: #ff0000; }
         .hero h1 span { background: linear-gradient(135deg, #ff0000, #cc0000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { font-size: 1.2rem; color: #888888; max-width: 600px; margin-bottom: 2rem; animation: fadeInUp 0.8s ease 0.4s both; }
+        .hero p { font-size: 1.2rem; color: #666666; max-width: 600px; margin-bottom: 2rem; animation: fadeInUp 0.8s ease 0.4s both; }
         .hero-cta { display: flex; gap: 1rem; animation: fadeInUp 0.8s ease 0.6s both; }
-        .btn-primary { background: #ff0000; color: #000000; padding: 1rem 2.5rem; border-radius: 50px; border: none; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif; }
+        .btn-primary { background: #ff0000; color: #000000 !important; font-weight: 800; padding: 1rem 2.5rem; border-radius: 50px; border: none; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif; }
         .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(255, 0, 0, 0.3); }
         .btn-secondary { background: transparent; color: #ff0000; padding: 1rem 2.5rem; border-radius: 50px; border: 2px solid #222222; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif; }
         .btn-secondary:hover { border-color: #ff0000; background: rgba(255, 0, 0, 0.1); }
@@ -65,7 +65,7 @@
         .products-section { padding: 6rem 2rem; max-width: 1400px; margin: 0 auto; }
         .section-header { text-align: center; margin-bottom: 4rem; }
         .section-header h2 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 1rem; color: #ff0000; }
-        .section-header p { color: #888888; font-size: 1.1rem; }
+        .section-header p { color: #666666; font-size: 1.1rem; }
         .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
         .product-card { background: #111111; border-radius: 20px; padding: 2rem; border: 1px solid #222222; transition: all 0.4s; position: relative; overflow: hidden; opacity: 0; transform: translateY(30px); box-shadow: 0 4px 20px var(--card-shadow); }
         .product-card::after {
@@ -91,14 +91,14 @@
         .product-card:hover { transform: translateY(-10px); border-color: #ff0000; box-shadow: 0 20px 50px rgba(255, 0, 0, 0.2); }
         .product-icon { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; overflow: hidden; }
         .product-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; color: #ff0000; }
-        .product-card .duration { color: #ff0000; font-weight: 600; font-size: 0.95rem; margin-bottom: 1rem; }
-        .product-card .price { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #ff0000, #cc0000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
-        .stock-status { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem; }
+        .product-card .duration { color: #ff0000; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; }
+        .product-card .price { font-size: 2.2rem; font-weight: 900; background: linear-gradient(135deg, #ff0000, #cc0000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        .stock-status { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.9rem; font-weight: 700; margin-bottom: 1.5rem; }
         .stock-status.in-stock { background: rgba(22, 163, 74, 0.1); color: var(--success); border: 1px solid rgba(22, 163, 74, 0.3); }
         .stock-status.out-stock { background: rgba(255, 0, 0, 0.1); color: var(--danger); border: 1px solid rgba(255, 0, 0, 0.3); }
         .stock-status.low-stock { background: rgba(217, 119, 6, 0.1); color: var(--warning); border: 1px solid rgba(217, 119, 6, 0.3); }
         .buy-btn { width: 100%; padding: 1rem; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 1rem; }
-        .buy-btn.available { background: #ff0000; color: #000000; }
+        .buy-btn.available { background: #ff0000; color: #000000 !important; font-weight: 800; }
         .buy-btn.available:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3); }
         .buy-btn.unavailable { background: #111111; color: #444444; cursor: not-allowed; opacity: 0.5; }
         .features-section { padding: 6rem 2rem; background: linear-gradient(180deg, #111111 0%, #000000 100%); }
@@ -107,7 +107,7 @@
         .feature-item.visible { opacity: 1; transform: translateY(0); }
         .feature-icon { width: 80px; height: 80px; background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(255, 0, 0, 0.1)); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem; border: 1px solid #222222; color: #ff0000; }
         .feature-item h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: #ff0000; }
-        .feature-item p { color: #888888; font-size: 0.95rem; }
+        .feature-item p { color: #666666; font-size: 0.95rem; }
         .telegram-section { padding: 4rem 2rem; text-align: center; background: linear-gradient(135deg, rgba(255, 0, 0, 0.05), rgba(255, 0, 0, 0.05)); border-top: 1px solid var(--border); border-bottom: 1px solid #222222; }
         .telegram-box { max-width: 600px; margin: 0 auto; background: #111111; padding: 2rem; border-radius: 20px; border: 1px solid #222222; box-shadow: 0 4px 20px var(--card-shadow); }
         .telegram-box i { font-size: 3rem; color: #ff0000; margin-bottom: 1rem; }
@@ -124,13 +124,14 @@
         #myKeysContent, #myOrdersContent { -ms-overflow-style: none; scrollbar-width: none; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
         .modal-header h2 { white-space: nowrap; font-size: clamp(0.9rem, 5vw, 1.5rem); color: #ff0000; overflow: hidden; text-overflow: ellipsis; }
-        .close-btn { background: none; border: none; color: #888888; font-size: 1.5rem; cursor: pointer; transition: color 0.3s; }
+        .close-btn { background: none; border: none; color: #666666; font-size: 1.5rem; cursor: pointer; transition: color 0.3s; }
         .close-btn:hover { color: #ff0000; }
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #ff0000; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; background: #000000; border: 2px solid #222222; border-radius: 10px; color: var(--text); font-size: 0.95rem; transition: all 0.3s; font-family: 'Inter', sans-serif; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; background: #000000; border: 2px solid #222222; border-radius: 10px; color: #ffffff; font-family: 'Inter', sans-serif; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #ff0000; box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1); }
-        .form-group input::placeholder { color: #888888; }
+        .form-group input::placeholder { color: #666666; }
+        input, textarea, select { color: #ffffff !important; }
         .modal .btn-primary { width: 100%; justify-content: center; }
         .admin-panel { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; padding-top: 2rem; }
         .admin-panel.active { display: block; }
@@ -142,12 +143,12 @@
         .admin-action-btn.add:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(22, 163, 74, 0.35); }
         .admin-action-btn.delete { background: linear-gradient(135deg, var(--danger), #cc0000); color: white; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.25); }
         .admin-action-btn.delete:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255, 0, 0, 0.35); }
-        .admin-action-btn.logout { background: #111111; color: #888888; border: 2px solid #222222; }
+        .admin-action-btn.logout { background: #111111; color: #666666; border: 2px solid #222222; }
         .admin-action-btn.logout:hover { border-color: #ff0000; color: #ff0000; background: rgba(255, 0, 0, 0.1); transform: translateY(-2px); }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
         .stat-card { background: #111111; padding: 1.5rem; border-radius: 16px; border: 1px solid #222222; box-shadow: 0 4px 20px var(--card-shadow); }
-        .stat-card h4 { color: #888888; font-size: 0.9rem; margin-bottom: 0.5rem; }
-        .stat-card .value { font-size: 2rem; font-weight: 800; color: #ff0000; }
+        .stat-card h4 { color: #666666; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .stat-card .value { font-size: 2.2rem; font-weight: 900; color: #ff0000; }
         .admin-table { width: 100%; background: #111111; border-radius: 16px; overflow: hidden; border: 1px solid #222222; box-shadow: 0 4px 20px var(--card-shadow); }
         .admin-table table { width: 100%; border-collapse: collapse; }
         .admin-table th, .admin-table td { padding: 1rem; text-align: left; border-bottom: 1px solid #222222; }
@@ -165,7 +166,7 @@
         .toast.success { border-left: 4px solid var(--success); }
         .toast.error { border-left: 4px solid var(--danger); }
         .toast.info { border-left: 4px solid var(--red); }
-        footer { padding: 3rem 2rem; text-align: center; border-top: 1px solid var(--border); color: #888888; background: #111111; }
+        footer { padding: 3rem 2rem; text-align: center; border-top: 1px solid var(--border); color: #666666; background: #111111; }
         footer .logo { justify-content: center; margin-bottom: 1rem; }
         @media (max-width: 768px) {
             .nav-links { position: fixed; top: 70px; left: 0; right: 0; background: rgba(0, 0, 0, 0.98); backdrop-filter: blur(20px); flex-direction: column; padding: 1.5rem; gap: 0.5rem; border-bottom: 1px solid #222222; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); transform: translateY(-150%); transition: transform 0.4s ease; z-index: 999; }
@@ -202,7 +203,7 @@
         .hidden { display: none !important; }
         .main-content { display: block; }
         .main-content.hidden { display: none; }
-        .sync-indicator { position: fixed; bottom: 1.5rem; right: 1.5rem; background: #111111; padding: 0.6rem 1rem; border-radius: 12px; border: 1px solid #222222; font-size: 0.8rem; color: #888888; display: flex; align-items: center; gap: 0.5rem; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
+        .sync-indicator { position: fixed; bottom: 1.5rem; right: 1.5rem; background: #111111; padding: 0.6rem 1rem; border-radius: 12px; border: 1px solid #222222; font-size: 0.85rem; color: #ffffff; font-weight: 600; color: #666666; display: flex; align-items: center; gap: 0.5rem; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
         .sync-indicator .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         .sync-indicator.syncing .dot { background: var(--warning); animation: spin 1s linear infinite; border-radius: 0; width: 10px; height: 10px; border: 2px solid var(--warning); border-top-color: transparent; }
@@ -267,76 +268,76 @@
         .auth-card { -ms-overflow-style: none; scrollbar-width: none; }
         .auth-card .auth-logo { text-align: center; margin-bottom: 0.5rem; }
         .auth-card .auth-logo img { height: 36px; width: auto; border-radius: 10px; object-fit: contain; margin-bottom: 0.2rem; }
-        .auth-card .auth-logo h2 { font-size: 1.25rem; color: #ff0000; font-weight: 800; }
-        .auth-card .auth-logo p { color: #888888; font-size: 0.75rem; margin-top: 0.15rem; }
+        .auth-card .auth-logo h2 { font-size: 1.4rem; color: #ff0000; font-weight: 900; }
+        .auth-card .auth-logo p { color: #666666; font-size: 0.75rem; margin-top: 0.15rem; }
         .auth-tabs { display: flex; gap: 0.4rem; background: #000000; border-radius: 12px; padding: 0.25rem; margin-bottom: 0.5rem; }
-        .auth-tab { flex: 1; padding: 0.45rem; border: none; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; color: #888888; background: transparent; }
-        .auth-tab.active { background: #ff0000; color: #000000; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.25); }
+        .auth-tab { flex: 1; padding: 0.45rem; border: none; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; color: #666666; background: transparent; }
+        .auth-tab.active { background: #ff0000; color: #000000 !important; font-weight: 800; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.25); }
         .auth-tab:hover:not(.active) { color: #ff0000; }
         .auth-form .form-group { margin-bottom: 0.4rem; }
-        .auth-form .form-group label { font-size: 0.75rem; font-weight: 600; color: #ff0000; margin-bottom: 0.15rem; display: flex; align-items: center; gap: 0.3rem; }
-        .auth-form .form-group input { padding: 0.5rem 0.75rem; font-size: 0.85rem; background: #000000; border: 2px solid #222222; border-radius: 10px; width: 100%; transition: all 0.3s; font-family: 'Inter', sans-serif; color: var(--text); }
+        .auth-form .form-group label { font-size: 0.75rem; font-weight: 600; color: #ff3333; margin-bottom: 0.15rem; display: flex; align-items: center; gap: 0.3rem; }
+        .auth-form .form-group input { padding: 0.5rem 0.75rem; font-size: 0.85rem; background: #000000; border: 2px solid #222222; border-radius: 10px; width: 100%; transition: all 0.3s; font-family: 'Inter', sans-serif; color: #ffffff; }
         .auth-form .form-group input:focus { outline: none; border-color: #ff0000; box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1); }
         .auth-form .form-group .input-wrap { position: relative; }
-        .auth-form .form-group .input-wrap i { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: #888888; font-size: 0.85rem; }
+        .auth-form .form-group .input-wrap i { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: #666666; font-size: 0.85rem; }
         .auth-form .form-group .input-wrap input { padding-left: 2.2rem; }
-        .auth-form .form-group .input-wrap .toggle-pass { position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%); color: #888888; cursor: pointer; font-size: 0.8rem; background: none; border: none; padding: 0.2rem; }
+        .auth-form .form-group .input-wrap .toggle-pass { position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%); color: #666666; cursor: pointer; font-size: 0.85rem; color: #ffffff; font-weight: 600; background: none; border: none; padding: 0.2rem; }
         .auth-form .btn-primary { width: 100%; padding: 0.55rem; border-radius: 10px; font-size: 0.85rem; margin-top: 0.15rem; justify-content: center; }
         .auth-form .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; opacity: 0.5; transform: none !important; box-shadow: none !important; }
-        .auth-divider { display: flex; align-items: center; gap: 0.8rem; margin: 0.5rem 0; color: #888888; font-size: 0.75rem; }
+        .auth-divider { display: flex; align-items: center; gap: 0.8rem; margin: 0.5rem 0; color: #666666; font-size: 0.75rem; }
         .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-        .google-btn { width: 100%; padding: 0.55rem; border-radius: 10px; border: 2px solid #444444; background: #111111; color: #ffffff; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-family: 'Inter', sans-serif; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
-        .google-btn:hover { border-color: #ff0000; background: rgba(255, 0, 0, 0.15); color: #ffffff; }
+        .google-btn { width: 100%; padding: 0.6rem; border-radius: 10px; border: 2px solid #444444; background: #111111; color: #ffffff !important; font-weight: 700; font-size: 0.9rem; text-align: center; letter-spacing: 0.3px; font-family: 'Inter', sans-serif; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        .google-btn:hover { border-color: #ff0000; background: rgba(255, 0, 0, 0.2); color: #ffffff !important; }
         .google-btn img { width: 18px; height: 18px; }
-        .auth-footer { text-align: center; margin-top: 0.5rem; font-size: 0.78rem; color: #888888; }
-        .auth-footer a { color: #ff0000; font-weight: 600; text-decoration: none; cursor: pointer; }
+        .auth-footer { text-align: center; margin-top: 0.5rem; font-size: 0.78rem; color: #666666; }
+        .auth-footer a { color: #ff0000; font-weight: 700; text-decoration: none; cursor: pointer; }
         .auth-footer a:hover { text-decoration: underline; }
         .auth-error { background: rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.25); color: var(--danger); padding: 0.45rem 0.7rem; border-radius: 8px; font-size: 0.78rem; margin-bottom: 0.5rem; display: none; align-items: center; gap: 0.4rem; }
         .auth-error.show { display: flex; }
-        .nav-user-email { color: #ff0000; font-weight: 600; font-size: 0.85rem; padding: 0.5rem 0.8rem; background: rgba(255, 0, 0, 0.15); border-radius: 50px; border: 1px solid rgba(255, 0, 0, 0.2); display: flex; align-items: center; gap: 0.4rem; white-space: nowrap; }
-        .nav-user-email i { font-size: 0.8rem; color: #ff0000; }
+        .nav-user-email { color: #ff0000; font-weight: 700; font-size: 0.85rem; padding: 0.5rem 0.8rem; background: rgba(255, 0, 0, 0.15); border-radius: 50px; border: 1px solid rgba(255, 0, 0, 0.2); display: flex; align-items: center; gap: 0.4rem; white-space: nowrap; }
+        .nav-user-email i { font-size: 0.85rem; color: #ffffff; font-weight: 600; color: #ff0000; }
         .nav-logout-btn { background: transparent; color: var(--danger); border: 2px solid rgba(255, 0, 0, 0.15); padding: 0.5rem 1.2rem; border-radius: 50px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: 0.4rem; }
         .nav-logout-btn:hover { background: rgba(255, 0, 0, 0.1); border-color: var(--danger); transform: translateY(-1px); }
         @media (max-width: 768px) {
             .nav-user-email { width: 100%; justify-content: center; margin: 0.3rem 0; }
             .nav-logout-btn { width: 100%; justify-content: center; margin-top: 0.3rem; }
         }
-        .forgot-link { font-size: 0.75rem; color: #ff0000; text-decoration: none; font-weight: 500; float: right; margin-top: -0.2rem; cursor: pointer; }
+        .forgot-link { font-size: 0.85rem; color: #ffffff; font-weight: 600; color: #ff0000; text-decoration: none; font-weight: 700; float: right; margin-top: -0.2rem; cursor: pointer; }
         .forgot-link:hover { text-decoration: underline; }
         .reset-sent { text-align: center; padding: 0.8rem; display: none; }
         .reset-sent.show { display: block; }
         .reset-sent i { font-size: 2.5rem; color: var(--success); margin-bottom: 0.3rem; }
         .reset-sent h3 { font-size: 1rem; color: #ff0000; margin-bottom: 0.2rem; }
-        .reset-sent p { font-size: 0.8rem; color: #888888; }
-        .admin-login-btn { width: 100%; padding: 0.5rem; border-radius: 10px; border: 2px solid #222222; background: transparent; color: #888888; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.4rem; font-family: 'Inter', sans-serif; margin-top: 0.3rem; }
+        .reset-sent p { font-size: 0.85rem; color: #ffffff; font-weight: 600; color: #666666; }
+        .admin-login-btn { width: 100%; padding: 0.5rem; border-radius: 10px; border: 2px solid #222222; background: transparent; color: #666666; font-weight: 600; font-size: 0.85rem; color: #ffffff; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.4rem; font-family: 'Inter', sans-serif; margin-top: 0.3rem; }
         .admin-login-btn:hover { border-color: #ff0000; color: #ff0000; background: rgba(255, 0, 0, 0.1); }
     
         .coupon-section { background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(255, 0, 0, 0.1)); padding: 1rem; border-radius: 12px; border: 1px dashed var(--red); margin: 1rem 0; }
         .coupon-input-wrap { display: flex; gap: 0.5rem; align-items: stretch; flex-wrap: nowrap; }
         .coupon-input-wrap input { flex: 1; min-width: 0; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
-        .coupon-btn { background: #ff0000; color: #000000; padding: 0.6rem 1rem; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 0.85rem; white-space: nowrap; flex-shrink: 0; }
+        .coupon-btn { background: #ff0000; color: #000000 !important; font-weight: 800; padding: 0.6rem 1rem; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 0.85rem; white-space: nowrap; flex-shrink: 0; }
         .coupon-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(255, 0, 0, 0.3); }
         .coupon-btn:disabled { opacity: 0.5; cursor: not-allowed; opacity: 0.5; transform: none; box-shadow: none; }
-        .coupon-status { margin-top: 0.5rem; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem; min-height: 20px; }
+        .coupon-status { margin-top: 0.5rem; font-size: 0.85rem; color: #ffffff; font-weight: 600; font-weight: 600; display: flex; align-items: center; gap: 0.4rem; min-height: 20px; }
         .coupon-status.valid { color: var(--success); }
         .coupon-status.invalid { color: var(--danger); }
         .coupon-status.pending { color: #ff0000; }
         .price-breakdown { background: #000000; padding: 0.8rem; border-radius: 10px; margin-top: 0.8rem; border: 1px solid #222222; }
-        .price-breakdown .row { display: flex; justify-content: space-between; padding: 0.3rem 0; font-size: 0.85rem; color: #888888; }
-        .price-breakdown .row.total { border-top: 2px solid var(--border); padding-top: 0.5rem; margin-top: 0.3rem; font-size: 1rem; font-weight: 700; color: #ff0000; }
+        .price-breakdown .row { display: flex; justify-content: space-between; padding: 0.3rem 0; font-size: 0.85rem; color: #666666; }
+        .price-breakdown .row.total { border-top: 2px solid var(--border); padding-top: 0.5rem; margin-top: 0.3rem; font-size: 1.1rem; font-weight: 800; color: #ffffff; }
         .price-breakdown .row .discount { color: var(--success); }
         .coupon-badge { display: inline-flex; align-items: center; gap: 0.3rem; background: linear-gradient(135deg, rgba(255,0,0,0.1), rgba(255,0,0,0.08)); color: #ff0000; padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(255,0,0,0.2); }
         .coupon-card { background: #111111; border: 1px solid #222222; border-radius: 12px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s; }
         .coupon-card:hover { border-color: #ff0000; box-shadow: 0 4px 15px rgba(255,0,0,0.08); }
-        .coupon-card .code { font-family: 'Courier New', monospace; font-weight: 800; color: #ff0000; font-size: 1rem; letter-spacing: 1px; }
-        .coupon-card .info { font-size: 0.8rem; color: #888888; margin-top: 0.2rem; }
+        .coupon-card .code { font-family: 'Courier New', monospace; font-weight: 900; color: #ff0000; font-size: 1.1rem; letter-spacing: 1px; }
+        .coupon-card .info { font-size: 0.85rem; color: #ffffff; font-weight: 600; color: #666666; margin-top: 0.2rem; }
         .coupon-card .discount-badge { background: linear-gradient(135deg, var(--success), #15803d); color: white; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; }
         .coupon-card .actions { display: flex; gap: 0.4rem; }
         .coupon-add-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; margin-bottom: 1rem; }
         @media (max-width: 768px) {
             .coupon-input-wrap { flex-wrap: nowrap; }
-            .coupon-input-wrap input { min-width: 0; font-size: 0.8rem; padding: 0.5rem 0.6rem; }
-            .coupon-btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; }
+            .coupon-input-wrap input { min-width: 0; font-size: 0.85rem; color: #ffffff; font-weight: 600; padding: 0.5rem 0.6rem; }
+            .coupon-btn { padding: 0.5rem 0.8rem; font-size: 0.85rem; color: #ffffff; font-weight: 600; }
         }
 
     </style>
@@ -404,11 +405,11 @@
                 <div class="form-group">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
                         <label style="margin-bottom: 0;"><i class="fas fa-lock" style="color: #ff0000;"></i> Password</label>
-                        <a onclick="showForgotPassword()" style="font-size: 0.75rem; color: #ff0000; text-decoration: none; font-weight: 500; cursor: pointer;">Forgot?</a>
+                        <a onclick="showForgotPassword()" style="font-size: 0.85rem; color: #ffffff; font-weight: 600; color: #ff0000; text-decoration: none; font-weight: 700; cursor: pointer;">Forgot?</a>
                     </div>
                     <div style="position: relative;">
                         <input type="password" id="signInPassword" placeholder="Enter password" required style="padding-right: 2.2rem;">
-                        <button type="button" onclick="togglePassword('signInPassword', this)" style="position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #888888; cursor: pointer; font-size: 0.85rem; padding: 0.2rem;">
+                        <button type="button" onclick="togglePassword('signInPassword', this)" style="position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #666666; cursor: pointer; font-size: 0.85rem; padding: 0.2rem;">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
@@ -434,7 +435,7 @@
                     <label><i class="fas fa-lock" style="color: #ff0000;"></i> Password</label>
                     <div style="position: relative;">
                         <input type="password" id="signUpPassword" placeholder="Min 6 characters" required minlength="6" style="padding-right: 2.2rem;">
-                        <button type="button" onclick="togglePassword('signUpPassword', this)" style="position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #888888; cursor: pointer; font-size: 0.85rem; padding: 0.2rem;">
+                        <button type="button" onclick="togglePassword('signUpPassword', this)" style="position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #666666; cursor: pointer; font-size: 0.85rem; padding: 0.2rem;">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
@@ -443,7 +444,7 @@
                     <label><i class="fas fa-lock" style="color: #ff0000;"></i> Confirm Password</label>
                     <div style="position: relative;">
                         <input type="password" id="signUpConfirm" placeholder="Confirm password" required style="padding-right: 2.2rem;">
-                        <button type="button" onclick="togglePassword('signUpConfirm', this)" style="position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #888888; cursor: pointer; font-size: 0.85rem; padding: 0.2rem;">
+                        <button type="button" onclick="togglePassword('signUpConfirm', this)" style="position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #666666; cursor: pointer; font-size: 0.85rem; padding: 0.2rem;">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
@@ -474,7 +475,7 @@
                         <i class="fas fa-lock"></i> Admin Login
                     </button>
                     <div class="auth-footer" style="margin-top: 0.8rem;">
-                        <a onclick="switchAuthTab('signin')" style="color: #ff0000; font-weight: 600; text-decoration: none; cursor: pointer;">Back to Sign In</a>
+                        <a onclick="switchAuthTab('signin')" style="color: #ff0000; font-weight: 700; text-decoration: none; cursor: pointer;">Back to Sign In</a>
                     </div>
                 </div>
             </form>
@@ -498,7 +499,7 @@
                 <button class="btn-primary" onclick="smoothScrollTo('products')"><i class="fas fa-shopping-cart"></i> Buy Now</button>
                 <button class="btn-secondary" onclick="smoothScrollTo('features')">Learn More</button>
             </div>
-            <div class="scroll-indicator" onclick="smoothScrollTo('products')"><i class="fas fa-chevron-down" style="color: #888888; font-size: 1.5rem;"></i></div>
+            <div class="scroll-indicator" onclick="smoothScrollTo('products')"><i class="fas fa-chevron-down" style="color: #666666; font-size: 1.5rem;"></i></div>
         </section>
         <section class="products-section" id="products">
             <div class="section-header">
@@ -506,7 +507,7 @@
                 <p>Select the duration that fits your needs. All keys are instantly delivered.</p>
             </div>
             <div class="products-grid" id="productsGrid">
-                <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #888888;">
+                <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #666666;">
                     <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
                     <p>Loading products from Firebase...</p>
                 </div>
@@ -544,10 +545,10 @@
             <div class="telegram-box">
                 <i class="fas fa-headset" style="color: #ff0000; font-size: 3rem; margin-bottom: 1rem;"></i>
                 <h3>Need Help?</h3>
-                <p style="color: #888888; margin-top: 0.5rem;">
+                <p style="color: #666666; margin-top: 0.5rem;">
                     After payment, your key will be displayed on screen.<br>
                     Make sure to copy it immediately — it won't be shown again!<br><br>
-                    <a href="https://t.me/KITYGAMER" target="_blank" style="color: #ff0000; font-weight: 600; text-decoration: none;">Contact Admin @KITYGAMER</a>
+                    <a href="https://t.me/KITYGAMER" target="_blank" style="color: #ff0000; font-weight: 700; text-decoration: none;">Contact Admin @KITYGAMER</a>
                 </p>
             </div>
         </section>
@@ -563,7 +564,7 @@
     <div class="admin-panel" id="adminPanel">
         <div class="admin-header">
             <h2><i class="fas fa-cog"></i> Admin Dashboard</h2>
-            <div style="background: linear-gradient(135deg, rgba(255,0,0,0.1), rgba(255,0,0,0.06)); border: 1px solid var(--red); border-radius: 12px; padding: 0.5rem 1rem; font-size: 0.8rem; color: #ff0000; font-weight: 600;">
+            <div style="background: linear-gradient(135deg, rgba(255,0,0,0.1), rgba(255,0,0,0.06)); border: 1px solid var(--red); border-radius: 12px; padding: 0.5rem 1rem; font-size: 0.85rem; color: #ffffff; font-weight: 600; color: #ff0000; font-weight: 700;">
                 <i class="fas fa-user-shield"></i> Manual Keys Only Mode
             </div>
             <div class="admin-actions">
@@ -579,7 +580,7 @@
             <div class="stat-card"><h4>Revenue</h4><div class="value" id="revenue">Rs.0</div></div>
         </div>
         <div style="margin-bottom: 1.5rem; text-align: center;">
-            <button onclick="forceReloadManualKeys()" style="background: #ff0000; color: #000000; border: none; padding: 0.6rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 4px 15px rgba(255,0,0,0.25);">
+            <button onclick="forceReloadManualKeys()" style="background: #ff0000; color: #000000 !important; font-weight: 800; border: none; padding: 0.6rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 4px 15px rgba(255,0,0,0.25);">
                 <i class="fas fa-sync-alt"></i> Refresh Manual Keys from Firebase
             </button>
         </div>
@@ -603,8 +604,8 @@
         <div style="background: #111111; border-radius: 16px; border: 1px solid #222222; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 20px var(--card-shadow);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
                 <div>
-                    <div style="font-size: 0.85rem; color: #888888; margin-bottom: 0.2rem;">Current Key</div>
-                    <div style="font-family: 'Courier New', monospace; font-size: 1rem; font-weight: 700; color: #ff0000;" id="currentRazorpayKey">Loading...</div>
+                    <div style="font-size: 0.85rem; color: #666666; margin-bottom: 0.2rem;">Current Key</div>
+                    <div style="font-family: 'Courier New', monospace; font-size: 1.2rem; font-weight: 900; color: #ff0000;" id="currentRazorpayKey">Loading...</div>
                 </div>
                 <div style="background: rgba(22, 163, 74, 0.1); color: var(--success); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;" id="razorpayStatus">
                     <i class="fas fa-check-circle"></i> Active
@@ -612,12 +613,12 @@
             </div>
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                 <input type="text" id="razorpayKeyInput" placeholder="Enter new Razorpay Key ID (e.g., rzp_live_...)" 
-                    style="flex: 1; min-width: 250px; padding: 0.6rem 0.8rem; background: #000000; border: 2px solid #222222; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 0.85rem; color: var(--text); transition: all 0.3s;">
+                    style="flex: 1; min-width: 250px; padding: 0.6rem 0.8rem; background: #000000; border: 2px solid #222222; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 0.85rem; color: #ffffff; transition: all 0.3s;">
                 <button class="add-stock-btn" id="saveRazorpayKeyBtn" onclick="updateRazorpayKey()" style="white-space: nowrap;">
                     <i class="fas fa-save"></i> Update Key
                 </button>
             </div>
-            <div style="margin-top: 0.8rem; font-size: 0.75rem; color: #888888;">
+            <div style="margin-top: 0.8rem; font-size: 0.75rem; color: #666666;">
                 <i class="fas fa-info-circle" style="color: #ff0000;"></i> 
                 Enter your Razorpay Key ID here. It will be securely stored in Firebase and used for all payments. 
                 <b>Do not share this key!</b>
@@ -628,19 +629,19 @@
         <div style="background: #111111; border-radius: 16px; border: 1px solid #222222; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 20px var(--card-shadow);">
             <div class="coupon-add-form">
                 <div class="form-group" style="margin-bottom: 0;">
-                    <label style="font-size: 0.8rem;">Coupon Code</label>
+                    <label style="font-size: 0.85rem; color: #ffffff; font-weight: 600;">Coupon Code</label>
                     <input type="text" id="newCouponCode" placeholder="WELCOME20" style="text-transform: uppercase;">
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
-                    <label style="font-size: 0.8rem;">Discount %</label>
+                    <label style="font-size: 0.85rem; color: #ffffff; font-weight: 600;">Discount %</label>
                     <input type="number" id="newCouponDiscount" placeholder="20" min="1" max="100">
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
-                    <label style="font-size: 0.8rem;">Max Uses</label>
+                    <label style="font-size: 0.85rem; color: #ffffff; font-weight: 600;">Max Uses</label>
                     <input type="number" id="newCouponMaxUses" placeholder="100" min="1">
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
-                    <label style="font-size: 0.8rem;">Min Order (Rs.)</label>
+                    <label style="font-size: 0.85rem; color: #ffffff; font-weight: 600;">Min Order (Rs.)</label>
                     <input type="number" id="newCouponMinOrder" placeholder="0" min="0">
                 </div>
             </div>
@@ -649,7 +650,7 @@
             </button>
         </div>
         <div id="couponsList" style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2rem;">
-            <div style="text-align: center; padding: 1rem; color: #888888;">Loading coupons...</div>
+            <div style="text-align: center; padding: 1rem; color: #666666;">Loading coupons...</div>
         </div>
 
         <!-- APK URL MANAGEMENT -->
@@ -660,17 +661,17 @@
                     <i class="fab fa-android"></i>
                 </div>
                 <div style="flex: 1; min-width: 0;">
-                    <div style="font-size: 0.8rem; color: #888888; margin-bottom: 0.2rem;">Current APK File</div>
-                    <div style="font-size: 1rem; font-weight: 700; color: #ff0000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="currentApkName">NovaEsp_50.0.2.apk</div>
+                    <div style="font-size: 0.85rem; color: #ffffff; font-weight: 600; color: #666666; margin-bottom: 0.2rem;">Current APK File</div>
+                    <div style="font-size: 1.1rem; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="currentApkName">NovaEsp_50.0.2.apk</div>
                     <div style="font-size: 0.75rem; color: var(--success); font-weight: 600; margin-top: 0.2rem;"><i class="fas fa-check-circle"></i> Active</div>
                 </div>
             </div>
 
-            <div style="font-size: 0.85rem; color: #888888; margin-bottom: 0.5rem; font-weight: 500;"><i class="fas fa-link" style="color: #ff0000;"></i> Update APK Download URL:</div>
+            <div style="font-size: 0.85rem; color: #666666; margin-bottom: 0.5rem; font-weight: 500;"><i class="fas fa-link" style="color: #ff0000;"></i> Update APK Download URL:</div>
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                 <input type="url" id="apkUrlInput" placeholder="https://github.com/.../app.apk" 
-                    style="flex: 1; min-width: 250px; padding: 0.7rem 1rem; background: #000000; border: 2px solid #222222; border-radius: 12px; font-size: 0.9rem; color: var(--text); transition: all 0.3s; font-family: 'Inter', sans-serif;">
-                <button onclick="updateApkUrl()" style="background: #ff0000; color: #000000; border: none; padding: 0.7rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap; box-shadow: 0 4px 15px rgba(255,0,0,0.25);">
+                    style="flex: 1; min-width: 250px; padding: 0.7rem 1rem; background: #000000; border: 2px solid #444444; border-radius: 12px; font-size: 0.9rem; color: #ffffff !important; -webkit-text-fill-color: #ffffff; font-family: 'Inter', sans-serif;">
+                <button onclick="updateApkUrl()" style="background: #ff0000; color: #000000 !important; font-weight: 800; border: none; padding: 0.7rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap; box-shadow: 0 4px 15px rgba(255,0,0,0.25);">
                     <i class="fas fa-save"></i> Update
                 </button>
             </div>
@@ -679,15 +680,15 @@
                 <button onclick="testApkDownload()" style="flex: 1; min-width: 140px; background: #111111; color: #ff0000; border: 2px solid #222222; padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
                     <i class="fas fa-download"></i> Test Download
                 </button>
-                <button onclick="openGithubReleases()" style="flex: 1; min-width: 140px; background: #111111; color: var(--text); border: 2px solid #222222; padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+                <button onclick="openGithubReleases()" style="flex: 1; min-width: 140px; background: #111111; color: #ffffff; border: 2px solid #222222; padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
                     <i class="fab fa-github"></i> GitHub Releases
                 </button>
             </div>
 
             <div style="margin-top: 1rem; padding: 0.8rem; background: #000000; border-radius: 10px; border: 1px solid #222222;">
-                <div style="font-size: 0.78rem; color: #888888; line-height: 1.6;">
+                <div style="font-size: 0.78rem; color: #666666; line-height: 1.6;">
                     <i class="fas fa-lightbulb" style="color: var(--warning);"></i> <b>How to update APK:</b><br>
-                    1. Upload new APK to <a href="https://github.com/KITYGAMER-07/KITYSHOP/releases" target="_blank" style="color: #ff0000; font-weight: 600;">GitHub Releases</a><br>
+                    1. Upload new APK to <a href="https://github.com/KITYGAMER-07/KITYSHOP/releases" target="_blank" style="color: #ff0000; font-weight: 700;">GitHub Releases</a><br>
                     2. Copy the direct download link<br>
                     3. Paste it above and click "Update"
                 </div>
@@ -698,20 +699,20 @@
     <div class="modal-overlay" id="buyModal">
         <div class="modal" style="max-width: 400px; width: 90%; border-radius: 24px; padding: 1.2rem;">
             <div class="modal-header" style="margin-bottom: 0.8rem;">
-                <h2 style="white-space: nowrap; font-size: 1.2rem;"><i class="fas fa-shopping-cart"></i> Complete Purchase</h2>
+                <h2 style="white-space: nowrap; font-size: 1.2rem; color: #ffffff;"><i class="fas fa-shopping-cart"></i> Complete Purchase</h2>
             </div>
             <div id="buyModalContent">
                 <div class="form-group" style="margin-bottom: 0.6rem;">
-                    <label style="font-size: 0.8rem;"><i class="fas fa-box"></i> Selected Plan</label>
-                    <input type="text" id="selectedPlan" readonly style="background: rgba(255, 0, 0, 0.1); border-color: #ff0000; font-size: 0.85rem; padding: 0.5rem;">
+                    <label style="font-size: 0.85rem; color: #ffffff; font-weight: 600;"><i class="fas fa-box"></i> Selected Plan</label>
+                    <input type="text" id="selectedPlan" readonly style="background: rgba(255, 0, 0, 0.1); border-color: #ff0000; font-size: 0.85rem; padding: 0.5rem; color: #ffffff !important; -webkit-text-fill-color: #ffffff;">
                 </div>
 
                 <div class="coupon-section" style="padding: 0.6rem; margin: 0.5rem 0;">
-                    <label style="font-size: 0.75rem; font-weight: 600; color: #ff0000; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.3rem;">
+                    <label style="font-size: 0.8rem; font-weight: 700; color: #ff3333; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.3rem;">
                         <i class="fas fa-ticket-alt" style="color: #ff0000;"></i> Have a Coupon?
                     </label>
                     <div class="coupon-input-wrap">
-                        <input type="text" id="couponCode" placeholder="Enter code" style="text-transform: uppercase; font-size: 0.8rem; padding: 0.4rem 0.6rem;">
+                        <input type="text" id="couponCode" placeholder="Enter code" style="text-transform: uppercase; font-size: 0.85rem; color: #ffffff; font-weight: 600; padding: 0.4rem 0.6rem; color: #ffffff !important; -webkit-text-fill-color: #ffffff;">
                         <button class="coupon-btn" id="applyCouponBtn" onclick="applyCoupon()" style="padding: 0.4rem 0.7rem; font-size: 0.75rem;">
                             <i class="fas fa-check"></i> Apply
                         </button>
@@ -726,8 +727,8 @@
                 </div>
 
                 <div class="form-group" style="margin-bottom: 0.6rem;">
-                    <label style="font-size: 0.8rem;"><i class="fas fa-envelope"></i> Email (optional)</label>
-                    <input type="email" id="email" placeholder="your@email.com" style="font-size: 0.8rem; padding: 0.5rem;">
+                    <label style="font-size: 0.85rem; color: #ffffff; font-weight: 600;"><i class="fas fa-envelope"></i> Email (optional)</label>
+                    <input type="email" id="email" placeholder="your@email.com" style="font-size: 0.85rem; color: #ffffff; font-weight: 600; padding: 0.5rem; color: #ffffff !important; -webkit-text-fill-color: #ffffff;">
                 </div>
                 <button class="btn-primary" id="payBtn" onclick="processPayment()" style="padding: 0.6rem; font-size: 0.85rem; width: 100%; justify-content: center;">
                     <i class="fas fa-credit-card"></i> Pay with Razorpay
@@ -739,12 +740,12 @@
             <div id="paymentSuccess" class="hidden" style="text-align: center;">
                 <div class="success-check" style="width: 48px; height: 48px; font-size: 1.3rem; margin: 0 auto 0.5rem;"><i class="fas fa-check"></i></div>
                 <h3 style="font-size: 0.95rem; margin-bottom: 0.15rem;">Payment Successful!</h3>
-                <p style="color: #888888; margin: 0.15rem 0; font-size: 0.75rem;">Your access key is ready!</p>
+                <p style="color: #666666; margin: 0.15rem 0; font-size: 0.75rem;">Your access key is ready!</p>
 
                 <div style="background: linear-gradient(135deg, var(--black), #fff); padding: 0.5rem; border-radius: 10px; margin: 0.4rem 0; border: 2px dashed var(--red);" id="keyBox">
-                    <div style="font-size: 0.7rem; color: #ff0000; margin-bottom: 0.2rem; font-weight: 600;"><i class="fas fa-key"></i> YOUR KEY</div>
-                    <div style="font-family: 'Courier New', monospace; font-size: 0.85rem; font-weight: 800; color: #ff0000; letter-spacing: 1px; word-break: break-all; padding: 0.3rem; background: #111111; border-radius: 6px; border: 1px solid #222222;" id="sentKeyDisplay">KEY-XXXX-XXXX-XXXX</div>
-                    <button onclick="copyKeyToClipboard()" style="margin-top: 0.4rem; background: #ff0000; color: #000000; border: none; padding: 0.4rem 1rem; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(255,0,0,0.3);">
+                    <div style="font-size: 0.8rem; color: #ff0000; margin-bottom: 0.3rem; font-weight: 700;"><i class="fas fa-key"></i> YOUR KEY</div>
+                    <div style="font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 800; color: #ff0000; letter-spacing: 1px; word-break: break-all; padding: 0.3rem; background: #111111; border-radius: 6px; border: 1px solid #222222;" id="sentKeyDisplay">KEY-XXXX-XXXX-XXXX</div>
+                    <button onclick="copyKeyToClipboard()" style="margin-top: 0.4rem; background: #ff0000; color: #000000 !important; font-weight: 800; border: none; padding: 0.4rem 1rem; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.85rem; color: #ffffff; font-weight: 600; box-shadow: 0 4px 15px rgba(255,0,0,0.3);">
                         <i class="fas fa-copy"></i> Copy
                     </button>
                 </div>
@@ -756,11 +757,11 @@
                             <i class="fab fa-android"></i>
                         </div>
                         <div style="flex: 1; min-width: 0;">
-                            <div style="font-weight: 700; color: #ff0000; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="apkFileNameDisplay">NovaEsp_50.0.2.apk</div>
-                            <div style="font-size: 0.65rem; color: #888888;">Android Package</div>
+                            <div style="font-weight: 700; color: #ff0000; font-size: 0.85rem; color: #ffffff; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="apkFileNameDisplay">NovaEsp_50.0.2.apk</div>
+                            <div style="font-size: 0.65rem; color: #666666;">Android Package</div>
                         </div>
                     </div>
-                    <button onclick="downloadApk()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.3rem; background: linear-gradient(135deg, var(--success), #15803d); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(22,163,74,0.3);">
+                    <button onclick="downloadApk()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.3rem; background: linear-gradient(135deg, var(--success), #15803d); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem; color: #ffffff; font-weight: 600; box-shadow: 0 4px 15px rgba(22,163,74,0.3);">
                         <i class="fas fa-download"></i> Download APK
                     </button>
                 </div>
@@ -788,12 +789,12 @@
                         </div>
                     </div>
 
-                    <div style="font-size: 0.72rem; color: var(--text); line-height: 1.5;">
+                    <div style="font-size: 0.8rem; color: #ffffff; line-height: 1.6; font-weight: 500;">
                         <div style="font-weight: 700; color: var(--danger); margin-bottom: 0.2rem; font-size: 0.7rem;"><i class="fas fa-user-friends"></i> Guys, follow strictly</div>
 
                         <div style="background: rgba(255,0,0,0.05); padding: 0.4rem; border-radius: 12px; margin-bottom: 0.3rem; border-left: 2px solid var(--red);">
-                            <div style="font-weight: 700; color: #ff0000; font-size: 0.7rem;"><i class="fas fa-fire"></i> Aimbot is very powerful</div>
-                            <div style="color: #888888; font-size: 0.68rem;">Don't misuse. Don't play like hacker.</div>
+                            <div style="font-weight: 800; color: #ff0000; font-size: 0.8rem;"><i class="fas fa-fire"></i> Aimbot is very powerful</div>
+                            <div style="color: #666666; font-size: 0.68rem;">Don't misuse. Don't play like hacker.</div>
                         </div>
 
                         <div style="display: flex; flex-direction: column; gap: 0.15rem; margin-bottom: 0.3rem;">
@@ -819,13 +820,13 @@
 
                         <div style="background: rgba(220,38,38,0.06); padding: 0.4rem; border-radius: 12px; text-align: center; border: 1px solid rgba(220,38,38,0.15);">
                             <div style="font-weight: 700; color: var(--danger); margin-bottom: 0.1rem; font-size: 0.7rem;"><i class="fas fa-brain"></i> Remember:</div>
-                            <div style="font-weight: 700; color: var(--success); font-size: 0.7rem;">Play smart = Safe ID <span style="color: #888888;">|</span> Show off = Ban <span style="color: var(--danger);">❌</span></div>
-                            <div style="margin-top: 0.15rem; font-size: 0.68rem; color: #888888; font-weight: 600;">Stay low. Stay safe 🖕</div>
+                            <div style="font-weight: 700; color: var(--success); font-size: 0.7rem;">Play smart = Safe ID <span style="color: #666666;">|</span> Show off = Ban <span style="color: var(--danger);">❌</span></div>
+                            <div style="margin-top: 0.15rem; font-size: 0.68rem; color: #666666; font-weight: 600;">Stay low. Stay safe 🖕</div>
                         </div>
                     </div>
                 </div>
 
-                <button class="btn-secondary" onclick="skipToMainContent()" style="width: 100%; padding: 0.6rem; font-size: 0.85rem; justify-content: center; border: 2px solid #222222; color: #888888; border-radius: 12px; margin-top: 0.5rem;">
+                <button class="btn-secondary" onclick="skipToMainContent()" style="width: 100%; padding: 0.6rem; font-size: 0.85rem; justify-content: center; border: 2px solid #222222; color: #666666; border-radius: 12px; margin-top: 0.5rem;">
                     <i class="fas fa-forward"></i> Skip
                 </button>
             </div>
@@ -864,7 +865,7 @@
             </div>
             <div class="form-group"><label>Price (Rs.)</label><input type="number" id="stockPrice" placeholder="199"></div>
             <div class="form-group" style="display: none;"><label>Quantity to Add</label><input type="number" id="stockQuantity" placeholder="10" value="1"></div>
-            <div class="form-group"><label>Keys (one per line, <span style="color: var(--danger);">REQUIRED</span>)</label><textarea id="stockKeys" rows="5" placeholder="KEY-ABC-123-XYZ&#10;KEY-DEF-456-UVW&#10;KEY-GHI-789-RST" required style="border-color: #ff0000;"></textarea><div style="font-size: 0.75rem; color: #888888; margin-top: 0.3rem;"><i class="fas fa-info-circle" style="color: #ff0000;"></i> Enter at least one key. Auto-generation is disabled.</div></div>
+            <div class="form-group"><label>Keys (one per line, <span style="color: var(--danger);">REQUIRED</span>)</label><textarea id="stockKeys" rows="5" placeholder="KEY-ABC-123-XYZ&#10;KEY-DEF-456-UVW&#10;KEY-GHI-789-RST" required style="border-color: #ff0000;"></textarea><div style="font-size: 0.75rem; color: #666666; margin-top: 0.3rem;"><i class="fas fa-info-circle" style="color: #ff0000;"></i> Enter at least one key. Auto-generation is disabled.</div></div>
             <button class="btn-primary" onclick="addStock()"><i class="fas fa-plus"></i> Add Stock</button>
         </div>
     </div>
@@ -889,7 +890,7 @@
             </div>
             <div class="form-group">
                 <label>Key to Delete</label>
-                <input type="text" id="deleteStockKey" placeholder="Enter exact key to delete (e.g., KEY-ABCD-EFGH-IJKL)" style="font-family: 'Courier New', monospace; text-transform: uppercase;">
+                <input type="text" id="deleteStockKey" placeholder="Enter exact key to delete (e.g., KEY-ABCD-EFGH-IJKL)" style="font-family: 'Courier New', monospace; text-transform: uppercase; color: #ffffff !important; -webkit-text-fill-color: #ffffff;">
             </div>
             <div style="background: rgba(220,38,38,0.06); border: 1px solid rgba(220,38,38,0.2); border-radius: 10px; padding: 0.8rem; margin-bottom: 1rem; font-size: 0.85rem; color: var(--danger);">
                 <i class="fas fa-exclamation-triangle"></i> This will permanently delete the specified admin-added key from stock.
@@ -1246,7 +1247,7 @@ function updateRazorpayKey() {
 
             const couponList = Object.values(coupons);
             if (couponList.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 1rem; color: #888888;">No coupons available</div>';
+                container.innerHTML = '<div style="text-align: center; padding: 1rem; color: #666666;">No coupons available</div>';
                 return;
             }
 
@@ -1530,8 +1531,8 @@ function updateRazorpayKey() {
                             document.getElementById("availableKeys").textContent = "-";
                             document.getElementById("soldToday").textContent = "-";
                             document.getElementById("revenue").textContent = "-";
-                            document.getElementById("adminTableBody").innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--text-muted);"><div class="loading" style="width:24px;height:24px;margin:0 auto 0.5rem;"></div>Loading from Firebase...</td></tr>';
-                            document.getElementById("ordersTableBody").innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);"><div class="loading" style="width:24px;height:24px;margin:0 auto 0.5rem;"></div>Loading orders...</td></tr>';
+                            document.getElementById("adminTableBody").innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#aaaaaa;"><div class="loading" style="width:24px;height:24px;margin:0 auto 0.5rem;"></div>Loading from Firebase...</td></tr>';
+                            document.getElementById("ordersTableBody").innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#aaaaaa;"><div class="loading" style="width:24px;height:24px;margin:0 auto 0.5rem;"></div>Loading orders...</td></tr>';
                             showToast("Admin session restored!", "success");
 
                             // Verify credentials and load Firebase data in background
@@ -1684,7 +1685,7 @@ function updateRazorpayKey() {
                     const content = document.getElementById("myOrdersContent");
                     if (!data || Object.keys(data).length === 0) {
                         content.innerHTML = `
-                            <div style="text-align: center; padding: 2rem; color: #888888;">
+                            <div style="text-align: center; padding: 2rem; color: #666666;">
                                 <i class="fas fa-shopping-bag" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
                                 <p>No orders yet. Buy a key to get started!</p>
                             </div>
@@ -1708,11 +1709,11 @@ function updateRazorpayKey() {
                                 <tbody>
                                     ${userOrders.map(o => `
                                         <tr style="border-bottom: 1px solid #222222;">
-                                            <td style="padding: 0.8rem; font-size: 0.8rem; color: #888888;">${o.id}</td>
-                                            <td style="padding: 0.8rem; font-size: 0.85rem; font-weight: 600; color: #ff0000;">${o.product}</td>
-                                            <td style="padding: 0.8rem; font-size: 0.85rem; color: #ff0000; font-weight: 600;">Rs.${o.amount}</td>
-                                            <td style="padding: 0.8rem; font-size: 0.8rem; font-family: monospace; color: #ff0000; background: rgba(255,0,0,0.06); border-radius: 6px;">${o.key}</td>
-                                            <td style="padding: 0.8rem; font-size: 0.75rem; color: #888888;">${o.time}</td>
+                                            <td style="padding: 0.8rem; font-size: 0.85rem; color: #ffffff; font-weight: 600; color: #666666;">${o.id}</td>
+                                            <td style="padding: 0.8rem; font-size: 0.9rem; font-weight: 700; color: #ffffff;">${o.product}</td>
+                                            <td style="padding: 0.8rem; font-size: 1rem; color: #ff0000; font-weight: 600; font-weight: 700; font-weight: 600;">Rs.${o.amount}</td>
+                                            <td style="padding: 0.8rem; font-size: 0.85rem; color: #ffffff; font-weight: 600; font-family: monospace; color: #ff0000; background: rgba(255,0,0,0.06); border-radius: 6px;">${o.key}</td>
+                                            <td style="padding: 0.8rem; font-size: 0.75rem; color: #666666;">${o.time}</td>
                                         <td style="padding: 0.8rem;">
                                             ${o.apkUrl ? `<button onclick="window.open('${o.apkUrl}', '_blank')" style="background: linear-gradient(135deg, var(--success), #15803d); color: white; border: none; padding: 0.3rem 0.7rem; border-radius: 50px; font-size: 0.7rem; font-weight: 600; cursor: pointer;"><i class="fas fa-download"></i> APK</button>` : '-'}
                                         </td>
@@ -1763,7 +1764,7 @@ function updateRazorpayKey() {
                     const content = document.getElementById("myKeysContent");
                     if (!data || Object.keys(data).length === 0) {
                         content.innerHTML = `
-                            <div style="text-align: center; padding: 2rem; color: #888888;">
+                            <div style="text-align: center; padding: 2rem; color: #666666;">
                                 <i class="fas fa-key" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
                                 <p>No keys yet. Buy a key to get started!</p>
                             </div>
@@ -1778,27 +1779,27 @@ function updateRazorpayKey() {
                                     <div style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(180deg, var(--red), var(--red));"></div>
                                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
                                         <div>
-                                            <div style="font-size: 0.75rem; color: #888888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.2rem;">${o.product}</div>
-                                            <div style="font-size: 0.85rem; color: #888888;">Order: ${o.id}</div>
-                                            ${o.couponCode ? '<div style="font-size: 0.75rem; color: #ff0000; font-weight: 600; margin-top: 0.2rem;"><i class="fas fa-ticket-alt"></i> ' + o.couponCode + ' (-' + o.discountPercent + '%)</div>' : ''}
+                                            <div style="font-size: 0.75rem; color: #666666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.2rem;">${o.product}</div>
+                                            <div style="font-size: 0.85rem; color: #666666;">Order: ${o.id}</div>
+                                            ${o.couponCode ? '<div style="font-size: 0.8rem; color: #ff0000; font-weight: 700; margin-top: 0.2rem;"><i class="fas fa-ticket-alt"></i> ' + o.couponCode + ' (-' + o.discountPercent + '%)</div>' : ''}
                                         </div>
                                         <div style="background: rgba(22, 163, 74, 0.1); color: var(--success); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;">
                                             <i class="fas fa-check-circle"></i> Active
                                         </div>
                                     </div>
                                     <div style="background: #111111; padding: 0.8rem; border-radius: 10px; border: 1px solid #222222; margin-bottom: 0.8rem;">
-                                        <div style="font-size: 0.7rem; color: #ff0000; margin-bottom: 0.3rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;"><i class="fas fa-key"></i> Access Key</div>
-                                        <div style="font-family: 'Courier New', monospace; font-size: 1.1rem; font-weight: 800; color: #ff0000; letter-spacing: 1px; word-break: break-all;" id="key-${o.id}">${o.key}</div>
+                                        <div style="font-size: 0.8rem; color: #ff0000; margin-bottom: 0.3rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;"><i class="fas fa-key"></i> Access Key</div>
+                                        <div style="font-family: 'Courier New', monospace; font-size: 1.2rem; font-weight: 900; color: #ff0000; letter-spacing: 1px; word-break: break-all;" id="key-${o.id}">${o.key}</div>
                                     </div>
                                     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                                        <button onclick="copyMyKey('${o.id}')" style="flex: 1; min-width: 120px; background: #ff0000; color: #000000; border: none; padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s;">
+                                        <button onclick="copyMyKey('${o.id}')" style="flex: 1; min-width: 120px; background: #ff0000; color: #000000 !important; font-weight: 800; border: none; padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s;">
                                             <i class="fas fa-copy"></i> Copy Key
                                         </button>
-                                        <button onclick="toggleKeyVisibility('${o.id}')" style="background: #000000; color: #888888; border: 1px solid #222222; padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s;">
+                                        <button onclick="toggleKeyVisibility('${o.id}')" style="background: #000000; color: #666666; border: 1px solid #222222; padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s;">
                                             <i class="fas fa-eye"></i> Hide
                                         </button>
                                     </div>
-                                    <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #888888;">
+                                    <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #666666;">
                                         <i class="fas fa-clock"></i> Purchased on ${o.time}
                                     </div>
                                     ${o.apkUrl ? `
@@ -2408,8 +2409,8 @@ function updateRazorpayKey() {
                         document.getElementById("availableKeys").textContent = "-";
                         document.getElementById("soldToday").textContent = "-";
                         document.getElementById("revenue").textContent = "-";
-                        document.getElementById("adminTableBody").innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--text-muted);"><div class="loading" style="width:24px;height:24px;margin:0 auto 0.5rem;"></div>Loading from Firebase...</td></tr>';
-                        document.getElementById("ordersTableBody").innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);"><div class="loading" style="width:24px;height:24px;margin:0 auto 0.5rem;"></div>Loading orders...</td></tr>';
+                        document.getElementById("adminTableBody").innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#aaaaaa;"><div class="loading" style="width:24px;height:24px;margin:0 auto 0.5rem;"></div>Loading from Firebase...</td></tr>';
+                        document.getElementById("ordersTableBody").innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#aaaaaa;"><div class="loading" style="width:24px;height:24px;margin:0 auto 0.5rem;"></div>Loading orders...</td></tr>';
                         loadKeysFromFirebase();
                         loadOrdersFromFirebase();
                         loadCouponsFromFirebase();
@@ -2521,11 +2522,11 @@ function updateRazorpayKey() {
                     <td>${o.product}</td>
                     <td>${o.email || "-"}</td>
                     <td>Rs.${o.amount}${o.discountAmount > 0 ? ' <span style="color: var(--success); font-size: 0.75rem;">(-' + o.discountAmount + ')</span>' : ''}</td>
-                    <td>${o.couponCode ? '<span style="color: #ff0000; font-weight: 600;">' + o.couponCode + '</span>' : '-'}</td>
+                    <td>${o.couponCode ? '<span style="color: #ff0000; font-weight: 700;">' + o.couponCode + '</span>' : '-'}</td>
                     <td><span style="color: var(--success);"><i class="fas fa-check"></i> ${o.status}</span></td>
                     <td>${o.time}</td>
                 </tr>
-            `).join("") || '<tr><td colspan="7" style="text-align: center; color: #888888;">No orders yet</td></tr>';
+            `).join("") || '<tr><td colspan="7" style="text-align: center; color: #666666;">No orders yet</td></tr>';
         }
 
         function showAddStockModal() {
@@ -2636,7 +2637,7 @@ function updateRazorpayKey() {
                 <div class="modal" style="max-width: 400px; text-align: center;">
                     <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
                     <h3 style="font-size: 1rem; color: #ff0000;">Loading admin keys...</h3>
-                    <p style="color: #888888; font-size: 0.8rem;">Fetching from Firebase</p>
+                    <p style="color: #666666; font-size: 0.85rem; color: #ffffff; font-weight: 600;">Fetching from Firebase</p>
                 </div>
             `;
             document.body.appendChild(loadingModal);
@@ -2691,11 +2692,11 @@ function updateRazorpayKey() {
             let keysHtml = '';
             if (productManualKeys.length === 0) {
                 keysHtml = `
-                    <div style="text-align: center; padding: 2rem; color: #888888;">
+                    <div style="text-align: center; padding: 2rem; color: #666666;">
                         <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
                         <p>No admin-added keys found for this plan.</p>
-                        <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">Only keys manually entered in "Add Stock" will appear here.</p>
-                        <div style="margin-top: 1rem; padding: 0.8rem; background: #000000; border-radius: 8px; border: 1px solid #222222; font-size: 0.75rem; color: #888888;">
+                        <p style="font-size: 0.85rem; color: #ffffff; font-weight: 600; margin-top: 0.5rem; opacity: 0.7;">Only keys manually entered in "Add Stock" will appear here.</p>
+                        <div style="margin-top: 1rem; padding: 0.8rem; background: #000000; border-radius: 8px; border: 1px solid #222222; font-size: 0.75rem; color: #666666;">
                             <i class="fas fa-bug" style="color: var(--warning);"></i> Debug: manualKeys[${productId}] has ${productManualKeys.length} items
                         </div>
                     </div>
@@ -2705,16 +2706,16 @@ function updateRazorpayKey() {
                     <div style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 400px; overflow-y: auto; padding-right: 0.5rem;">
                         ${productManualKeys.map((key, index) => `
                             <div style="display: flex; align-items: center; gap: 0.5rem; background: #000000; padding: 0.6rem 0.8rem; border-radius: 10px; border: 1px solid #222222;">
-                                <span style="font-size: 0.75rem; color: #888888; font-weight: 600; min-width: 30px;">#${index + 1}</span>
-                                <span style="font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 700; color: #ff0000; flex: 1; letter-spacing: 0.5px;">${key}</span>
-                                <button onclick="copyAdminKey('${key.replace(/'/g, "\'")}')" style="background: #ff0000; color: #000000; border: none; padding: 0.3rem 0.8rem; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.75rem; transition: all 0.3s; white-space: nowrap;">
+                                <span style="font-size: 0.75rem; color: #666666; font-weight: 600; min-width: 30px;">#${index + 1}</span>
+                                <span style="font-family: 'Courier New', monospace; font-size: 1rem; font-weight: 800; color: #ff0000; flex: 1; letter-spacing: 0.5px;">${key}</span>
+                                <button onclick="copyAdminKey('${key.replace(/'/g, "\'")}')" style="background: #ff0000; color: #000000 !important; font-weight: 800; border: none; padding: 0.3rem 0.8rem; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.75rem; transition: all 0.3s; white-space: nowrap;">
                                     <i class="fas fa-copy"></i> Copy
                                 </button>
                             </div>
                         `).join('')}
                     </div>
                     <div style="margin-top: 1rem; padding: 0.8rem; background: rgba(255, 0, 0, 0.1); border-radius: 10px; border: 1px solid #222222; text-align: center;">
-                        <span style="font-size: 0.85rem; color: #ff0000; font-weight: 600;">
+                        <span style="font-size: 1rem; color: #ff0000; font-weight: 600; font-weight: 700; font-weight: 600;">
                             <i class="fas fa-user-shield"></i> Admin-Added Keys: ${productManualKeys.length} | 
                             <i class="fas fa-box"></i> ${product.name}
                         </span>
