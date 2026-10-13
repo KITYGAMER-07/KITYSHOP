@@ -1,9 +1,0 @@
-node_modules/
-dist/
-android/.gradle/
-android/build/
-android/app/build/
-*.jks
-*.keystore
-.env
-android/release-signing.properties
